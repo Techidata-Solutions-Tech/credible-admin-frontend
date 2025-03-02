@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .custom-li {
+      @apply border-l-2 border-black font-medium bg-gray-100 hover:bg-gray-200;
+    }
+  }
