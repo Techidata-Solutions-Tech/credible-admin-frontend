@@ -3,7 +3,8 @@ import { BsThreeDots } from "react-icons/bs";
 
 const UserTable = () => {
   const [userId, setUserId] = useState(null);
-
+  const [modalData, setModalData] = useState(null);
+  
   const userData = [
     {
       id: '01',
@@ -56,6 +57,8 @@ const UserTable = () => {
 
   const handleEdit = (id) => {
     setUserId(id);
+    const user = userData.find(user => user.id === id);
+    setModalData(user);
     document.getElementById('my_modal_edit').showModal();
   };
 
@@ -67,6 +70,53 @@ const UserTable = () => {
   const handleStatusChange = (id) => {
     setUserId(id);
     document.getElementById('my_modal_status').showModal();
+  };
+
+  const updateUser = async (userData) => {
+    try {
+      const response = await fetch('https://your-api-url/edit', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      console.log('User updated successfully:', data);
+      document.getElementById('my_modal_edit').close();
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      const response = await fetch(`https://your-api-url/delete/${id}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      console.log('User deleted successfully:', data);
+      document.getElementById('my_modal_delete').close();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const changeUserStatus = async (id, status) => {
+    try {
+      const response = await fetch(`https://your-api-url/status/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status }),
+      });
+      const data = await response.json();
+      console.log('User status updated successfully:', data);
+      document.getElementById('my_modal_status').close();
+    } catch (error) {
+      console.error('Error updating user status:', error);
+    }
   };
 
   return (
@@ -116,6 +166,46 @@ const UserTable = () => {
           ))}
         </tbody>
       </table>
+
+      {/* Edit Modal */}
+      <dialog id="my_modal_edit" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_edit').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Edit User</h2>
+          <input type="text" value={modalData?.name} className="input input-bordered w-full mt-2" />
+          <button className="btn btn-primary mt-4" onClick={() => updateUser(modalData)}>Save Changes</button>
+        </form>
+      </dialog>
+
+      {/* Delete Modal */}
+      <dialog id="my_modal_delete" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_delete').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Are you sure you want to delete this user?</h2>
+          <button className="btn btn-danger mt-4" onClick={() => deleteUser(userId)}>Yes, Delete</button>
+        </form>
+      </dialog>
+
+      {/* Status Change Modal */}
+      <dialog id="my_modal_status" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_status').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Change Status</h2>
+          <select className="select select-bordered w-full mt-2" onChange={(e) => changeUserStatus(userId, e.target.value)}>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+            <option value="2">Suspended</option>
+            <option value="3">Blocked</option>
+          </select>
+          <button className="btn btn-primary mt-4">Change Status</button>
+        </form>
+      </dialog>
     </div>
   );
 };

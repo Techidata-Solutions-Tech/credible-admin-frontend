@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import OrderDetailModalSeller from './OrderDetailModalSeller';
 import { BsThreeDots } from "react-icons/bs";
-
+import OrderDetailModalSeller from './OrderDetailModalSeller'
 const OrderTable = () => {
   const [orderId, setOrderId] = useState(null);
+  const [modalData, setModalData] = useState(null); 
+  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState(null); 
 
   const orderData = [
     {
@@ -37,8 +39,11 @@ const OrderTable = () => {
 
   const handleEdit = (id) => {
     setOrderId(id);
+    const order = orderData.find((order) => order.id === id);
+    setModalData(order); 
     document.getElementById('my_modal_edit').showModal();
   };
+
   const handleOrder = (id) => {
     setOrderId(id);
     document.getElementById('product_detail').showModal();
@@ -49,9 +54,22 @@ const OrderTable = () => {
     document.getElementById('my_modal_delete').showModal();
   };
 
+  const handleConfirmDelete = async () => {
+    setLoading(true);
+    try {
+      await new Promise((resolve, reject) => setTimeout(() => resolve('Order deleted'), 2000));
+
+      setLoading(false);
+      document.getElementById('my_modal_delete').close();
+      alert('Order deleted successfully');
+    } catch (error) {
+     setLoading(false);
+      setError('Failed to delete the order');
+    }
+  };
+
   return (
-    <>
-      <OrderDetailModalSeller/>
+    <><OrderDetailModalSeller/>
       <div className="w-full bg-white container rounded-lg shadow-sm overflow-hidden pb-[100px]">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
@@ -99,6 +117,86 @@ const OrderTable = () => {
           </div>
         </div>
       </div>
+
+      {/* View Modal */}
+      <dialog id="product_detail" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('product_detail').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Order Details</h2>
+          <p><strong>Order ID:</strong> {modalData?.id}</p>
+          <p><strong>Customer Name:</strong> {modalData?.customerName}</p>
+          <p><strong>Branch ID:</strong> {modalData?.branchId}</p>
+          <p><strong>Items:</strong> {modalData?.items}</p>
+          <p><strong>Quantity:</strong> {modalData?.qty}</p>
+          <p><strong>Order Value:</strong> ${modalData?.orderValue.toFixed(2)}</p>
+        </form>
+      </dialog>
+
+      {/* Edit Modal */}
+      <dialog id="my_modal_edit" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_edit').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Edit Order</h2>
+          <input
+            type="text"
+            value={modalData?.customerName || ''}
+            onChange={(e) => setModalData({ ...modalData, customerName: e.target.value })}
+            className="input input-bordered w-full mt-2"
+            placeholder="Customer Name"
+          />
+          <input
+            type="text"
+            value={modalData?.branchId || ''}
+            onChange={(e) => setModalData({ ...modalData, branchId: e.target.value })}
+            className="input input-bordered w-full mt-2"
+            placeholder="Branch ID"
+          />
+          <input
+            type="number"
+            value={modalData?.items || ''}
+            onChange={(e) => setModalData({ ...modalData, items: e.target.value })}
+            className="input input-bordered w-full mt-2"
+            placeholder="Items"
+          />
+          <input
+            type="number"
+            value={modalData?.qty || ''}
+            onChange={(e) => setModalData({ ...modalData, qty: e.target.value })}
+            className="input input-bordered w-full mt-2"
+            placeholder="Quantity"
+          />
+          <input
+            type="number"
+            value={modalData?.orderValue || ''}
+            onChange={(e) => setModalData({ ...modalData, orderValue: e.target.value })}
+            className="input input-bordered w-full mt-2"
+            placeholder="Order Value"
+          />
+          <button className="btn btn-primary mt-4">Save Changes</button>
+        </form>
+      </dialog>
+
+      {/* Delete Modal */}
+      <dialog id="my_modal_delete" className="modal">
+        <form method="dialog" className="modal-box">
+          <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_delete').close()}>
+            &times;
+          </button>
+          <h2 className="text-lg font-semibold">Are you sure you want to delete this order?</h2>
+          <button
+            className="btn btn-danger mt-4"
+            onClick={handleConfirmDelete}
+            disabled={loading}
+          >
+            {loading ? 'Deleting...' : 'Yes, Delete'}
+          </button>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </form>
+      </dialog>
     </>
   );
 };

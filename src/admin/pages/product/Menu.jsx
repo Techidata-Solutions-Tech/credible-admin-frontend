@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
-import CategoryTable from '../../components/category/CategoryTable';
 import { Link } from 'react-router-dom';
 import Loader from '../../../components/loader';
+import MenuTable from '../../components/menu/MenuTable';
 
-const Category = () => {
+const Menu = () => {
     const [loading, setLoading] = useState(true);
     const [toggle, setToggle] = useState(Date.now());
     const [categories, setCategories] = useState([]);
@@ -26,7 +26,7 @@ const Category = () => {
                 });
                 };
                 traverse(data)
-                setCategories(flatCategories.filter(cat=>cat.categoryType ==="MAIN"));
+                setCategories(flatCategories.filter(cat=>cat.categoryType !=="MAIN"));
             }
             
           } catch (error) {
@@ -76,22 +76,22 @@ const Category = () => {
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                                    <input type="text" className="grow text-blue-900 placeholder-blue-400" placeholder="Search category..." />
+                                    <input type="text" className="grow text-blue-900 placeholder-blue-400" placeholder="Search Menu..." />
                                 </label>
                             </div>
 
                             <div className="flex items-center justify-between w-full sm:w-auto">
                                 <Link
-                                    to={'/admin/product/category/add-category'}
+                                    to={'/admin/product/menu/add-menu'}
                                     className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
                                 >
-                                    Add Category
+                                    Add Menu
                                 </Link>
                             </div>
                         </div>
 
                         <div className="overflow-x-auto">
-                        { loading ? <Loader/> :<CategoryTable categories={categories} setToggle={setToggle} />}
+                        { loading ? <Loader/> :<MenuTable categories={categories} setToggle={setToggle} />}
                         </div>
                     </div>
 
@@ -109,4 +109,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default Menu;
