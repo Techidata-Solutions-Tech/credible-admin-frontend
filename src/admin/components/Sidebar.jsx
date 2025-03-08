@@ -36,7 +36,8 @@ import {
   Percent,
   Server,
   Code,
-  Facebook
+  Facebook,
+  Image
 } from "lucide-react";
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -119,11 +120,28 @@ const Sidebar = (props) => {
               </ul>
             </li>
           </ul>
+          {/* <ul className="ml-6">
+            <li><Link to="#">Slider</Link>
+              <ul>
+                <li><Link to={"/admin/dashboard/slider/add-slider"}> Add Slider</Link></li>
+                <li><Link to={"/admin/dashboard/slider/table"}> Slider table</Link></li>
+              </ul>
+            </li>
+          </ul> */}
+          <ul className="ml-6">
+            <li><Link to="#">Mange Section</Link>
+              <ul>
+                <li><Link to={"/admin/dashboard/section/manage"}>Manage Sections</Link></li>
+                <li><Link to={"/admin/dashboard/section/create"}> Create Section</Link></li>
+              </ul>
+            </li>
+          </ul>
           
           <ul className="ml-6">
             <li><Link to="#">Product</Link>
               <ul>
                 <li><Link to={"/admin/dashboard/product/add-product"}> Add product to home</Link></li>
+                <li><Link to={"/admin/dashboard/product/manage-product"}> Manage product to home</Link></li>
                 {/* <li><Link to={"/admin/user/business"}> Business User</Link></li> */}
               </ul>
             </li>
@@ -163,9 +181,107 @@ const Sidebar = (props) => {
           </ul>
         </details>
             </li>
+            <li>
+              <details className="group">
+                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
+                  <Boxes /> Products Management
+                </summary>
+                <ul className="ml-6">
+                  <li>
+                    <Link to="#"><Package /> Products</Link>
+                    <ul>
+                      <li><Link to={`/admin/product`}>Manage Products</Link></li>
+                      <li><Link to="/admin/product/add-product">Add Products</Link></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <Link to="#"><Layers /> Categories</Link>
+                    <ul>
+                      <li><Link to={`/admin/product/category`}>Manage Categories</Link></li>
+                      <li><Link to={`/admin/product/category/add-category`}>Add Categories</Link></li>
+                    </ul>
+                  </li>
+                 
+                  <li>
+                    <Link to="#"><Sliders /> Attributes</Link>
+                    <ul>
+                      <li><Link to="/admin/product/attributes/">Manage Attributes</Link></li>
+                      <li><Link to="/admin/product/attributes/add-attributes">Add Attributes</Link></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <Link to="#"><Tag /> Brands</Link>
+                    <ul>
+                      <li><Link to="/admin/product/brand">Manage Brands</Link></li>
+                      <li><Link to="/admin/product/brand/add-brand">Add Brands</Link></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <Link to="#"><Layers /> Menu</Link>
+                    <ul>
+                      <li><Link to={`/admin/product/menu`}>Manage Menu</Link></li>
+                      <li><Link to={`/admin/product/menu/add-menu`}>Add Menu</Link></li>
+                    </ul>
+                  </li>
+                </ul>
+              </details>
+            </li>
 
-
-
+            <li>
+              <details className="group">
+                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
+                <Package />Order Management
+                </summary>
+                <ul className="ml-6">
+                  <li>
+                    <Link to="#"><ShoppingCart /> Sale Order</Link>
+                    <ul >
+                      <li><Link to={ `/admin/orders`}>My Orders</Link ></li>
+                      <li><Link to="/admin/orders/branch">Branch Order</Link></li>
+                      <li><Link to="/admin/orders/seller">Seller Order</Link></li>
+                    </ul>
+                  </li>
+                </ul>
+              </details>
+            </li>
+     
+                  <li>
+                    <Link to="/admin/media-setting"><Image />Media Setting</Link>
+                 
+            </li>
+            <li>
+              <details className="group">
+                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
+                <ReceiptText /> Tax Management
+                </summary>
+                <ul className="ml-6">
+                  <li>
+                    <Link to=""><FileText /> Tax</Link>
+                    <ul>
+                      <li><Link to={`/admin/taxes/gst-tax`}>Manage GST/TAX</Link></li>
+                      {/* <li><Link to="#">Create GST/TAX</Link></li> */}
+                      <li><Link to="/admin/taxes/hsn-sac">Manage HSN/SAC</Link></li>
+                    </ul>
+                  </li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details className="group">
+                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
+                  <Building /> Warehouse Management
+                </summary>
+                <ul className="ml-6">
+                  <li>
+                    <Link to="#"><Home /> Warehouse</Link>
+                    <ul>
+                      <li><Link to="/admin/warehouse/table">Manage Warehouse</Link></li>
+                      <li><Link to="/admin/warehouse/create">Create Warehouse</Link></li>
+                    </ul>
+                  </li>
+                </ul>
+              </details>
+            </li>
             <li>
               <details className="group">
                 <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
@@ -211,23 +327,6 @@ const Sidebar = (props) => {
 
 
 
-            <li>
-              <details className="group">
-                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
-                <Package />Order Management
-                </summary>
-                <ul className="ml-6">
-                  <li>
-                    <Link to="#"><ShoppingCart /> Sale Order</Link>
-                    <ul >
-                      <li><Link to={ `/admin/orders`}>My Orders</Link ></li>
-                      <li><Link to="/admin/orders/branch">Branch Order</Link></li>
-                      <li><Link to="/admin/orders/seller">Seller Order</Link></li>
-                    </ul>
-                  </li>
-                </ul>
-              </details>
-            </li>
 
 
             <li>
@@ -247,61 +346,9 @@ const Sidebar = (props) => {
               </details>
             </li>
             
-            <li>
-              <details className="group">
-                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
-                  <Boxes /> Products Management
-                </summary>
-                <ul className="ml-6">
-                  <li>
-                    <Link to="#"><Package /> Products</Link>
-                    <ul>
-                      <li><Link to={`/admin/product`}>Manage Products</Link></li>
-                      <li><Link to="/admin/product/add-product">Add Products</Link></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="#"><Layers /> Categories</Link>
-                    <ul>
-                      <li><Link to={`/admin/product/category`}>Manage Categories</Link></li>
-                      <li><Link to={`/admin/product/category/add-category`}>Add Categories</Link></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="#"><Sliders /> Attributes</Link>
-                    <ul>
-                      <li><Link to="/admin/product/attributes/">Manage Attributes</Link></li>
-                      <li><Link to="/admin/product/attributes/add-attributes">Add Attributes</Link></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link to="#"><Tag /> Brands</Link>
-                    <ul>
-                      <li><Link to="/admin/product/brand">Manage Brands</Link></li>
-                      <li><Link to="/admin/product/brand/add-brand">Add Brands</Link></li>
-                    </ul>
-                  </li>
-                </ul>
-              </details>
-            </li>
+      
 
-            <li>
-              <details className="group">
-                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
-                <ReceiptText /> Tax Management
-                </summary>
-                <ul className="ml-6">
-                  <li>
-                    <Link to=""><FileText /> Tax</Link>
-                    <ul>
-                      <li><Link to={`/admin/taxes/gst-tax`}>Manage GST/TAX</Link></li>
-                      {/* <li><Link to="#">Create GST/TAX</Link></li> */}
-                      <li><Link to="/admin/taxes/hsn-sac">Manage HSN/SAC</Link></li>
-                    </ul>
-                  </li>
-                </ul>
-              </details>
-            </li>
+    
 
 
             <li>
@@ -447,22 +494,7 @@ const Sidebar = (props) => {
                 </ul>
               </details>
             </li>
-            <li>
-              <details className="group">
-                <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
-                  <Building /> Branch Management
-                </summary>
-                <ul className="ml-6">
-                  <li>
-                    <Link to="#"><Home /> Branch</Link>
-                    <ul>
-                      <li><Link to="#">Manage Branch</Link></li>
-                      <li><Link to="#">Create Account</Link></li>
-                    </ul>
-                  </li>
-                </ul>
-              </details>
-            </li>
+        
 
             <li>
               <details className="group">

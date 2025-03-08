@@ -57,16 +57,35 @@ import AddPopularCategory from '../admin/pages/dashboard/AddPopularCategory'
 import UploadImage from '../admin/pages/dashboard/UploadImage'
 import Banner from '../admin/pages/dashboard/Banner'
 import PopularCategory from '../admin/pages/dashboard/PopularCategory'
+import CreateWarehouse from '../admin/pages/branch/CreateBranch'
+import WarehouseTable from '../admin/pages/branch/Branch'
+import ProductHome from '../admin/pages/dashboard/ManageProductHome'
+import AddSlider from '../admin/pages/dashboard/AddSlider'
+import Slider from '../admin/pages/dashboard/Slider'
+import SectionManager from '../admin/pages/dashboard/SectionManager'
+import CreateSection from '../admin/pages/dashboard/CreateSection'
+import SectionDetail from '../admin/pages/dashboard/EditSection'
+import Menu from '../admin/pages/product/Menu'
+import AddMenu from '../admin/pages/product/AddMenu'
+import EditMenu from '../admin/pages/product/Editmenu'
+import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
 const AdminRoutes = () => {
   return (
   <>
    <AdminContext>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          <Route path='/media-setting' element={<MediaSetting/>}/>
           {/* dashboard */}
+          <Route path='/dashboard/section/manage' element={<SectionManager/>}/>
+          <Route path='/dashboard/section/:id' element={<SectionDetail/>}/>
+          <Route path='/dashboard/section/create' element={<CreateSection/>}/>
           <Route path='/dashboard/banner/add-banner' element={<AddBanner/>}/>
           <Route path='/dashboard/banner/table' element={<Banner/>}/>
+          <Route path='/dashboard/slider/add-slider' element={<AddSlider/>}/>
+          <Route path='/dashboard/slider/table' element={<Slider/>}/>
           <Route path='/dashboard/product/add-product' element={<AddProductHome/>}/>
+          <Route path='/dashboard/product/manage-product' element={<ProductHome/>}/>
           <Route path='/dashboard/image/upload' element={<UploadImage />}/>
           <Route path='/dashboard/category/popular' element={<AddPopularCategory/>}/>
           <Route path='/dashboard/category/popular-table' element={<PopularCategory/>}/>
@@ -86,6 +105,9 @@ const AdminRoutes = () => {
           <Route path='/orders' element={<Orders/>}/>
           <Route path='/orders/branch' element={<OrdersBranch/>}/>
           <Route path='/orders/seller' element={<OrdersSeller/>}/>
+          {/* Warehouse */}
+          <Route path='/warehouse/create' element={<CreateWarehouse/>}/>
+          <Route path='/warehouse/table' element={<WarehouseTable/>}/>
           {/* return  */}
           <Route path='/returns/' element={<Returns/>}/>
           <Route path='/returns/sale-verify' element={<SaleVerifyReturns/>}/>
@@ -96,6 +118,9 @@ const AdminRoutes = () => {
           <Route path='/product/category' element={<Category/>}/>
           <Route path='/product/category/add-category' element={<AddCategory/>}/>
           <Route path='/product/category/edit-category/:id' element={<EditCategory/>}/>
+          <Route path='/product/menu' element={<Menu/>}/>
+          <Route path='/product/menu/add-menu' element={<AddMenu/>}/>
+          <Route path='/product/menu/edit-menu/:id' element={<EditMenu/>}/>
           <Route path='/product/attributes/' element={<Attributes/>}/>
           <Route path='/product/attributes/add-attributes' element={<AddAttributes/>}/>
           <Route path='/product/brand' element={<Brand/>}/>
