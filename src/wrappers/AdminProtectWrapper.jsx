@@ -6,7 +6,7 @@ const AdminProtectWrapper = ({children}) => {
     const token = localStorage.getItem('token')
     const navigate = useNavigate();
     if (!token) {
-        navigate('/admi/login')
+        navigate('/admin/login')
     }
 
    useEffect(()=>{

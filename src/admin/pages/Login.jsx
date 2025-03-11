@@ -12,23 +12,24 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const {admin, setAdmin} = React.useContext(AdminDataContext);
- useEffect(()=>{
-  if(token){
-    navigate('/admin')
-  }
- },[token])
+  const { admin, setAdmin } = React.useContext(AdminDataContext)
+  useEffect(() => {
+    if (token) {
+      navigate('/admin');
+    }
+  }, [token]);
+
   const onSubmit = async (data) => {
     const payLoad = {
-        username: data.email,
-        password: data.password
-    }
+      username: data.email,
+      password: data.password,
+    };
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/admin/login`, payLoad);
     const result = response.data;
-    if(response.status === 200){
-        setAdmin(result.admin)
-        localStorage.setItem('token', result.token)
-        navigate('/')
+    if (response.status === 200) {
+      setAdmin(result.admin);
+      localStorage.setItem('token', result.token);
+      navigate('/admin')
     }
   };
 
@@ -47,23 +48,22 @@ const Login = () => {
           </h1>
         </div>
         <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-        {errors.email && (
-                <div className="chat chat-end absolute right-[250px]">
-                <div className="chat-bubble">{errors.email.message}</div>
-              </div>
-            )}
+          {errors.email && (
+            <div className="chat chat-end absolute right-[250px]">
+              <div className="chat-bubble">{errors.email.message}</div>
+            </div>
+          )}
           <div className="form-control">
             <label className="label">
               <span className="label-text">Email</span>
             </label>
-           
             <input
+            autoComplete='true'
               type="email"
               placeholder="email"
               className="input input-bordered"
               {...register('email', { required: 'Email is required' })}
             />
-           
           </div>
           <div className="form-control">
             <label className="label">
@@ -71,6 +71,7 @@ const Login = () => {
             </label>
             <input
               type="password"
+                  autoComplete='true'
               placeholder="password"
               className="input input-bordered"
               {...register('password', {
@@ -82,9 +83,9 @@ const Login = () => {
               })}
             />
             {errors.password && (
-                 <div className="chat chat-end absolute right-[250px]">
-                 <div className="chat-bubble">{errors.password.message}</div>
-               </div>
+              <div className="chat chat-end absolute right-[250px]">
+                <div className="chat-bubble">{errors.password.message}</div>
+              </div>
             )}
           </div>
           <div className="form-control mt-6">

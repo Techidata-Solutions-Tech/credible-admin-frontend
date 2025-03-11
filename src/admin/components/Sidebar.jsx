@@ -74,7 +74,7 @@ const Sidebar = (props) => {
             <li className="p-1 flex justify-between items-center border-b">
               <div className="flex items-center gap-2">
                 <img
-                  src="/api/placeholder/32/32"
+                  src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
                   alt="Credible"
                   className="w-8 h-8 text-2xl font-semibold"
                 />
