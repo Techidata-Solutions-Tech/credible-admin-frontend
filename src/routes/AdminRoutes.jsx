@@ -69,6 +69,7 @@ import Menu from '../admin/pages/product/Menu'
 import AddMenu from '../admin/pages/product/AddMenu'
 import EditMenu from '../admin/pages/product/Editmenu'
 import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
+import ManageUsers from '../admin/pages/users/ManageUsers'
 const AdminRoutes = () => {
   return (
   <>
@@ -128,6 +129,8 @@ const AdminRoutes = () => {
           {/* taxes */}
           <Route path='/taxes/hsn-sac' element={<TaxHSNSAC/>}/>
           <Route path='/taxes/gst-tax' element={<Taxes/>}/>
+          {/* Users */}
+          <Route path='/users/manage' element={<ManageUsers/>}/>
           {/* Marketing */}
           <Route path='/marketing/admin-coupon' element={<AdminCoupon/>}/>
           <Route path='/marketing/create-coupon' element={<CreateCoupon/>}/>

@@ -586,7 +586,7 @@ const Sidebar = (props) => {
                   <Users /> Users Management
                 </summary>
                 <ul className="ml-6">
-                  <li><Link to="#">Manage Users</Link></li>
+                  <li><Link to="/admin/users/manage">Manage Users</Link></li>
                   <li><Link to="#">Add Users</Link></li>
                 </ul>
               </details>

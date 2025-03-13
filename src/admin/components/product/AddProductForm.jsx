@@ -1,5 +1,6 @@
 import React, { useEffect, useState , useReducer } from 'react';
 import { useForm } from 'react-hook-form';
+import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const AddProductForm = () => {
@@ -7,8 +8,10 @@ const AddProductForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [productId, setProductId] = useState(null);
   const { register, handleSubmit, setValue,watch, formState: { errors } } = useForm();
-
-  
+  const [taxData, setTaxData] = useState([]);
+  const [selectedTaxes, setSelectedTaxes] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 
   const steps = [
     { number: 1, label: 'Category' },
@@ -45,7 +48,35 @@ const AddProductForm = () => {
           console.error("Error fetching categories:", error);
         }
       };
-
+      const fetchTaxData = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax`);
+          const data = await response.json();
+          if (response.ok) {
+            setTaxData(data.data);
+          } else {
+            toast.error(`Error fetching tax data: ${data.message}`);
+          }
+        } catch (error) {
+          toast.error(`Error fetching tax data: ${error.message}`);
+        }
+      };
+      const fetchWarehouses = async () => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/warehouse`);
+          const data = await response.json();
+          if (data.success) {
+            setWarehouses(data.data);
+          } else {
+            console.error('Failed to fetch warehouses');
+          }
+        } catch (error) {
+          console.error('Error fetching warehouses:', error);
+        }
+      };
+  
+      fetchWarehouses();
+      fetchTaxData();
      
       fetchCategoryParent();
     }, []);
@@ -190,10 +221,11 @@ const AddProductForm = () => {
       }
 
       if(currentStep === 6){
-
+        const selectedTaxIds = selectedTaxes.map((tax) => tax.value);
         const payLoad = {
           taxCountry: data.taxCountry,
           taxClass: data.taxClass,
+          selectedTaxIds,
           countryTaxCode: data.countryTaxCode,
           hsnSacCode: data.hsnSacCode,
           taxType: data.taxType,
@@ -212,7 +244,13 @@ const AddProductForm = () => {
       
       }
       if(currentStep === 7){
-
+        useEffect(() => {
+          if (selectedWarehouse) {
+            setValue("warehouseId", selectedWarehouse.warehouseId);
+            setValue("warehouseLocation", selectedWarehouse.location);
+            setValue("warehouseAddress", selectedWarehouse.address);
+          }
+        }, [selectedWarehouse, setValue]);
         const payLoad = {
           warehouseId: data.warehouseId,
           warrantyType: data.warrantyType,
@@ -768,19 +806,24 @@ const AddProductForm = () => {
               </div>
         
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Tax Class</label>
-                <select
-                  {...register("taxClass", { required: "Tax class is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                >
-                  <option value="">Select tax class...</option>
-                  <option value="standard">Standard</option>
-                  <option value="exempt">Exempt</option>
-                </select>
-                {errors.taxClass && (
-                  <p className="text-red-500 text-sm mt-1">{errors.taxClass.message}</p>
+                <label className="block text-md font-semibold text-gray-700 mb-1">Select Taxes</label>
+                <Select
+                  isMulti
+                  name="taxes"
+                  options={taxData.map((tax) => ({
+                    value: tax.id,
+                    label: `${tax.displayName} (${tax.percentage}%)`,
+                  }))}
+                  value={selectedTaxes}
+                  onChange={setSelectedTaxes} 
+                  getOptionLabel={(e) => e.label} 
+                  getOptionValue={(e) => e.value} 
+                />
+                {errors.taxes && (
+                  <p className="text-red-500 text-sm mt-1">{errors.taxes.message}</p>
                 )}
               </div>
+
         
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">Country Tax Code</label>
@@ -961,127 +1004,110 @@ const AddProductForm = () => {
 
         case 7: return (
           <div className="space-y-4 container shadow-lg rounded-md p-4">
-            {/* Warehouse Details Section */}
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse ID</label>
-              <input
-                type="text"
-                {...register("warehouseId", { required: "Warehouse ID is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.warehouseId && (
-                <p className="text-red-500 text-sm mt-1">{errors.warehouseId.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Type</label>
-              <select
-                {...register("warrantyType", { required: "Warranty type is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select warranty type...</option>
-                <option value="standard">Standard</option>
-                <option value="extended">Extended</option>
-                <option value="none">None</option>
-              </select>
-              {errors.warrantyType && (
-                <p className="text-red-500 text-sm mt-1">{errors.warrantyType.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Location</label>
-              <input
-                type="text"
-                {...register("warehouseLocation", { required: "Warehouse location is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.warehouseLocation && (
-                <p className="text-red-500 text-sm mt-1">{errors.warehouseLocation.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Address</label>
-              <textarea
-                {...register("warehouseAddress", { required: "Warehouse address is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-                rows="3"
-              />
-              {errors.warehouseAddress && (
-                <p className="text-red-500 text-sm mt-1">{errors.warehouseAddress.message}</p>
-              )}
-            </div>
-        
-            {/* Warranty Details Section */}
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Applicable</label>
-              <select
-                {...register("warrantyApplicable", { required: "Warranty applicable is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select warranty applicability...</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-              {errors.warrantyApplicable && (
-                <p className="text-red-500 text-sm mt-1">{errors.warrantyApplicable.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Type</label>
-              <select
-                {...register("warrantyTypeDetails", { required: "Warranty type is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select warranty type...</option>
-                <option value="standard">Standard</option>
-                <option value="extended">Extended</option>
-                <option value="none">None</option>
-              </select>
-              {errors.warrantyTypeDetails && (
-                <p className="text-red-500 text-sm mt-1">{errors.warrantyTypeDetails.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty</label>
-              <input
-                type="text"
-                {...register("warranty", { required: "Warranty is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.warranty && (
-                <p className="text-red-500 text-sm mt-1">{errors.warranty.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Location</label>
-              <input
-                type="text"
-                {...register("warrantyLocation", { required: "Warranty location is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.warrantyLocation && (
-                <p className="text-red-500 text-sm mt-1">{errors.warrantyLocation.message}</p>
-              )}
-            </div>
-        
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Duration (months)</label>
-              <input
-                type="number"
-                {...register("warrantyDuration", { required: "Warranty duration is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.warrantyDuration && (
-                <p className="text-red-500 text-sm mt-1">{errors.warrantyDuration.message}</p>
-              )}
-            </div>
+          {/* Warehouse Select Dropdown */}
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Select Warehouse</label>
+            <select
+              {...register("warehouseId", { required: "Warehouse ID is required" })}
+              onChange={(e) => {
+                const selectedWarehouse = warehouses.find((w) => w.id === parseInt(e.target.value));
+                setSelectedWarehouse(selectedWarehouse);
+              }}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+            >
+              <option value="">Select a warehouse...</option>
+              {warehouses.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name} - {warehouse.city}, {warehouse.state}
+                </option>
+              ))}
+            </select>
+            {errors.warehouseId && <p className="text-red-500 text-sm mt-1">{errors.warehouseId.message}</p>}
           </div>
+    
+          {/* Warehouse Location */}
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Location</label>
+            <input
+              type="text"
+              {...register("warehouseLocation", { required: "Warehouse location is required" })}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+              value={selectedWarehouse ? selectedWarehouse.location : ''}
+              readOnly
+            />
+            {errors.warehouseLocation && <p className="text-red-500 text-sm mt-1">{errors.warehouseLocation.message}</p>}
+          </div>
+    
+          {/* Warehouse Address */}
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Address</label>
+            <textarea
+              {...register("warehouseAddress", { required: "Warehouse address is required" })}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+              rows="3"
+              value={selectedWarehouse ? selectedWarehouse.address : ''}
+              readOnly
+            />
+            {errors.warehouseAddress && <p className="text-red-500 text-sm mt-1">{errors.warehouseAddress.message}</p>}
+          </div>
+    
+          {/* Warranty Details Section */}
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Applicable</label>
+            <select {...register("warrantyApplicable", { required: "Warranty applicable is required" })} className="w-full px-4 py-2 border rounded-md bg-transparent">
+              <option value="">Select warranty applicability...</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+            {errors.warrantyApplicable && <p className="text-red-500 text-sm mt-1">{errors.warrantyApplicable.message}</p>}
+          </div>
+    
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Type</label>
+            <select {...register("warrantyTypeDetails", { required: "Warranty type is required" })} className="w-full px-4 py-2 border rounded-md bg-transparent">
+              <option value="">Select warranty type...</option>
+              <option value="standard">Standard</option>
+              <option value="extended">Extended</option>
+              <option value="none">None</option>
+            </select>
+            {errors.warrantyTypeDetails && <p className="text-red-500 text-sm mt-1">{errors.warrantyTypeDetails.message}</p>}
+          </div>
+    
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty</label>
+            <input
+              type="text"
+              {...register("warranty", { required: "Warranty is required" })}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+            />
+            {errors.warranty && <p className="text-red-500 text-sm mt-1">{errors.warranty.message}</p>}
+          </div>
+    
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Location</label>
+            <input
+              type="text"
+              {...register("warrantyLocation", { required: "Warranty location is required" })}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+            />
+            {errors.warrantyLocation && <p className="text-red-500 text-sm mt-1">{errors.warrantyLocation.message}</p>}
+          </div>
+    
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Duration (months)</label>
+            <input
+              type="number"
+              {...register("warrantyDuration", { required: "Warranty duration is required" })}
+              className="w-full px-4 py-2 border rounded-md bg-transparent"
+            />
+            {errors.warrantyDuration && <p className="text-red-500 text-sm mt-1">{errors.warrantyDuration.message}</p>}
+          </div>
+    
+          {/* Submit Button */}
+          <button type="button" onClick={handleSubmit(onSubmit)} className="w-full px-4 py-2 bg-blue-500 text-white rounded-md">
+            Submit
+          </button>
+        </div>
         );
         
 
