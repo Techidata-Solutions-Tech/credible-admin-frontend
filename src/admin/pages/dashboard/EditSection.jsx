@@ -1,51 +1,57 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import Navbar from "../../components/Navbar";
+import { toast, ToastContainer } from "react-toastify";
 import Select from "react-select";
+import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
+import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
 
 const SectionDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const dummyData = {
-    title: "Divya Pratap",
-    selectedProducts: [
-      {
-        product_name: "Channa Dal",
-        main_image:
-          "https://m.media-amazon.com/images/I/51hK8qXV9NL._SX300_SY300_QL70_FMwebp_.jpg",
-        value: 23,
-      },
-      {
-        product_name: "iphone 15 pro max",
-        main_image: "main image url",
-        value: 16,
-      },
-    ],
-  };
-
-  const [section, setSection] = useState(dummyData);
+  const [section, setSection] = useState({ title: "", selectedProducts: [] });
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
     axios
-      .get(
-        `${
-          import.meta.env.VITE_BASE_URL
-        }/api/admin/getAllProducts?page=0&limit=2`
-      )
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts?page=0&limit=100`)
       .then((response) => {
         const formattedProducts = response.data.data.map((product) => ({
           product_name: product.product_name,
-          value: product.value,
+          value: product.id, 
           main_image: product.main_image,
         }));
         setAllProducts(formattedProducts);
       })
-      .catch((error) => console.error("Error fetching products:", error));
-  }, []);
+      .catch((error) => {
+        console.error("Error fetching products:", error);
+        toast.error("Failed to fetch products.");
+      });
+
+    axios
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`)
+      .then((response) => {
+        if (response.data.status) {
+          const sectionData = response.data.data;
+          setSection({
+            title: sectionData.name,
+            selectedProducts: sectionData.products.map((product) => ({
+              value: product.id,
+              product_name: product.product_name,
+              main_image: product.main_image,
+            })),
+          });
+        } else {
+          toast.error("Failed to fetch section details.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching section:", error);
+        toast.error("Failed to fetch section details.");
+      });
+  }, [id]);
 
   const handleTitleChange = (e) => {
     setSection({ ...section, title: e.target.value });
@@ -68,9 +74,25 @@ const SectionDetail = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitting section data:", section);
-    alert("Section updated successfully!");
-    navigate("/sections");
+    const data = {
+      name: section.title,
+      products: section.selectedProducts.map((product) => product.value),
+    };
+
+    axios
+      .put(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, data)
+      .then((response) => {
+        if (response.data.status) {
+          toast.success("Section updated successfully!");
+          navigate("/admin/dashboard/section/manage"); 
+        } else {
+          toast.error("Failed to update section.");
+        }
+      })
+      .catch((error) => {
+        toast.error("An error occurred while updating the section.");
+        console.error("Error updating section:", error);
+      });
   };
 
   return (
@@ -108,9 +130,9 @@ const SectionDetail = () => {
                 isMulti
                 options={allProducts}
                 value={section.selectedProducts}
-                getOptionLabel={(e) => e.product_name}
-                getOptionValue={(e) => e.id}
                 onChange={handleProductChange}
+                getOptionLabel={(e) => e.product_name}
+                getOptionValue={(e) => e.value}
                 className="basic-multi-select"
                 classNamePrefix="select"
               />
@@ -157,6 +179,7 @@ const SectionDetail = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

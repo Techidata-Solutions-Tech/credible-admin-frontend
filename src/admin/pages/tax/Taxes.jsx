@@ -1,110 +1,174 @@
-import React from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
-import GSTTaxTable  from '../../components/tax/GSTTaxTable'
-import AddTaxModal from '../../components/tax/AddTaxModal'
-import PillTabs from '../../components/PillTabs'
-import { RiFilterLine, RiSearchLine, RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
+import { useEffect, useState } from "react";
+import Navbar from '../../components/Navbar';
+import Sidebar from '../../components/Sidebar';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Taxes = () => {
-    const handleAdd = async () => {
-        document.getElementById('my_modal_1').showModal()
+const TaxTable = () => {
+  const [taxes, setTaxes] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [editTax, setEditTax] = useState(null);
+  const [newTax, setNewTax] = useState({ name: "", percentage: "", displayName: "" });
+
+  const fetchTaxes = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax`);
+      const data = await res.json();
+      setTaxes(data.data);
+    } catch (error) {
+      toast.error("Failed to fetch taxes");
     }
+  };
 
-    const tabs_tax = [
-        { id: 1, label: 'Taxable' },
-        { id: 2, label: 'Non-taxable' },
-    ];
+  useEffect(() => {
+    fetchTaxes();
+  }, []);
 
-    const tabs_gst = [
-        { id: 1, label: 'GST 3%' },
-        { id: 2, label: 'GST 5%' },
-        { id: 3, label: 'GST 15%' },
-        { id: 4, label: 'GST 18%' },
-        { id: 5, label: 'GST 28%' },
-    ];
+  const toggleStatus = async (id, status) => {
+    try {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: !status })
+      });
+      toast.success("Status updated");
+      fetchTaxes();
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
+  };
 
-    return (
-        <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <Navbar />
-                
-                <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-                    <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
-                    <div className="w-full mb-6">
-                        <div className="max-w-full px-2 md:px-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
-                                <div className="w-full overflow-x-auto scrollbar-hide py-2">
-                                    <div className="flex flex-col md:flex-row gap-2 min-w-full justify-center">
-                                        <div className="w-full md:w-auto">
-                                            <PillTabs tabs={tabs_tax} />
-                                        </div>
-                                        <div className="w-full md:w-auto">
-                                            <PillTabs tabs={tabs_gst} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  const setDefault = async (id) => {
+    try {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`);
+      toast.success("Default tax updated");
+      fetchTaxes();
+    } catch (error) {
+      toast.error("Failed to set default tax");
+    }
+  };
 
-                    <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 container items-center w-full'>
-                        <div className="flex items-center gap-2 flex-wrap">
-                            <div className="dropdown">
-                                <button tabIndex={0} className="btn bg-blue-500 hover:bg-blue-600 text-white gap-2 min-w-[120px] border-none">
-                                    <RiFilterLine className="text-lg" />
-                                    Filter
-                                </button>
-                                <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                                    <li><label><input type="checkbox" /></label></li>
-                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                </ul>
-                            </div>
-                            <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                                <option disabled selected>Sort</option>
-                                <option>Homer</option>
-                                <option>Marge</option>
-                                <option>Bart</option>
-                                <option>Lisa</option>
-                                <option>Maggie</option>
-                            </select>
-                        </div>
+  const deleteTax = async (id) => {
+    if (window.confirm("Are you sure you want to delete this tax?")) {
+      try {
+        await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`, { method: "DELETE" });
+        toast.success("Tax deleted");
+        fetchTaxes();
+      } catch (error) {
+        toast.error("Failed to delete tax");
+      }
+    }
+  };
 
-                        <div className="w-full">
-                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                                <i className="ri-search-line text-gray-800"></i>
-                                <input type="text" className="grow" placeholder="Tax" />
-                            </label>
-                        </div>
+  const handleSubmit = async () => {
+    try {
+      const url = editTax ? `${import.meta.env.VITE_BASE_URL}/api/admin/tax/${editTax.id}` : `${import.meta.env.VITE_BASE_URL}/api/admin/tax`;
+      const method = editTax ? "PUT" : "POST";
+      await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newTax),
+      });
+      toast.success(editTax ? "Tax updated successfully" : "Tax added successfully");
+      setShowPopup(false);
+      setEditTax(null);
+      setNewTax({ name: "", percentage: "", displayName: "" });
+      fetchTaxes();
+    } catch (error) {
+      toast.error("Failed to save tax");
+    }
+  };
 
-                        <div className='flex justify-end'>
-                            <AddTaxModal />
-                            <button
-                                className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
-                                onClick={() => handleAdd()}
-                            >
-                                + Add Tax
-                            </button>
-                        </div>
-                    </div>
-                    </div>
-
-                    <GSTTaxTable />
-
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
-                </div>
+  return (
+    <div className="flex h-screen overflow-hidden">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar />
+        <div className="p-6">
+     <div className="flex justify-between items-center">
+     <h2 className="text-xl font-bold mb-4">Tax Setting</h2>
+          <button onClick={() => setShowPopup(true)} className="bg-green-500 text-white px-4 py-2 rounded mb-4">+ Add New Tax</button>
+       
+     </div>
+        <table className="w-full border border-gray-300">
+            <thead>
+              <tr className="bg-gray-100">
+                <th className="p-2 border">Sr. No</th>
+                <th className="p-2 border">Display Name</th>
+                <th className="p-2 border">Tax Name</th>
+                <th className="p-2 border">Tax Amount(%)</th>
+                <th className="p-2 border">Status</th>
+                <th className="p-2 border">Default</th>
+                <th className="p-2 border">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {taxes.map((tax, index) => (
+                <tr key={tax.id} className="text-center">
+                  <td className="p-2 border">{index + 1}</td>
+                  <td className="p-2 border">{tax.displayName}</td>
+                  <td className="p-2 border">{tax.name}</td>
+                  <td className="p-2 border">{tax.percentage}%</td>
+                  <td className="p-2 border">
+                    <span
+                      onClick={() => toggleStatus(tax.id, tax.status)}
+                      className={`cursor-pointer px-2 py-1 text-white rounded ${tax.status ? "bg-green-500" : "bg-red-500"}`}
+                    >
+                      {tax.status ? "Active" : "Inactive"}
+                    </span>
+                  </td>
+                  <td className="p-2 border">
+                    {tax.isDefault ? (
+                      <span className="bg-blue-500 text-white px-2 py-1 rounded">Default</span>
+                    ) : (
+                      <button onClick={() => setDefault(tax.id)} className="text-blue-500 underline">
+                        Make Default
+                      </button>
+                    )}
+                  </td>
+                  <td className="p-2 border">
+                    <button onClick={() => deleteTax(tax.id)} className="text-red-500 mr-2">🗑</button>
+                    <button onClick={() => { setEditTax(tax); setNewTax(tax); setShowPopup(true); }} className="text-blue-500">✏</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {showPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+              <div className="bg-white p-6 rounded shadow-lg">
+                <h3 className="text-lg font-bold mb-4">{editTax ? "Edit Tax" : "Add Tax"}</h3>
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={newTax.name}
+                  onChange={(e) => setNewTax({ ...newTax, name: e.target.value })}
+                  className="border p-2 w-full mb-2"
+                />
+                <input
+                  type="number"
+                  placeholder="Percentage"
+                  value={newTax.percentage}
+                  onChange={(e) => setNewTax({ ...newTax, percentage: e.target.value })}
+                  className="border p-2 w-full mb-2"
+                />
+                <input
+                  type="text"
+                  placeholder="Display Name"
+                  value={newTax.displayName}
+                  onChange={(e) => setNewTax({ ...newTax, displayName: e.target.value })}
+                  className="border p-2 w-full mb-2"
+                />
+                <button onClick={handleSubmit} className="bg-green-500 text-white px-4 py-2 rounded">Save</button>
+                <button onClick={() => { setShowPopup(false); setEditTax(null); setNewTax({ name: "", percentage: "", displayName: "" }); }} className="ml-2 px-4 py-2 border rounded">Cancel</button>
+              </div>
             </div>
+          )}
         </div>
-    )
-}
+      </div>
+      <ToastContainer />
+    </div>
+  );
+};
 
-export default Taxes
+export default TaxTable;
