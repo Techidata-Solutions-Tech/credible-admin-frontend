@@ -1,80 +1,145 @@
-import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
-import UserTable from '../../components/user/UserTable'
-import PillTabs from '../../components/PillTabs'
+import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaEye } from "react-icons/fa";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
 
-const CustomerPersonalUser = () => {
-    const tabs_user = [
-        { id: 1, label: 'All (1000)' },
-        { id: 2, label: 'Active (800)' },
-        { id: 3, label: 'Inactive (100)' },
-        { id: 4, label: 'Blocked (100)' },
-        { id: 5, label: 'Tash (10)' },
-    ];
 
-    return (
-        <div className='min-h-screen'>
-            <Navbar />
-            <div className='flex flex-col md:flex-row bg-gray-100'>
-                <Sidebar />
-                <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
-                    <div className="w-full mb-6">
-                        <div className="max-w-full px-2 md:px-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
-                                <div className="w-full overflow-x-auto scrollbar-hide py-2">
-                                    <div className="min-w-full flex justify-center">
-                                        <PillTabs tabs={tabs_user} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+const UserTable = () => {
+  const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 container items-center w-full mt-10'>
-                        <div className='flex gap-2 flex-wrap'>
-                            <div className="dropdown">
-                                <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                                    Filter
-                                </div>
-                                <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                                    <li><label><input type="checkbox" /></label></li>
-                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                </ul>
-                            </div>
-                            <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                                <option disabled selected>Sort</option>
-                                <option>Homer</option>
-                                <option>Marge</option>
-                                <option>Bart</option>
-                                <option>Lisa</option>
-                                <option>Maggie</option>
-                            </select>
-                        </div>
+  useEffect(() => {
+    fetchUsers();
+  }, [page]);
 
-                        <div className="w-full">
-                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                                <i className="ri-search-line"></i>
-                                <input type="text" className="grow" placeholder="Customer" />
-                            </label>
-                        </div>
-                    </div>
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/user?page=${page - 1}&limit=20`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      setUsers(data.data);
+      setTotalPages(data.pagination.totalPages);
+    } catch (error) {
+      toast.error("Failed to fetch users");
+    }
+  };
 
-                    <UserTable />
+  const toggleBlockStatus = async (id, isBlocked) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/user/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          isAccountBlockedByAdmin: !isBlocked,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Error updating user status");
+      }
+      toast.success(`User ${!isBlocked ? "Blocked" : "Unblocked"} Successfully`);
+      fetchUsers();
+    } catch (error) {
+      toast.error("Error updating user status");
+    }
+  };
 
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  const openModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
+  };
+
+  return (
+    <div className="min-h-screen">
+    <Navbar />
+    <div className="flex flex-col md:flex-row bg-gray-100">
+      <Sidebar />
+    <div className="p-6 bg-gray-100 min-h-screen flex-1">
+      <ToastContainer position="top-right" autoClose={3000} />
+      <h1 className="text-2xl mb-2 font-semibold">Manage Users</h1>
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="p-3">ID</th>
+              <th className="p-3">Name</th>
+              <th className="p-3">Email</th>
+              <th className="p-3">Phone</th>
+              <th className="p-3">Type</th>
+              <th className="p-3">Account</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id} className="border-b text-center">
+                <td className="p-3">{user.id}</td>
+                <td className="p-3">{user.firstName || "N/A"} {user.lastName || ""}</td>
+                <td className="p-3">{user.email}</td>
+                <td className="p-3">{user.phone || "N/A"}</td>
+                <td className="p-3">{user.kind ==="customer"? "Customer" : "Supplier"}</td>
+                <td className="p-3">{user.isAccountCompleted ? "Completed" : "Incomplete"}</td>
+                <td className="p-3 flex justify-center items-center space-x-4">
+                  <button 
+                    onClick={() => toggleBlockStatus(user.id, user.isAccountBlockedByAdmin)} 
+                    className={`px-3 py-1 text-white rounded ${user.isAccountBlockedByAdmin ? "bg-red-500" : "bg-green-500"}`}
+                  >
+                    {user.isAccountBlockedByAdmin ? "Blocked" : "Unblocked"}
+                  </button>
+                  <button onClick={() => openModal(user)} className="text-blue-600 text-lg">
+                    <FaEye />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-center mt-4 space-x-4">
+        <button 
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))} 
+          disabled={page === 1} 
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <span className="font-semibold">Page {page} of {totalPages}</span>
+        <button 
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))} 
+          disabled={page === totalPages} 
+          className="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+      {isModalOpen && selectedUser && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h2 className="text-xl font-semibold mb-4">User Details</h2>
+            <p><strong>ID:</strong> {selectedUser.id}</p>
+            <p><strong>Name:</strong> {selectedUser.firstName || "N/A"} {selectedUser.lastName || ""}</p>
+            <p><strong>Email:</strong> {selectedUser.email}</p>
+            <p><strong>Phone:</strong> {selectedUser.phone || "N/A"}</p>
+            <p ><strong>Account:</strong> {selectedUser.isAccountCompleted ? "Completed" : "Incomplete"}</p>
+            <p><strong>Status:</strong> {selectedUser.isAccountBlockedByAdmin ? "Blocked" : "Unblocked"}</p>
+            <button onClick={() => setIsModalOpen(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
+              Close
+            </button>
+          </div>
         </div>
-    )
-}
+      )}
+    </div>
+    </div>
+    </div>
+  );
+};
 
-export default CustomerPersonalUser
+export default UserTable;
