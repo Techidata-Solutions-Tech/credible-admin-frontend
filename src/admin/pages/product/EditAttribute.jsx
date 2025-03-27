@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const AttributeForm = () => {
+
+const EditAttribute = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [attributes, setAttributes] = useState([
     {
       name: "",
@@ -16,7 +21,31 @@ const AttributeForm = () => {
     },
   ]);
   const [isMultiple, setIsMultiple] = useState(false);
-  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchAttribute = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/get-attribute/${id}`
+        );
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setAttributes(data);
+          setIsMultiple(true);
+        } else {
+          setAttributes([data]);
+          setIsMultiple(false);
+        }
+      } catch (error) {
+        console.error("Failed to fetch attribute:", error);
+        toast.error("Failed to load attribute.");
+      }
+    };
+
+    fetchAttribute();
+  }, [id]);
+
   const handleChange = (index, field, value) => {
     const updatedAttributes = [...attributes];
     if (field === "value") {
@@ -50,38 +79,27 @@ const AttributeForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const payload = isMultiple ? attributes : [attributes[0]];
 
     try {
       const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/attribute`,
+        `${import.meta.env.VITE_BASE_URL}/update-attribute/${id}`,
         {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         }
       );
 
-      const data = await res.json();
-      toast.success("Attributes saved successfully!");
-      setAttributes([
-        {
-          name: "",
-          value: [""],
-          type: "text",
-          order: 0,
-          metaTitle: "",
-          metaKeyword: "",
-          metaDescription: "",
-        },
-      ])
+      if (res.ok) {
+        toast.success("Attribute updated successfully!");
+        setTimeout(() => navigate("/manage-attributes"), 2000);
+      } else {
+        toast.error("Failed to update attribute.");
+      }
     } catch (error) {
-      toast.error("Error:", error);
+      console.error("Error updating attribute:", error);
+      toast.error("Error updating attribute.");
     }
   };
 
@@ -91,7 +109,7 @@ const AttributeForm = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <h1 className="text-3xl font-bold mb-6">Add Attributes</h1>
+          <h1 className="text-3xl font-bold mb-6">Edit Attribute</h1>
 
           <div className="flex items-center mb-4">
             <label className="mr-4">Mode:</label>
@@ -134,18 +152,16 @@ const AttributeForm = () => {
                   </div>
 
                   <div>
-                    <label className="block mb-2">Values (comma separated)</label>
+                    <label className="block font-bold">Attribute Value</label>
                     <input
                       type="text"
-                      name="value"
                       value={attr.value.join(",")}
                       onChange={(e) =>
                         handleChange(index, "value", e.target.value)
                       }
+                      placeholder="Separate values by comma"
                       className="w-full p-2 border rounded"
-                      required
                     />
-                
                   </div>
 
                   <div>
@@ -248,7 +264,7 @@ const AttributeForm = () => {
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Create
+                Update
               </button>
             </div>
           </form>
@@ -259,4 +275,4 @@ const AttributeForm = () => {
   );
 };
 
-export default AttributeForm;
+export default EditAttribute;

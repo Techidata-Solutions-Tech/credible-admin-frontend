@@ -1,230 +1,366 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import SelectImageModal from "../../components/dashboard/SelectImageModal";
 const AddCategory = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const [featureImage, setFeatureImage] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [formType, setFormType] = useState("category");
+  const [selectedParentId, setSelectedParentId] = useState(null);
+  const [count, setCount] = useState(0);
+
   useEffect(() => {
     const fetchCategories = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("No token found!");
+        return;
+      }
+
       try {
-        const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `);
-        const data = await response.json();      
-        const flatCategories = [];
-        const traverse = (nodes, depth = 0) => {
-          nodes.forEach(node => {
-            flatCategories.push({ id: node.id, name: node.name, depth });
-            if (node.children.length) {
-              traverse(node.children, depth + 1);
-            }
-          });
-        };
-        traverse(data);
-        setCategories(flatCategories);
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/admin/get-child-categories?parentId=0`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch categories");
+
+        const data = await response.json();
+        setCategories(data.categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
+        toast.error("Failed to fetch categories");
       }
     };
 
     fetchCategories();
-  }, []);
+  }, [count]);
+
+  useEffect(() => {
+    if (selectedParentId) {
+      const fetchSubcategories = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          toast.error("No token found!");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `${
+              import.meta.env.VITE_BASE_URL
+            }/api/admin/get-child-categories?parentId=${selectedParentId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (!response.ok) throw new Error("Failed to fetch subcategories");
+
+          const data = await response.json();
+          setSubcategories(data.categories);
+        } catch (error) {
+          console.error("Error fetching subcategories:", error);
+          toast.error("Failed to fetch subcategories");
+        }
+      };
+
+      fetchSubcategories();
+    }
+  }, [selectedParentId]);
+
   const onSubmit = async (data) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("No token found!");
+      return;
+    }
+
+    let parentId;
+
+    if (formType === "category") {
+      parentId = 0;
+    } else if (formType === "subcategory") {
+      parentId = parseInt(data.parentCat);
+    } else if (formType === "childcategory") {
+      parentId = parseInt(data.subCat);
+    }
 
     const payLoad = {
       name: data.name,
       seo_url: data.seo_url,
-      parentCat: parseInt(data.parentCat),
+      parentCat: parentId,
       description: data.description,
-      featureimage: 'https://media.istockphoto.com/id/185278433/photo/black-digital-slr-camera-in-a-white-background.jpg?s=612x612&w=0&k=20&c=OOCbhvOF0W-eVhhrm-TxbgLfbKhFfs4Lprjd7hiQBNU=',
+      featureimage: featureImage ||"/image.jpg",
       meta_title: data.meta_title,
       meta_keywords: data.meta_keywords,
       meta_description: data.meta_description,
-      isFeatured: data.isFeatured,
-      cat_type : data.cat_type === "True"
-    }
+      isFeatured: data.isFeatured || false,
+      cat_type: formType,
+    };
+
     try {
-      const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/add-category`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payLoad),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/add-category`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payLoad),
+        }
+      );
 
       const result = await response.json();
+
       if (response.ok) {
-        toast.success("Category submitted successfully!")
-        // alert("Category submitted successfully!");
+        toast.success(`${formType} submitted successfully!`);
+        reset();
+        setSelectedParentId(null);
+        setCount((prev) => prev + 1);
+        setSubcategories([]);
       } else {
-        toast.error(`Error: ${result.message}`)
-        // alert(`Error: ${result.message}`);
+        toast.error(`Error: ${result.message}`);
       }
     } catch (error) {
       toast.error("Something went wrong!");
     }
   };
+
   return (
-    <div className=''>
+    <div>
       <Navbar />
-      <div className='flex bg-gray-100'>
+      <div className="flex bg-gray-100">
         <Sidebar />
-        <div className=' rounded shadow-lg p-4 w-screen m-2 bg-white'>
+        <div className="rounded shadow-lg p-4 w-screen m-2 bg-white">
+          <h1 className="text-4xl text-center mb-2">Add Category</h1>
+          <div className="flex justify-around mb-4">
+            <button
+              className={`px-4 py-2 rounded ${
+                formType === "category"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-300"
+              }`}
+              onClick={() => setFormType("category")}
+            >
+              Create Category
+            </button>
+            <button
+              className={`px-4 py-2 rounded ${
+                formType === "subcategory"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-300"
+              }`}
+              onClick={() => setFormType("subcategory")}
+            >
+              Create Subcategory
+            </button>
+            <button
+              className={`px-4 py-2 rounded ${
+                formType === "childcategory"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-300"
+              }`}
+              onClick={() => setFormType("childcategory")}
+            >
+              Create Child Category
+            </button>
+          </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md">
-
-           <div className='flex justify-evenly gap-[50px]'>
-           <div className="mb-4 w-1/2">
-              <label htmlFor="name" className="block text-sm font-semibold">Name</label>
-              <input
-                id="name"
-                type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('name', { required: 'Name is required' })}
-              />
-              {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
-            </div>
-            
-            <div className="mb-4 w-1/2">
-              <label htmlFor="seo_url" className="block text-sm font-semibold">SEO URL</label>
-              <input
-                id="seo_url"
-                type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('seo_url', { required: 'Name is required' })}
-              />
-              {errors.seo_url && <p className="text-red-500 text-xs">{errors.seo_url.message}</p>}
-            </div>
-           </div>
-
-           <div className='flex justify-evenly gap-[50px]'>
-              <div className="mb-4 w-1/3">
-                <label htmlFor="parentCat" className="block text-sm font-semibold">
-                  Category
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="p-4 border rounded-md"
+          >
+            <div className="grid grid-cols-2 gap-4">
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-semibold">
+                  Name
                 </label>
-                <select
-                  id="parentCat"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register("parentCat")}
-                >
-                  <option value="0">Select a Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {"— ".repeat(cat.depth)} {cat.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.parentCat && (
-                  <p className="text-red-500 text-xs">{errors.parentCat.message}</p>
-                )}
-              </div>
-              <div className="mb-4 w-1/3">
-                <label htmlFor="featureimage" className="block text-sm font-semibold">Upload Image</label>
                 <input
-                  id="featureimage"
-                  type="file"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('featureimage', { required: 'Image is required' })}
+                  id="name"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("name", { required: "Name is required" })}
                 />
-                {errors.featureimage && <p className="text-red-500 text-xs">{errors.featureimage.message}</p>}
-              </div>
-              <div className="mb-4 w-1/3">
-                <label htmlFor="cat_type" className="block text-sm font-semibold">
-                  Category type
-                </label>
-                <select
-                  id="cat_type"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register("cat_type")}
-                >
-                  <option value={true}>Yes</option>
-                  <option value={false}>False</option>
-                </select>
-                {errors.cat_type && (
-                  <p className="text-red-500 text-xs">{errors.cat_type.message}</p>
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name.message}</p>
                 )}
               </div>
-              {/* <div className="mb-4">
-                <label htmlFor="status" className="block text-sm font-semibold">Status</label>
-                <select
-                  id="status"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('status', { required: 'Status is required' })}
+
+              <div className="mb-4">
+                <label
+                  htmlFor="seo_url"
+                  className="block text-sm font-semibold"
                 >
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-                {errors.status && <p className="text-red-500 text-xs">{errors.status.message}</p>}
-              </div> */}
-           </div>
-
-            <div className="mb-4">
-              <label htmlFor="description" className="block text-sm font-semibold">Description</label>
-              <textarea
-                id="description"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('description', { required: 'Description is required' })}
-                rows="4"
-              />
-              {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="meta_title" className="block text-sm font-semibold">Meta Title</label>
-              <input
-                id="meta_title"
-                type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('meta_title', { required: 'Meta title is required' })}
-              />
-              {errors.meta_title && <p className="text-red-500 text-xs">{errors.meta_title.message}</p>}
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="meta_keywords" className="block text-sm font-semibold">Meta Keywords</label>
-              <input
-                id="meta_keywords"
-                type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('meta_keywords', { required: 'Meta keywords are required' })}
-              />
-              {errors.meta_keywords && <p className="text-red-500 text-xs">{errors.meta_keywords.message}</p>}
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="meta_description" className="block text-sm font-semibold">Meta Description</label>
-              <textarea
-                id=" meta_description"
-                className="w-full p-2 border rounded-md bg-transparent"
-                {...register('meta_description', { required: 'Meta description is required' })}
-                rows="3"
-              />
-              {errors.meta_description && <p className="text-red-500 text-xs">{errors.meta_description.message}</p>}
-            </div>
-
-            <div className="mb-4">
-              <label className="flex items-center space-x-2">
+                  SEO URL
+                </label>
                 <input
+                  id="seo_url"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("seo_url", { required: "SEO URL is required" })}
+                />
+                {errors.seo_url && (
+                  <p className="text-red-500 text-xs">
+                    {errors.seo_url.message}
+                  </p>
+                )}
+              </div>
+
+              {formType !== "category" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="parentCat"
+                    className="block text-sm font-semibold"
+                  >
+                    Parent Category
+                  </label>
+                  <select
+                    id="parentCat"
+                    className="w-full p-2 border border-black rounded-md bg-transparent"
+                    {...register("parentCat", { required: true })}
+                    onChange={(e) => setSelectedParentId(e.target.value)}
+                  >
+                    <option value="">Select a Parent Category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {formType === "childcategory" && (
+                <div className="mb-4">
+                  <label
+                    htmlFor="subCat"
+                    className="block text-sm font-semibold"
+                  >
+                    Subcategory
+                  </label>
+                  <select
+                    id="subCat"
+                    className="w-full p-2 border border-black rounded-md bg-transparent"
+                    {...register("subCat", { required: true })}
+                  >
+                    <option value="">Select a Subcategory</option>
+                    {subcategories.map((sub) => (
+                      <option key={sub.id} value={sub.id}>
+                        {sub.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="mb-4 col-span-2">
+                <label
+                  htmlFor="description"
+                  className="block text-sm font-semibold"
+                >
+                  Description
+                </label>
+                <textarea
+                  id="description"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  rows="3"
+                  {...register("description")}
+                ></textarea>
+              </div>
+             <div className="grid sm:grid-cols-2 gap-5"> <SelectImageModal setImage={setFeatureImage} />
+             <img src={featureImage} alt="featureImage" /></div>
+              <div className="mb-4">
+                <label
+                  htmlFor="meta_title"
+                  className="block text-sm font-semibold"
+                >
+                  Meta Title
+                </label>
+                <input
+                  id="meta_title"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("meta_title")}
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="meta_keywords"
+                  className="block text-sm font-semibold"
+                >
+                  Meta Keywords
+                </label>
+                <input
+                  id="meta_keywords"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("meta_keywords")}
+                />
+              </div>
+
+              <div className="mb-4 col-span-2">
+                <label
+                  htmlFor="meta_description"
+                  className="block text-sm font-semibold"
+                >
+                  Meta Description
+                </label>
+                <textarea
+                  id="meta_description"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  rows="3"
+                  {...register("meta_description")}
+                ></textarea>
+              </div>
+
+              {/* Is Featured */}
+              <div className="mb-4 flex items-center">
+                <input
+                  id="isFeatured"
                   type="checkbox"
-                  className="w-4 h-4"
-                  {...register('isFeatured')}
+                  className="mr-2"
+                  {...register("isFeatured")}
                 />
-                <span className="text-sm font-semibold">Is Featured?</span>
-              </label>
+                <label htmlFor="isFeatured" className="text-sm font-semibold">
+                  Is Featured Category
+                </label>
+              </div>
             </div>
 
-            <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded-md">
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full p-2 bg-blue-600 text-white rounded-md"
+            >
               Submit
             </button>
           </form>
-
         </div>
       </div>
       <ToastContainer />
     </div>
-  )
-}
+  );
+};
 
-export default AddCategory
+export default AddCategory;

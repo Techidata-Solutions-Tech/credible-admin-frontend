@@ -70,6 +70,7 @@ import AddMenu from '../admin/pages/product/AddMenu'
 import EditMenu from '../admin/pages/product/Editmenu'
 import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
 import ManageUsers from '../admin/pages/users/ManageUsers'
+import EditAttribute from '../admin/pages/product/EditAttribute'
 const AdminRoutes = () => {
   return (
   <>
@@ -122,6 +123,7 @@ const AdminRoutes = () => {
           <Route path='/product/menu/add-menu' element={<AddMenu/>}/>
           <Route path='/product/menu/edit-menu/:id' element={<EditMenu/>}/>
           <Route path='/product/attributes/' element={<Attributes/>}/>
+          <Route path='/product/attributes/:id' element={<EditAttribute/>}/>
           <Route path='/product/attributes/add-attributes' element={<AddAttributes/>}/>
           <Route path='/product/brand' element={<Brand/>}/>
           <Route path='/product/brand/add-brand' element={<AddBrand/>}/>

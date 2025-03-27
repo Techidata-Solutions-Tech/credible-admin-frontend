@@ -54,7 +54,7 @@ const CreateWarehouse = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
-
+    const token = localStorage.getItem('token');
     try {
       // Convert date to ISO format
       const isoDate = formData.date ? new Date(formData.date).toISOString() : null;
@@ -62,6 +62,7 @@ const CreateWarehouse = () => {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/warehouse`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({

@@ -6,13 +6,19 @@ import { Link } from 'react-router-dom';
 import Loader from '../../../components/loader';
 
 const Category = () => {
+    const token = localStorage.getItem('token')
     const [loading, setLoading] = useState(true);
     const [toggle, setToggle] = useState(Date.now());
     const [categories, setCategories] = useState([]);
      useEffect(() => {
         const fetchCategories = async () => {
           try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy`);
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy`,{
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                  }
+            });
             const data = await response.json();
             if(response.status === 200){
                 setLoading(false)

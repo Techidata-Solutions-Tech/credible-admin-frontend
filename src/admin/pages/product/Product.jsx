@@ -7,6 +7,7 @@ import PillTabs from '../../components/PillTabs'
 import Loader from '../../../components/loader'
 
 const Product = () => {
+  const token = localStorage.getItem('token')
    const [loading, setLoading] = useState(true);
   const tabs_status = [
     { id: 1, label: 'All (200)' },
@@ -20,7 +21,13 @@ const Product = () => {
  useEffect(() => {
         const fetchCategories = async () => {
           try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts?page=1&limit=5`);
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product?page=1&limit=5`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
             const result = await response.json();
             if(response.status === 200){
               setLoading(false)

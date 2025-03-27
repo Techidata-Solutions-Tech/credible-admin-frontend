@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsThreeDots } from "react-icons/bs";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 const CategoryTable = ({categories,setToggle}) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-
+const token = localStorage.getItem('token')
   // Sample category data
   // const categories = [
   //   {
@@ -49,27 +50,34 @@ const CategoryTable = ({categories,setToggle}) => {
   }
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-single-category/${selectedCategoryId}`);
+      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-single-category/${selectedCategoryId}`,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          }});
       setToggle(Date.now())
       if (response.status === 200) {
         document.getElementById('delete_modal').close()
-        alert("Category deleted successfully");
+        toast.success("Category deleted successfully");
       }
     } catch (error) {
-      alert("Failed to delete category");
+      toast.error("Failed to delete category");
       setToggle(Date.now())
     }
   };
 
   const handleStatusChange = async (id) =>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/admin/toggle-category-status/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/admin/toggle-category-status/${id}`,{ headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }});
       setToggle(Date.now())
       if (response.status === 200) {
-        alert("Category status changed");
+        toast.success("Category status changed");
       }
     } catch (error) {
-      alert("Failed to category status changed");
+      toast.error("Failed to category status changed");
       setToggle(Date.now())
     }
   }
