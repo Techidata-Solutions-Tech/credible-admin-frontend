@@ -6,6 +6,7 @@ import BannerTable from '../../components/dashboard/BannerTable'
 import Loader from '../../../components/loader'
 
 const Banner = () => {
+    const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [banners, setBanners] = useState([]);
     const [toggle, setToggle] = useState(Date.now());
@@ -20,7 +21,13 @@ const Banner = () => {
     useEffect(()=>{
         const fetchBanners = async () => {
             try {
-              const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/get-banner`);
+              const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/get-banner`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+              );
               const result = await response.json();
               if(response.status === 200){
                 setLoading(false)

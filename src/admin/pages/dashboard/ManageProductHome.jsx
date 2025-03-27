@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 
 const ProductHome = () => {
+  const token = localStorage.getItem('token');
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -16,7 +17,12 @@ const ProductHome = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/get-productHome`
+        `${import.meta.env.VITE_BASE_URL}/api/admin/get-productHome`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       
       if (!response.ok) {

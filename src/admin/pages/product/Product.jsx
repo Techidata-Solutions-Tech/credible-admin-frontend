@@ -69,6 +69,21 @@ const Product = () => {
 
             {/* Filters and Search */}
             <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full">
+            <Link
+                to="/admin/product/add-product"
+                className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
+              >
+                + Add Product
+              </Link>
+              
+              <div className="w-full sm:w-auto">
+                <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
+                  <i className="ri-search-line text-gray-800"></i>
+                  <input type="text" className="grow" placeholder="Tax" />
+                </label>
+              </div>
+              
+              
               <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                 <div className="dropdown">
                   <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
@@ -89,20 +104,6 @@ const Product = () => {
                   <option>Maggie</option>
                 </select>
               </div>
-              
-              <div className="w-full sm:w-auto">
-                <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                  <i className="ri-search-line text-gray-800"></i>
-                  <input type="text" className="grow" placeholder="Tax" />
-                </label>
-              </div>
-              
-              <Link
-                to="/admin/product/add-product"
-                className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
-              >
-                + Add Product
-              </Link>
             </div>
 
             {/* Product Table */}

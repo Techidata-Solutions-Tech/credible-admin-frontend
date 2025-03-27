@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 const EditAttribute = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const token = localStorage.getItem('token')
   const [attributes, setAttributes] = useState([
     {
       name: "",
@@ -26,7 +26,12 @@ const EditAttribute = () => {
     const fetchAttribute = async () => {
       try {
         const res = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/get-attribute/${id}`
+          `${import.meta.env.VITE_BASE_URL}/get-attribute/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         const data = await res.json();
 
@@ -86,7 +91,11 @@ const EditAttribute = () => {
         `${import.meta.env.VITE_BASE_URL}/update-attribute/${id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            
+          "Authorization": `Bearer ${token}`,
+
+           },
           body: JSON.stringify(payload),
         }
       );

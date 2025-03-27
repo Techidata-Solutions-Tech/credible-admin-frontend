@@ -55,6 +55,25 @@ const Category = () => {
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
                         <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
+                        <div className="flex items-center justify-between w-full sm:w-auto">
+                                <Link
+                                    to={'/admin/product/category/add-category'}
+                                    className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
+                                >
+                                    Add Category
+                                </Link>
+                            </div>
+
+                            {/* Search Input */}
+                            <div className="flex-1 max-w-md">
+                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                                    <input type="text" className="grow text-blue-900 placeholder-blue-400" placeholder="Search category..." />
+                                </label>
+                            </div>
+
                             <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
                                 <div className="dropdown">
                                     <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
@@ -76,24 +95,7 @@ const Category = () => {
                                 </select>
                             </div>
 
-                            {/* Search Input */}
-                            <div className="flex-1 max-w-md">
-                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
-                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                                    <input type="text" className="grow text-blue-900 placeholder-blue-400" placeholder="Search category..." />
-                                </label>
-                            </div>
-
-                            <div className="flex items-center justify-between w-full sm:w-auto">
-                                <Link
-                                    to={'/admin/product/category/add-category'}
-                                    className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
-                                >
-                                    Add Category
-                                </Link>
-                            </div>
+                           
                         </div>
 
                         <div className="overflow-x-auto">

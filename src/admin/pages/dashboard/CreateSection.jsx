@@ -6,13 +6,20 @@ import Select from "react-select";
 import Sidebar from "../../components/Sidebar";
 import "react-toastify/dist/ReactToastify.css";
 const CreateSection = () => {
+  const token = localStorage.getItem('token');
   const [title, setTitle] = useState("");
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts`)
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
       .then((response) => response.json())
       .then((data) => setProducts(data.data))
       .catch((error) => console.error("Error fetching products:", error));
@@ -36,6 +43,7 @@ const CreateSection = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(data),
     })

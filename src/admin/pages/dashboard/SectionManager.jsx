@@ -7,13 +7,20 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const SectionManager = () => {
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
     const fetchSections = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome`);
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await response.json();
 
         if (data.status) {
@@ -37,6 +44,7 @@ const SectionManager = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ status: updatedStatus }),
       });
@@ -63,9 +71,12 @@ const SectionManager = () => {
       try {
         const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, {
           method: "DELETE",
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         });
         const data = await response.json();
-
         if (data.status) {
           toast.success(data.message);
           setSections((prevSections) => prevSections.filter((section) => section.id !== id));

@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 
 const ImageGallery = () => {
+  const token = localStorage.getItem('token');
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState(new Set());
   const [selectedFile, setSelectedFile] = useState(null);
@@ -16,7 +17,12 @@ const ImageGallery = () => {
   const fetchImages = async () => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/images`
+        `${import.meta.env.VITE_BASE_URL}/api/admin/images`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       const result = await response.json();
       setImages(result.data || []);
@@ -48,7 +54,10 @@ const ImageGallery = () => {
           `${import.meta.env.VITE_BASE_URL}/api/admin/images`,
           {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`,
+             },
             body: JSON.stringify({ images: Array.from(selectedImages) }),
           }
         );
@@ -79,6 +88,9 @@ const ImageGallery = () => {
         `${import.meta.env.VITE_BASE_URL}/api/admin/upload-image`,
         {
           method: "POST",
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
           body: formData,
         }
       );

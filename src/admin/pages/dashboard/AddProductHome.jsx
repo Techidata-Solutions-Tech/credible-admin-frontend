@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddProductHome = () => {
+  const token = localStorage.getItem('token');
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedKind, setSelectedKind] = useState(null);
   const [selectedWarehouse, setSelectedWarehouse] = useState(null);
@@ -48,6 +49,7 @@ const AddProductHome = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });

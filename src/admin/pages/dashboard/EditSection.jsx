@@ -8,6 +8,7 @@ import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
 const SectionDetail = () => {
+  const token = localStorage.getItem('token');
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -15,12 +16,19 @@ const SectionDetail = () => {
   const [allProducts, setAllProducts] = useState([]);
 
   useEffect(() => {
+    const config = {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts?page=0&limit=100`)
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts?page=0&limit=100`, config)
       .then((response) => {
         const formattedProducts = response.data.data.map((product) => ({
           product_name: product.product_name,
-          value: product.id, 
+          value: product.id,
           main_image: product.main_image,
         }));
         setAllProducts(formattedProducts);
@@ -31,7 +39,7 @@ const SectionDetail = () => {
       });
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`)
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, config)
       .then((response) => {
         if (response.data.status) {
           const sectionData = response.data.data;

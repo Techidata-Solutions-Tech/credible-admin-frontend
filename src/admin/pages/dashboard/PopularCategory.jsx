@@ -6,6 +6,7 @@ import PopularCategoryTable from '../../components/dashboard/PopularCategoryTabl
 import Loader from '../../../components/loader'
 
 const PopularCategory = () => {
+    const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [popularCategory, setPopularCategory] = useState([]);
     const [toggle, setToggle] = useState(Date.now());
@@ -20,7 +21,13 @@ const PopularCategory = () => {
     useEffect(()=>{
         const fetchPopularCategory = async () => {
             try {
-              const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory`);
+              const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory`,
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+              );
               const result = await response.json();
               if(response.status === 200){
                 setLoading(false)

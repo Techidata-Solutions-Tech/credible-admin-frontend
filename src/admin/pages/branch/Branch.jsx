@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 
 const WarehouseTable = () => {
+  const token = localStorage.getItem('token');
   const [filteredWarehouses, setFilteredWarehouses] = useState([]);
   const [sortConfig, setSortConfig] = useState({
     key: null,
@@ -17,7 +18,12 @@ const WarehouseTable = () => {
     const fetchWarehouses = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/api/warehouse`
+          `${import.meta.env.VITE_BASE_URL}/api/warehouse`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch warehouses");
@@ -204,7 +210,7 @@ const WarehouseTable = () => {
                       <td className="px-4 py-4 text-[14px] text-gray-600">
                         {warehouse.inventory ? "Active" : "-"}
                       </td>
-                      <td className="px-4 py-4 text-[14px] text-gray-600 text-blue-600 cursor-pointer">
+                      <td className="px-4 py-4 text-[14px] text-gray-600 cursor-pointer">
                         Update / Delete
                       </td>
                     </tr>
