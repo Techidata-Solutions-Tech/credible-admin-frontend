@@ -7,11 +7,16 @@ const SelectImageModal = ({ setImage }) => {
     const [images, setImages] = useState([]);
     const [activeTab, setActiveTab] = useState('gallery');
     const [selectedFile, setSelectedFile] = useState(null);
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/images`);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/images`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const result = await response.json();
                 setImages(result.data);
             } catch (error) {
@@ -33,6 +38,9 @@ const SelectImageModal = ({ setImage }) => {
         try {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/upload-image`, {
                 method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
                 body: formData
             });
             const result = await response.json();
@@ -49,21 +57,50 @@ const SelectImageModal = ({ setImage }) => {
 
     return (
         <div>
+            {/* Button to trigger the modal */}
+            <button 
+                onClick={() => document.getElementById('view_image').showModal()} 
+                className="btn bg-blue-500 text-white p-2 rounded"
+            >
+                Choose Image
+            </button>
+
             <dialog id="view_image" className="modal">
                 <div className="modal-box bg-white max-w-[72%] max-h-[25rem] overflow-y-auto p-5 rounded-lg shadow-lg">
                     <h3 className="font-bold text-lg pb-5">Choose Image</h3>
                     <div className="flex border-b mb-5">
-                        <button className={`p-2 w-1/2 ${activeTab === 'gallery' ? 'border-b-2 border-blue-500 font-bold' : ''}`} onClick={() => setActiveTab('gallery')}>Choose Image From Gallery</button>
-                        <button className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-b-2 border-blue-500 font-bold' : ''}`} onClick={() => setActiveTab('upload')}>Upload New Image</button>
+                        <button 
+                            className={`p-2 w-1/2 ${activeTab === 'gallery' ? 'border-b-2 border-blue-500 font-bold' : ''}`} 
+                            onClick={() => setActiveTab('gallery')}
+                        >
+                            Choose Image From Gallery
+                        </button>
+                        <button 
+                            className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-b-2 border-blue-500 font-bold' : ''}`} 
+                            onClick={() => setActiveTab('upload')}
+                        >
+                            Upload New Image
+                        </button>
                     </div>
+                    
                     {activeTab === 'gallery' ? (
                         <SelectImage images={images} setImage={setImage} />
                     ) : (
                         <div className="flex flex-col items-center gap-4">
-                            <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} className="p-2 border rounded w-full" />
-                            <button onClick={handleUpload} className="btn bg-blue-500 text-white p-2 rounded w-full">Upload</button>
+                            <input 
+                                type="file" 
+                                onChange={(e) => setSelectedFile(e.target.files[0])} 
+                                className="p-2 border rounded w-full" 
+                            />
+                            <button 
+                                onClick={handleUpload} 
+                                className="btn bg-blue-500 text-white p-2 rounded w-full"
+                            >
+                                Upload
+                            </button>
                         </div>
                     )}
+
                     <div className="modal-action">
                         <form method="dialog">
                             <button className="btn bg-red-500 text-white">Close</button>
@@ -71,6 +108,7 @@ const SelectImageModal = ({ setImage }) => {
                     </div>
                 </div>
             </dialog>
+
             <ToastContainer />
         </div>
     );

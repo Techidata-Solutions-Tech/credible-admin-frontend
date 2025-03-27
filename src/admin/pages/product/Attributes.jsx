@@ -1,161 +1,318 @@
-import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
-import ProductTable from '../../components/product/ProductTable'
-import { Link } from 'react-router-dom'
-import PillTabs from '../../components/PillTabs'
-import { BsThreeDots } from 'react-icons/bs'
+import Navbar from "../../components/Navbar";
+import Sidebar from "../../components/Sidebar";
+import { useState, useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Attributes = () => {
-  const tabs_status = [
-    { id: 1, label: 'All (200)' },
-    { id: 2, label: 'Active (100)' },
-    { id: 3, label: 'Inactive (20)' },
-    { id: 4, label: 'Instock (05)' },
-    { id: 5, label: 'Out of stock (10)' },
-  ];
-  const [selectedAttributeId, setSelectedAttributeId] = useState(null);
+const AttributeTable = () => {
+  const [attributes, setAttributes] = useState([]);
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(5);
+  const [filteredData, setFilteredData] = useState([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currentAttribute, setCurrentAttribute] = useState(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    value: "",
+    type: "",
+    order: "",
+    metaTitle: "",
+    metaKeyword: "",
+    metaDescription: ""
+  });
+  const token = localStorage.getItem('token');
 
-  const attributesData = [
-    {
-      id: 'A001',
-      name: 'Color',
-      values: ['Red', 'Blue', 'Green', 'Black'],
-      type: 'Dropdown',
-    },
-    {
-      id: 'A002',
-      name: 'Size',
-      values: ['Small', 'Medium', 'Large', 'Extra Large'],
-      type: 'Dropdown',
-    },
-    {
-      id: 'A003',
-      name: 'Material',
-      values: ['Cotton', 'Polyester', 'Leather'],
-      type: 'Text',
-    },
-  ];
+  useEffect(() => {
+    fetchAttributes();
+  }, []);
 
-  const handleEdit = (id) => {
-    setSelectedAttributeId(id);
-    alert(`Editing Attribute ID: ${id}`);
-    // Implement modal or form navigation here
+  const fetchAttributes = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await res.json();
+      setAttributes(data.data);
+      setFilteredData(data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setSelectedAttributeId(id);
-    alert(`Deleting Attribute ID: ${id}`);
-    // Implement delete logic here
+  const handleSearch = () => {
+    const filtered = attributes.filter((attr) =>
+      attr.name.toLowerCase().includes(search.toLowerCase())
+    );
+    setFilteredData(filtered);
+    setCurrentPage(1);
   };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this attribute?")) {
+      return;
+    }
+    try {
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`, 
+          'Content-Type': 'application/json',
+        },
+      });
+      toast.success("Attribute deleted successfully!");
+      fetchAttributes();
+    } catch (error) {
+      toast.error("Failed to delete attribute.");
+    }
+  };
+
+  const openEditModal = (attribute) => {
+    setCurrentAttribute(attribute);
+    setEditForm({
+      name: attribute.name,
+      value: attribute.value.join(", "),
+      type: attribute.type,
+      order: attribute.order,
+      metaTitle: attribute.metaTitle || "",
+      metaKeyword: attribute.metaKeyword || "",
+      metaDescription: attribute.metaDescription || ""
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute/${currentAttribute.id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...editForm,
+          value: editForm.value.split(",").map(item => item.trim())
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Attribute updated successfully!");
+        fetchAttributes();
+        setShowEditModal(false);
+      } else {
+        toast.error("Failed to update attribute.");
+      }
+    } catch (error) {
+      toast.error("Error updating attribute.");
+    }
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const indexOfLast = currentPage * perPage;
+  const indexOfFirst = indexOfLast - perPage;
+  const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
       <Sidebar activeTab={1} />
-      
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
+
+      <div className="flex-1 flex flex-col overflow-hidden px-4">
         <Navbar />
-        
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
-            {/* Tabs Section */}
-            <div className="w-full mb-6">
-              <div className="max-w-full px-4">
-                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-full overflow-x-auto py-2">
-                    <div className="flex justify-center min-w-full">
-                      <PillTabs tabs={tabs_status} />
-                    </div>
+        <ToastContainer />
+        <h1 className="text-3xl font-bold mb-4">Manage Attributes</h1>
+
+        {/* Search & Filter */}
+        <div className="flex mb-4 space-x-4">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border p-2 rounded w-1/3"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Search
+          </button>
+        </div>
+
+        {/* Table */}
+        <table className="w-full table-auto bg-white shadow-md rounded-lg">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="p-4">No</th>
+              <th className="p-4">Attribute Name</th>
+              <th className="p-4">Values</th>
+              <th className="p-4">Type</th>
+              <th className="p-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems?.map((attr, index) => (
+              <tr key={attr.id} className="text-center">
+                <td className="p-4">{index + 1 + (currentPage - 1) * perPage}</td>
+                <td className="p-4">{attr.name}</td>
+                <td className="p-4">{attr.value.join(", ")}</td>
+                <td className="p-4">{attr.type}</td>
+                <td className="p-4">
+                  <button
+                    onClick={() => openEditModal(attr)}
+                    className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(attr.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-4">
+          {Array.from(
+            { length: Math.ceil(filteredData.length / perPage) },
+            (_, index) => (
+              <button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`px-4 py-2 mx-1 rounded ${
+                  currentPage === index + 1
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-300"
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
+        </div>
+
+        {/* Edit Modal */}
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-lg w-1/2">
+              <h2 className="text-2xl font-bold mb-4">Edit Attribute</h2>
+              <form onSubmit={handleEditSubmit}>
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block mb-2">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Values (comma separated)</label>
+                    <input
+                      type="text"
+                      name="value"
+                      value={editForm.value}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Type</label>
+                    <input
+                      type="text"
+                      name="type"
+                      value={editForm.type}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Order</label>
+                    <input
+                      type="number"
+                      name="order"
+                      value={editForm.order}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Meta Title</label>
+                    <input
+                      type="text"
+                      name="metaTitle"
+                      value={editForm.metaTitle}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2">Meta Keyword</label>
+                    <input
+                      type="text"
+                      name="metaKeyword"
+                      value={editForm.metaKeyword}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block mb-2">Meta Description</label>
+                    <textarea
+                      name="metaDescription"
+                      value={editForm.metaDescription}
+                      onChange={handleEditChange}
+                      className="w-full p-2 border rounded"
+                      rows="3"
+                    />
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* Filters and Search */}
-            <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full">
-              <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                <div className="dropdown">
-                  <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                    Filter
-                  </div>
-                  <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                    <li><label><input type="checkbox" /></label></li>
-                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                  </ul>
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="bg-gray-500 text-white px-4 py-2 rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                  >
+                    Save Changes
+                  </button>
                 </div>
-                <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                  <option disabled selected>Sort</option>
-                  <option>Homer</option>
-                  <option>Marge</option>
-                  <option>Bart</option>
-                  <option>Lisa</option>
-                  <option>Maggie</option>
-                </select>
-              </div>
-              
-              <div className="w-full sm:w-auto">
-                <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                  <i className="ri-search-line text-gray-800"></i>
-                  <input type="text" className="grow" placeholder="Tax" />
-                </label>
-              </div>
-              
-             
-            </div>
-
-            {/* Product Table */}
-            <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-                <table className="w-full table-auto mb-10 min-w-[800px]">
-                    <thead className="bg-gray-50">
-                    <tr>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Attribute Name</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Attribute Values</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Attribute Type</th>
-                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                    {attributesData.map((attribute) => (
-                        <tr key={attribute.id} className="hover:bg-gray-50 border-b border-gray-300">
-                        <td className="px-4 py-4 text-sm text-gray-900">{attribute.id}</td>
-                        <td className="px-4 py-4 text-sm text-gray-900">{attribute.name}</td>
-                        <td className="px-4 py-4 text-sm text-gray-900">{attribute.values.join(', ')}</td>
-                        <td className="px-4 py-4 text-sm text-gray-900">{attribute.type}</td>
-                        <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
-                            <div className="dropdown dropdown-bottom dropdown-end">
-                            <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                                <BsThreeDots className='mt-2 text-blue-500' size={28} />
-                            </button>
-                            <ul tabIndex={0} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                                <li><a href="#" onClick={() => handleEdit(attribute.id)}>Edit</a></li>
-                                <li><a href="#" onClick={() => handleDelete(attribute.id)}>Delete</a></li>
-                            </ul>
-                            </div>
-                        </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
-            {/* Pagination */}
-            <div className="flex justify-center mt-6">
-              <div className="join shadow-lg">
-                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-              </div>
+              </form>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Attributes
+export default AttributeTable;

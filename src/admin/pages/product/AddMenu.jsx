@@ -5,12 +5,19 @@ import Sidebar from '../../components/Sidebar'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const AddMenu = () => {
+  const token = localStorage.getItem('token')
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `);
+        const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const data = await response.json();      
         const flatCategories = [];
         const traverse = (nodes, depth = 0) => {
@@ -47,9 +54,11 @@ const AddMenu = () => {
     try {
       const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/add-category`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json",
+            
+          "Authorization": `Bearer ${token}`,
+
+           },
         body: JSON.stringify(payLoad),
       });
 

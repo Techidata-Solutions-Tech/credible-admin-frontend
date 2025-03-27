@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import SelectImageModal from '../../components/dashboard/SelectImageModal'
 import 'react-toastify/dist/ReactToastify.css';
 const AddPopularCategory = () => {
+  const token = localStorage.getItem('token');
   const { register, handleSubmit,setValue, formState: { errors } } = useForm();
    const [image, setImage] = useState(null);
    useEffect(()=>{
@@ -24,6 +25,7 @@ const AddPopularCategory = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payLoad),
       });

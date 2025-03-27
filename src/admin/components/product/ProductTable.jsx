@@ -117,25 +117,25 @@ const ProductTable = ({products}) => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 ">
           {products?.map((product) => (
-            <tr key={product.id} className="hover:bg-gray-50">
+            <tr key={product?.id} className="hover:bg-gray-50">
               <td className="px-4 py-4">
-                <img src={product.main_image} alt={product.product_name} className="h-12 w-12 rounded-lg object-cover shadow" />
+                <img src={product?.main_image} alt={product?.product_name} className="h-12 w-12 rounded-lg object-cover shadow" />
               </td>
-              <td className="px-4 py-4 text-[14px] text-gray-600 font-semibold">{product.id}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.main_category}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.sub_category}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.child_category}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-700">{product.product_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.brand_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.model_name}</td>
-              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product.variant}</td> */}
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product.SKU}</td>
-              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product.UOM}</td> */}
-              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product.taxRate}</td> */}
+              <td className="px-4 py-4 text-[14px] text-gray-600 font-semibold">{product?.id}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.main_category}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.sub_category}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.child_category}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-700">{product?.product_name}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.brand_name}</td>
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.model_name}</td>
+              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product?.variant}</td> */}
+              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.SKU}</td>
+              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product?.UOM}</td> */}
+              {/* <td className="px-4 py-4 text-[14px] text-gray-600">{product?.taxRate}</td> */}
               <td className="px-4 py-4 text-[14px] text-green-700 font-semibold">
-                {product.seller_price}
+                {product?.seller_price}
               </td>
-              <td className="px-4 py-4 text-sm text-red-500 font-semibold">{product.mrp}</td>
+              <td className="px-4 py-4 text-sm text-red-500 font-semibold">{product?.mrp}</td>
               <td className="px-4 py-4 text-sm text-gray-700 flex justify-center gap-3">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
@@ -146,7 +146,7 @@ const ProductTable = ({products}) => {
                     className="dropdown-content menu bg-white shadow-md rounded-lg w-48 text-sm text-gray-700 z-10"
                   >
                     <li>
-                      <Link to={`/admin/product/variant/${product.id}` }className="hover:text-blue-500">
+                      <Link to={`/admin/product/variant/${product?.id}` }className="hover:text-blue-500">
                         Variants
                       </Link>
                     </li>
@@ -157,7 +157,7 @@ const ProductTable = ({products}) => {
                     </li>
                     <li>
                       <button
-                        onClick={() => handleDelete(product.id)}
+                        onClick={() => handleDelete(product?.id)}
                         className="hover:text-red-500"
                       >
                         Delete

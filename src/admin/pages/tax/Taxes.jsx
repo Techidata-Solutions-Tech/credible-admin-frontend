@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const TaxTable = () => {
+  const token = localStorage.getItem('token');
   const [taxes, setTaxes] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [editTax, setEditTax] = useState(null);
@@ -12,7 +13,13 @@ const TaxTable = () => {
 
   const fetchTaxes = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax`);
+      const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax`,
+        {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      }
+      );
       const data = await res.json();
       setTaxes(data.data);
     } catch (error) {
@@ -28,7 +35,10 @@ const TaxTable = () => {
     try {
       await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({ status: !status })
       });
       toast.success("Status updated");
@@ -40,7 +50,13 @@ const TaxTable = () => {
 
   const setDefault = async (id) => {
     try {
-      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`);
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`,
+        {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      }
+      );
       toast.success("Default tax updated");
       fetchTaxes();
     } catch (error) {
@@ -51,7 +67,12 @@ const TaxTable = () => {
   const deleteTax = async (id) => {
     if (window.confirm("Are you sure you want to delete this tax?")) {
       try {
-        await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`, { method: "DELETE" });
+        await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/tax/${id}`, { 
+          method: "DELETE",
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
         toast.success("Tax deleted");
         fetchTaxes();
       } catch (error) {
@@ -66,7 +87,10 @@ const TaxTable = () => {
       const method = editTax ? "PUT" : "POST";
       await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+           'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify(newTax),
       });
       toast.success(editTax ? "Tax updated successfully" : "Tax added successfully");
@@ -78,6 +102,7 @@ const TaxTable = () => {
       toast.error("Failed to save tax");
     }
   };
+  
 
   return (
     <div className="flex h-screen overflow-hidden">

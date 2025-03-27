@@ -6,54 +6,69 @@ import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const EditMenu = () => {
-    const { register, handleSubmit, formState: { errors } ,setValue} = useForm();
+    const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const { id } = useParams();
     const [categories, setCategories] = useState([]);
     const [categoryImage, setCategoyImage] = useState(null);
+    const token = localStorage.getItem('token')
 
-        useEffect(() => {
-            const fetchCategory = async () => {
-                try {
-                    const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${id}`);
-                    const data = await response.json();    
-                    setValue("name", data.category.name);
-                    setValue("seo_url", data.category.seo_url);
-                    setValue("parentCat", data.category.parentCat);
-                    setValue("featureimage", data.category.featureimage);
-                    setCategoyImage(data.category.featureimage)
-                    setValue("meta_title", data.category.meta_title);
-                    setValue("meta_keywords", data.category.meta_keywords);
-                    setValue("description", data.category.description);
-                    setValue("meta_description", data.category.meta_description);
-                    setValue("isFeatured", data.category.isFeatured);
-                    setValue("cat_type", data.category.cat_type);
-                } catch (error) {
-                     toast.error("Error fetching category");
-                }
-            };
-        const fetchCategories = async () => {
+
+    useEffect(() => {
+        const fetchCategory = async () => {
             try {
-              const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `);
-              const data = await response.json();      
-              const flatCategories = [];
-              const traverse = (nodes, depth = 0) => {
-                nodes.forEach(node => {
-                  flatCategories.push({ id: node.id, name: node.name, depth });
-                  if (node.children.length) {
-                    traverse(node.children, depth + 1);
-                  }
-                });
-              };
-              traverse(data);
-              setCategories(flatCategories);
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                const data = await response.json();
+                setValue("name", data.category.name);
+                setValue("seo_url", data.category.seo_url);
+                setValue("parentCat", data.category.parentCat);
+                setValue("featureimage", data.category.featureimage);
+                setCategoyImage(data.category.featureimage)
+                setValue("meta_title", data.category.meta_title);
+                setValue("meta_keywords", data.category.meta_keywords);
+                setValue("description", data.category.description);
+                setValue("meta_description", data.category.meta_description);
+                setValue("isFeatured", data.category.isFeatured);
+                setValue("cat_type", data.category.cat_type);
             } catch (error) {
-              console.error("Error fetching categories:", error);
+                toast.error("Error fetching category");
             }
         };
-            fetchCategories();
-            fetchCategory();
-       }, [id]);
-       const onSubmit = async (data) => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `,
+
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                const data = await response.json();
+                const flatCategories = [];
+                const traverse = (nodes, depth = 0) => {
+                    nodes.forEach(node => {
+                        flatCategories.push({ id: node.id, name: node.name, depth });
+                        if (node.children.length) {
+                            traverse(node.children, depth + 1);
+                        }
+                    });
+                };
+                traverse(data);
+                setCategories(flatCategories);
+            } catch (error) {
+                console.error("Error fetching categories:", error);
+            }
+        };
+        fetchCategories();
+        fetchCategory();
+    }, [id]);
+    const onSubmit = async (data) => {
 
         const payLoad = {
             name: data.name,
@@ -65,31 +80,33 @@ const EditMenu = () => {
             meta_keywords: data.meta_keywords,
             meta_description: data.meta_description,
             isFeatured: data.isFeatured,
-            cat_type : true
-          }
+            cat_type: true
+        }
         try {
-          const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/update-category/${id}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payLoad),
-          });
-    
-          const result = await response.json();
-          if (response.ok) {
-            toast.success("Menu submitted successfully!")
-            // alert("Category submitted successfully!");
-          } else {
-             toast.error(`Error: ${result.message}`)
-            // alert(`Error: ${result.message}`);
-          }
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/update-category/${id}`, {
+                method: "PUT",
+                headers: {
+                  
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(payLoad),
+            });
+
+            const result = await response.json();
+            if (response.ok) {
+                toast.success("Menu submitted successfully!")
+                // alert("Category submitted successfully!");
+            } else {
+                toast.error(`Error: ${result.message}`)
+                // alert(`Error: ${result.message}`);
+            }
         } catch (error) {
             toast.error("Something went wrong!");
             // alert("Something went wrong!");
         }
-      };
-    
+    };
+
 
     return (
         <div>
@@ -122,39 +139,39 @@ const EditMenu = () => {
                                     {errors.seo_url && <p className="text-red-500 text-xs">{errors.seo_url.message}</p>}
                                 </div>
                                 <div className="mb-4">
-                                <label htmlFor="parentCat" className="block text-sm font-semibold">
-                                    Category
+                                    <label htmlFor="parentCat" className="block text-sm font-semibold">
+                                        Category
                                     </label>
                                     <select
-                                    id="parentCat"
-                                    className="w-full p-2 border rounded-md bg-transparent"
+                                        id="parentCat"
+                                        className="w-full p-2 border rounded-md bg-transparent"
                                     // {...register("parentCat")}
                                     >
-                                    <option value="0">Select a Category</option>
-                                    {categories.map((cat) => (
-                                        <option key={cat.id} value={cat.id}>
-                                        {"— ".repeat(cat.depth)} {cat.name}
-                                        </option>
-                                    ))}
+                                        <option value="0">Select a Category</option>
+                                        {categories.map((cat) => (
+                                            <option key={cat.id} value={cat.id}>
+                                                {"— ".repeat(cat.depth)} {cat.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     {errors.parentCat && (
-                                    <p className="text-red-500 text-xs">{errors.parentCat.message}</p>
+                                        <p className="text-red-500 text-xs">{errors.parentCat.message}</p>
                                     )}
-                                    </div>
-                                    <div className="mb-4 w-1/3">
+                                </div>
+                                <div className="mb-4 w-1/3">
                                     <label htmlFor="cat_type" className="block text-sm font-semibold">
-                                    Category type
+                                        Category type
                                     </label>
                                     <select
-                                    id="cat_type"
-                                    className="w-full p-2 border rounded-md bg-transparent"
+                                        id="cat_type"
+                                        className="w-full p-2 border rounded-md bg-transparent"
                                     // {...register("cat_type")}
                                     >
-                                    <option value={true}>Yes</option>
-                                    <option value={false}>False</option>
+                                        <option value={true}>Yes</option>
+                                        <option value={false}>False</option>
                                     </select>
                                     {errors.cat_type && (
-                                    <p className="text-red-500 text-xs">{errors.cat_type.message}</p>
+                                        <p className="text-red-500 text-xs">{errors.cat_type.message}</p>
                                     )}
                                 </div>
                                 {/* <div className="mb-4">
@@ -205,7 +222,7 @@ const EditMenu = () => {
                                         id="meta_title"
                                         type="text"
                                         className="w-full p-2 py-3 border rounded-md bg-transparent"
-                                        // {...register('meta_title', { required: 'Meta title is required' })}
+                                    // {...register('meta_title', { required: 'Meta title is required' })}
                                     />
                                     {errors.meta_title && <p className="text-red-500 text-xs">{errors.meta_title.message}</p>}
                                 </div>
@@ -216,7 +233,7 @@ const EditMenu = () => {
                                         id="meta_keywords"
                                         type="text"
                                         className="w-full p-2 py-3 border rounded-md bg-transparent"
-                                        // {...register('meta_keywords', { required: 'Meta keywords are required' })}
+                                    // {...register('meta_keywords', { required: 'Meta keywords are required' })}
                                     />
                                     {errors.meta_keywords && <p className="text-red-500 text-xs">{errors.meta_keywords.message}</p>}
                                 </div>
@@ -237,7 +254,7 @@ const EditMenu = () => {
                                         <input
                                             type="checkbox"
                                             className="w-4 h-4"
-                                            // {...register('isFeatured')}
+                                        // {...register('isFeatured')}
                                         />
                                         <span className="text-sm font-semibold">Is Featured?</span>
                                     </label>
@@ -254,7 +271,7 @@ const EditMenu = () => {
                     </form>
                 </div>
             </div>
-             <ToastContainer />
+            <ToastContainer />
         </div>
     );
 };

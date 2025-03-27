@@ -7,6 +7,7 @@ import Sidebar from "../../components/Sidebar";
 
 
 const UserTable = () => {
+  const token = localStorage.getItem('token');
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -19,7 +20,13 @@ const UserTable = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/user?page=${page - 1}&limit=20`);
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/user?page=${page - 1}&limit=20`,
+        {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      }
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -37,6 +44,7 @@ const UserTable = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           isAccountBlockedByAdmin: !isBlocked,

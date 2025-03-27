@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddSlider = () => {
+  const token = localStorage.getItem('token');
   const [image, setImage] = useState(null);
   const {
     register,
@@ -37,6 +38,7 @@ const AddSlider = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(payload),
         }

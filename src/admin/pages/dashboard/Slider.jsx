@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const EditSlider = () => {
+  const token = localStorage.getItem('token');
   const [image, setImage] = useState(null);
   const [sliders, setSliders] = useState([]); 
   const [editData, setEditData] = useState(null); 
@@ -30,7 +31,13 @@ const EditSlider = () => {
 
   const fetchSliders = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/get-banner`);
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/get-banner`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const result = await response.json();
       setSliders(result.data);
     } catch (error) {
@@ -41,7 +48,13 @@ const EditSlider = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
     try {
-      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-banner/${id}`, { method: "DELETE" });
+      await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-banner/${id}`, { 
+        method: "DELETE",
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       toast.success("Banner deleted successfully!");
       fetchSliders();
     } catch (error) {
@@ -53,7 +66,10 @@ const EditSlider = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/update-banner-status/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({ status: newStatus }),
       });
 
@@ -89,9 +105,11 @@ const EditSlider = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/upload-image`, {
         method: "POST",
-        body: formData, 
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData,
       });
-
       if (response.ok) {
         const result = await response.json();
         setImage(result.imageUrl);
@@ -121,7 +139,11 @@ const EditSlider = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/update-banner/${editData._id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`,
+
+         },
         body: JSON.stringify(payload),
       });
 

@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { AdminDataContext } from '../../context/AdminContext';
+
 const Login = () => {
-  const token = localStorage.getItem('token')
-  const navigate = useNavigate()
+  const token = localStorage.getItem('token');
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const { admin, setAdmin } = React.useContext(AdminDataContext)
+  const { admin, setAdmin } = React.useContext(AdminDataContext);
+
   useEffect(() => {
     if (token) {
       navigate('/admin');
@@ -21,15 +23,28 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     const payLoad = {
-      username: data.email,
+      email: data.email,
       password: data.password,
     };
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/admin/login`, payLoad);
-    const result = response.data;
-    if (response.status === 200) {
-      setAdmin(result.admin);
-      localStorage.setItem('token', result.token);
-      navigate('/admin')
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/api/admin/auth/login`, payLoad);
+
+      if (response.status === 200) {
+        const result = response.data;
+
+        setAdmin({
+          name: result.name,
+          email: data.email,
+          image: result.image,
+        });
+
+        localStorage.setItem('token', result.token);
+        navigate('/admin');
+      }
+    } catch (error) {
+      // You can handle errors here if needed
+      console.error("Login failed", error);
     }
   };
 
@@ -58,7 +73,7 @@ const Login = () => {
               <span className="label-text">Email</span>
             </label>
             <input
-            autoComplete='true'
+              autoComplete="true"
               type="email"
               placeholder="email"
               className="input input-bordered"
@@ -71,7 +86,7 @@ const Login = () => {
             </label>
             <input
               type="password"
-                  autoComplete='true'
+              autoComplete="true"
               placeholder="password"
               className="input input-bordered"
               {...register('password', {
