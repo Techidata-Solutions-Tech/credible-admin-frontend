@@ -152,7 +152,6 @@ const AddCategory = () => {
       <div className="flex bg-gray-100">
         <Sidebar />
         <div className="rounded shadow-lg p-4 w-screen m-2 bg-white">
-          <h1 className="text-4xl text-center mb-2">Add Category</h1>
           <div className="flex justify-around mb-4">
             <button
               className={`px-4 py-2 rounded ${
@@ -191,42 +190,7 @@ const AddCategory = () => {
             className="p-4 border rounded-md"
           >
             <div className="grid grid-cols-2 gap-4">
-              <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-semibold">
-                  Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  className="w-full p-2 border border-black rounded-md bg-transparent"
-                  {...register("name", { required: "Name is required" })}
-                />
-                {errors.name && (
-                  <p className="text-red-500 text-xs">{errors.name.message}</p>
-                )}
-              </div>
-
-              <div className="mb-4">
-                <label
-                  htmlFor="seo_url"
-                  className="block text-sm font-semibold"
-                >
-                  SEO URL
-                </label>
-                <input
-                  id="seo_url"
-                  type="text"
-                  className="w-full p-2 border border-black rounded-md bg-transparent"
-                  {...register("seo_url", { required: "SEO URL is required" })}
-                />
-                {errors.seo_url && (
-                  <p className="text-red-500 text-xs">
-                    {errors.seo_url.message}
-                  </p>
-                )}
-              </div>
-
-              {formType !== "category" && (
+            {formType !== "category" && (
                 <div className="mb-4">
                   <label
                     htmlFor="parentCat"
@@ -272,6 +236,42 @@ const AddCategory = () => {
                   </select>
                 </div>
               )}
+              <div className="mb-4">
+                <label htmlFor="name" className="block text-sm font-semibold">
+                  {formType === "category" ? "Parent Category" : formType === "subcategory" ? "Sub Category": 'Child Category'}
+                </label>
+                <input
+                  id="name"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name.message}</p>
+                )}
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="seo_url"
+                  className="block text-sm font-semibold"
+                >
+                  SEO URL
+                </label>
+                <input
+                  id="seo_url"
+                  type="text"
+                  className="w-full p-2 border border-black rounded-md bg-transparent"
+                  {...register("seo_url", { required: "SEO URL is required" })}
+                />
+                {errors.seo_url && (
+                  <p className="text-red-500 text-xs">
+                    {errors.seo_url.message}
+                  </p>
+                )}
+              </div>
+
+              
 
               <div className="mb-4 col-span-2">
                 <label

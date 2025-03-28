@@ -71,6 +71,7 @@ import EditMenu from '../admin/pages/product/Editmenu'
 import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
 import ManageUsers from '../admin/pages/users/ManageUsers'
 import EditAttribute from '../admin/pages/product/EditAttribute'
+import AddVariant from '../admin/pages/product/AddVariant'
 const AdminRoutes = () => {
   return (
   <>
@@ -128,6 +129,8 @@ const AdminRoutes = () => {
           <Route path='/product/brand' element={<Brand/>}/>
           <Route path='/product/brand/add-brand' element={<AddBrand/>}/>
           <Route path='/product/variant/:id' element={<ProductVariant/>}/>
+          <Route path='/product/add-variant/:id' element={<AddVariant/>}/>
+
           {/* taxes */}
           <Route path='/taxes/hsn-sac' element={<TaxHSNSAC/>}/>
           <Route path='/taxes/gst-tax' element={<Taxes/>}/>

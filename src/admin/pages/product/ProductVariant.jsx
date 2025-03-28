@@ -7,7 +7,7 @@ import VariantTable from '../../components/variant/VariantTable'
 import AddVariantModal from '../../components/variant/AddVariantModal'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 const ProductVariant = () => {
     const {id} = useParams();
     const [toggle, setToggle] = useState(Date.now());
@@ -34,8 +34,7 @@ const ProductVariant = () => {
             <div className='flex bg-gray-100'>
             <Sidebar/>
             <div className=' rounded shadow-lg p-4 w-screen m-2 bg-white'>
-            <button className="btn btn-info" onClick={() => handleAdd()}>Add Variant</button>
-            <AddVariantModal setToggle={setToggle} id={id} />
+            <Link to={`/admin/product/add-variant/${id}`} className="btn btn-info">Add Variant</Link>
             <VariantTable variants={variants} setToggle={setToggle}/>
 
         </div>
