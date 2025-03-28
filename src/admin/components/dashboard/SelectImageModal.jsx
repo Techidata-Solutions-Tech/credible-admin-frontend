@@ -57,43 +57,45 @@ const SelectImageModal = ({ setImage }) => {
 
     return (
         <div>
-            {/* Button to trigger the modal */}
-            <button 
-                onClick={() => document.getElementById('view_image').showModal()} 
-                className="btn bg-blue-500 text-white p-2 rounded"
+            <button
+                onClick={() => document.getElementById('view_image').showModal()}
+                className="flex items-center justify-between border border-gray-300 bg-white text-gray-600 px-4 py-2 rounded-md shadow-sm w-[280px]"
             >
-                Choose Image
+                <span>Choose File</span>
+                <span className="border-l pl-3 ml-3 text-blue-500 font-medium">Browse</span>
             </button>
+
+
 
             <dialog id="view_image" className="modal">
                 <div className="modal-box bg-white max-w-[72%] max-h-[25rem] overflow-y-auto p-5 rounded-lg shadow-lg">
                     <h3 className="font-bold text-lg pb-5">Choose Image</h3>
                     <div className="flex border-b mb-5">
-                        <button 
-                            className={`p-2 w-1/2 ${activeTab === 'gallery' ? 'border-b-2 border-blue-500 font-bold' : ''}`} 
+                        <button
+                            className={`p-2 w-1/2 ${activeTab === 'gallery' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
                             onClick={() => setActiveTab('gallery')}
                         >
                             Choose Image From Gallery
                         </button>
-                        <button 
-                            className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-b-2 border-blue-500 font-bold' : ''}`} 
+                        <button
+                            className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
                             onClick={() => setActiveTab('upload')}
                         >
                             Upload New Image
                         </button>
                     </div>
-                    
+
                     {activeTab === 'gallery' ? (
                         <SelectImage images={images} setImage={setImage} />
                     ) : (
                         <div className="flex flex-col items-center gap-4">
-                            <input 
-                                type="file" 
-                                onChange={(e) => setSelectedFile(e.target.files[0])} 
-                                className="p-2 border rounded w-full" 
+                            <input
+                                type="file"
+                                onChange={(e) => setSelectedFile(e.target.files[0])}
+                                className="p-2 border rounded w-full"
                             />
-                            <button 
-                                onClick={handleUpload} 
+                            <button
+                                onClick={handleUpload}
                                 className="btn bg-blue-500 text-white p-2 rounded w-full"
                             >
                                 Upload
