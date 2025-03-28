@@ -7,7 +7,6 @@ export default function ImageGallery({ images ,setImage}) {
         setSelectedImage(src);
         setImage(src)
         document.getElementById('view_image').close()
-        // console.log("Selected Image:", src); // You can use this in your logic
     };
 
     return (
