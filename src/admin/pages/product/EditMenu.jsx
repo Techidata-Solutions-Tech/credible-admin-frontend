@@ -5,30 +5,28 @@ import Sidebar from '../../components/Sidebar';
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const EditMenu = () => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
     const { id } = useParams();
     const [categories, setCategories] = useState([]);
-    const [categoryImage, setCategoyImage] = useState(null);
+    const [categoryImage, setCategoryImage] = useState(null);
     const token = localStorage.getItem('token')
-
 
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${id}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
                 setValue("name", data.category.name);
                 setValue("seo_url", data.category.seo_url);
                 setValue("parentCat", data.category.parentCat);
                 setValue("featureimage", data.category.featureimage);
-                setCategoyImage(data.category.featureimage)
+                setCategoryImage(data.category.featureimage)
                 setValue("meta_title", data.category.meta_title);
                 setValue("meta_keywords", data.category.meta_keywords);
                 setValue("description", data.category.description);
@@ -39,16 +37,14 @@ const EditMenu = () => {
                 toast.error("Error fetching category");
             }
         };
+
         const fetchCategories = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy `,
-
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
+                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const data = await response.json();
                 const flatCategories = [];
                 const traverse = (nodes, depth = 0) => {
@@ -65,11 +61,12 @@ const EditMenu = () => {
                 console.error("Error fetching categories:", error);
             }
         };
+
         fetchCategories();
         fetchCategory();
     }, [id]);
-    const onSubmit = async (data) => {
 
+    const onSubmit = async (data) => {
         const payLoad = {
             name: data.name,
             seo_url: data.seo_url,
@@ -80,13 +77,12 @@ const EditMenu = () => {
             meta_keywords: data.meta_keywords,
             meta_description: data.meta_description,
             isFeatured: data.isFeatured,
-            cat_type: true
-        }
+            cat_type: data.cat_type, 
+        };
         try {
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/update-category/${id}`, {
                 method: "PUT",
                 headers: {
-                  
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
@@ -95,18 +91,14 @@ const EditMenu = () => {
 
             const result = await response.json();
             if (response.ok) {
-                toast.success("Menu submitted successfully!")
-                // alert("Category submitted successfully!");
+                toast.success("Menu submitted successfully!");
             } else {
-                toast.error(`Error: ${result.message}`)
-                // alert(`Error: ${result.message}`);
+                toast.error(`Error: ${result.message}`);
             }
         } catch (error) {
             toast.error("Something went wrong!");
-            // alert("Something went wrong!");
         }
     };
-
 
     return (
         <div>
@@ -115,7 +107,6 @@ const EditMenu = () => {
                 <Sidebar />
                 <div className='rounded shadow-lg p-4 w-screen m-2 bg-white'>
                     <form onSubmit={handleSubmit(onSubmit)} className="p-4">
-                        {/* First Container */}
                         <div className="grid grid-cols-2 gap-4">
                             <div className="p-4 border rounded-md">
                                 <div className="mb-4">
@@ -134,7 +125,7 @@ const EditMenu = () => {
                                         id="seo_url"
                                         type="text"
                                         className="w-full p-2 border rounded-md bg-transparent"
-                                        {...register('seo_url', { required: 'Name is required' })}
+                                        {...register('seo_url', { required: 'SEO URL is required' })}
                                     />
                                     {errors.seo_url && <p className="text-red-500 text-xs">{errors.seo_url.message}</p>}
                                 </div>
@@ -145,7 +136,7 @@ const EditMenu = () => {
                                     <select
                                         id="parentCat"
                                         className="w-full p-2 border rounded-md bg-transparent"
-                                    // {...register("parentCat")}
+                                        {...register("parentCat", { required: 'Category is required' })}
                                     >
                                         <option value="0">Select a Category</option>
                                         {categories.map((cat) => (
@@ -154,63 +145,43 @@ const EditMenu = () => {
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.parentCat && (
-                                        <p className="text-red-500 text-xs">{errors.parentCat.message}</p>
-                                    )}
+                                    {errors.parentCat && <p className="text-red-500 text-xs">{errors.parentCat.message}</p>}
                                 </div>
                                 <div className="mb-4 w-1/3">
                                     <label htmlFor="cat_type" className="block text-sm font-semibold">
-                                        Category type
+                                        Category Type
                                     </label>
                                     <select
                                         id="cat_type"
                                         className="w-full p-2 border rounded-md bg-transparent"
-                                    // {...register("cat_type")}
+                                        {...register("cat_type", { required: 'Category type is required' })}
                                     >
                                         <option value={true}>Yes</option>
-                                        <option value={false}>False</option>
+                                        <option value={false}>No</option>
                                     </select>
-                                    {errors.cat_type && (
-                                        <p className="text-red-500 text-xs">{errors.cat_type.message}</p>
-                                    )}
+                                    {errors.cat_type && <p className="text-red-500 text-xs">{errors.cat_type.message}</p>}
                                 </div>
-                                {/* <div className="mb-4">
-                                <label htmlFor="featureimage" className="block text-sm font-semibold">Upload Image</label>
-                                    <input
-                                    id="featureimage"
-                                    type="file"
-                                    className="w-full p-2 border rounded-md bg-transparent"
-                                    // {...register('featureimage')}
-                                    />
-                                    <img src={categoryImage} alt="Category" className="w-14 h-14 rounded-md object-cover" />
-              
-                                    {errors.featureimage && <p className="text-red-500 text-xs">{errors.featureimage.message}</p>}
-                                
-                                </div> */}
 
                                 {/* <div className="mb-4">
-                                    <label htmlFor="status" className="block text-sm font-semibold text-gray-800">Status</label>
-                                    <select
-                                        id="status"
-                                        className="w-full p-2 py-3 border rounded-md bg-transparent"
-                                        {...register('status', { required: 'Status is required' })}
-                                    >
-                                        <option  value="">Select Status</option>
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                    {errors.status && <p className="text-red-500 text-xs">{errors.status.message}</p>}
+                                    <label htmlFor="featureimage" className="block text-sm font-semibold">Upload Image</label>
+                                    <input
+                                        id="featureimage"
+                                        type="file"
+                                        className="w-full p-2 border rounded-md bg-transparent"
+                                        onChange={(e) => setCategoryImage(e.target.files[0])}
+                                    />
+                                    {categoryImage && <img src={URL.createObjectURL(categoryImage)} alt="Category" className="w-14 h-14 rounded-md object-cover" />}
+                                    {errors.featureimage && <p className="text-red-500 text-xs">{errors.featureimage.message}</p>}
                                 </div> */}
                             </div>
 
-                            {/* Second Container */}
                             <div className="p-4 border rounded-md">
                                 <div className="mb-4">
                                     <label htmlFor="description" className="block text-sm font-semibold text-gray-800">Description</label>
                                     <textarea
                                         id="description"
                                         className="w-full p-2 border rounded-md bg-transparent"
-                                        // {...register('description', { required: 'Description is required' })}
+                                        {...register('description', { required: 'Description is required' })}
                                         rows="4"
                                     />
                                     {errors.description && <p className="text-red-500 text-xs">{errors.description.message}</p>}
@@ -222,7 +193,7 @@ const EditMenu = () => {
                                         id="meta_title"
                                         type="text"
                                         className="w-full p-2 py-3 border rounded-md bg-transparent"
-                                    // {...register('meta_title', { required: 'Meta title is required' })}
+                                        {...register('meta_title', { required: 'Meta title is required' })}
                                     />
                                     {errors.meta_title && <p className="text-red-500 text-xs">{errors.meta_title.message}</p>}
                                 </div>
@@ -233,7 +204,7 @@ const EditMenu = () => {
                                         id="meta_keywords"
                                         type="text"
                                         className="w-full p-2 py-3 border rounded-md bg-transparent"
-                                    // {...register('meta_keywords', { required: 'Meta keywords are required' })}
+                                        {...register('meta_keywords', { required: 'Meta keywords are required' })}
                                     />
                                     {errors.meta_keywords && <p className="text-red-500 text-xs">{errors.meta_keywords.message}</p>}
                                 </div>
@@ -243,10 +214,10 @@ const EditMenu = () => {
                                     <textarea
                                         id="meta_description"
                                         className="w-full p-2 border rounded-md bg-transparent"
-                                        // {...register('meta_description', { required: 'Meta description is required' })}
+                                        {...register('meta_description', { required: 'Meta description is required' })}
                                         rows="3"
                                     />
-                                    {errors.meta_description && <p className="text-red-500 text-xs ">{errors.meta_description.message}</p>}
+                                    {errors.meta_description && <p className="text-red-500 text-xs">{errors.meta_description.message}</p>}
                                 </div>
 
                                 <div className="mb-4">
@@ -254,7 +225,7 @@ const EditMenu = () => {
                                         <input
                                             type="checkbox"
                                             className="w-4 h-4"
-                                        // {...register('isFeatured')}
+                                            {...register('isFeatured')}
                                         />
                                         <span className="text-sm font-semibold">Is Featured?</span>
                                     </label>
@@ -262,7 +233,6 @@ const EditMenu = () => {
                             </div>
                         </div>
 
-                        {/* Submit Button Outside */}
                         <div className="mt-4">
                             <button type="submit" className="w-full p-2 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-md">
                                 Submit

@@ -67,11 +67,11 @@ import CreateSection from '../admin/pages/dashboard/CreateSection'
 import SectionDetail from '../admin/pages/dashboard/EditSection'
 import Menu from '../admin/pages/product/Menu'
 import AddMenu from '../admin/pages/product/AddMenu'
-import EditMenu from '../admin/pages/product/Editmenu'
 import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
 import ManageUsers from '../admin/pages/users/ManageUsers'
 import EditAttribute from '../admin/pages/product/EditAttribute'
 import AddVariant from '../admin/pages/product/AddVariant'
+import EditMenu from '../admin/pages/product/EditMenu'
 const AdminRoutes = () => {
   return (
   <>
