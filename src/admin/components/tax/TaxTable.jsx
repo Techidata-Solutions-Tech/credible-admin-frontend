@@ -90,12 +90,12 @@ const TaxTable = () => {
   };
 
   return (
-    <div className="w-full shadow-lg rounded-lg border overflow-hidden">
+    <div className="w-full shadow-lg rounded-lg border overflow-hidden py-8">
       {/* Header */}
       <div className="flex justify-start p-4">
-        <button className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded'>
-          Create Tax
-        </button>
+        <h1 className='text-black font-semibold text-2xl px-4 py-2 rounded'>
+          Manage Tax
+        </h1>
       </div>
 
       {/* Create buttons */}
@@ -121,25 +121,18 @@ const TaxTable = () => {
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
                   Tax Rate
-                  <button className="ml-2 bg-blue-300 text-blue-800 w-6 h-6 flex items-center justify-center rounded">
-                    <FaSortDown />
-                  </button>
                 </div>
               </th>
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
                   CGST & SGST
-                  <button className="ml-2 bg-blue-300 text-blue-800 w-6 h-6 flex items-center justify-center rounded">
-                    <FaSortDown />
-                  </button>
+                  
                 </div>
               </th>
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
                   IGST
-                  <button className="ml-2 bg-blue-300 text-blue-800 w-6 h-6 flex items-center justify-center rounded">
-                    <FaSortDown />
-                  </button>
+                 
                 </div>
               </th>
               <th className="px-4 py-2 text-left">HSN Code</th>
@@ -164,26 +157,7 @@ const TaxTable = () => {
         </table>
       </div>
 
-      {/* Footer buttons */}
-      <div className="p-4 flex justify-between">
-        <div className="flex gap-2">
-          <button
-            onClick={handleAddRow}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded"
-          >
-            Add
-          </button>
-          <button
-            onClick={handleRemoveRow}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Remove
-          </button>
-        </div>
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded">
-          Submit
-        </button>
-      </div>
+      
 
       {/* Single tax creation modal */}
       <CreateTax
