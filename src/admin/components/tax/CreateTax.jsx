@@ -2,28 +2,70 @@ import React, { useState } from 'react';
 import { FaSortDown, FaTimes } from 'react-icons/fa';
 
 const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
-  const [taxData, setTaxData] = useState({
-    taxRate: '5%',
-    cgst: '2.5',
-    sgst: '2.5',
-    igst: '5',
+  const initialTaxData = {
+    taxRate: '',
+    cgst: '',
+    sgst: '',
+    igst: '',
     hsnCode: '',
     description: '',
     category: ''
-  });
+  };
+
+  const [taxData, setTaxData] = useState(initialTaxData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setTaxData({
-      ...taxData,
-      [name]: value
-    });
+    
+    if (name === 'taxRate') {
+      // Extract numeric value, handling both with and without '%'
+      let numericValue = value;
+      if (value.includes('%')) {
+        numericValue = value.replace('%', '');
+      }
+      
+      numericValue = parseFloat(numericValue);
+      
+      if (!isNaN(numericValue)) {
+        const halfValue = (numericValue / 2).toFixed(1);
+        
+        setTaxData({
+          ...taxData,
+          taxRate: numericValue + '%',
+          cgst: halfValue,
+          sgst: halfValue,
+          // Not updating IGST - it will be manually entered
+        });
+      } else {
+        setTaxData({
+          ...taxData,
+          taxRate: value
+        });
+      }
+    } else if (name === 'igst') {
+      // Convert IGST input to a number
+      const numericValue = parseFloat(value);
+      
+      setTaxData({
+        ...taxData,
+        igst: isNaN(numericValue) ? '' : numericValue
+      });
+    } else {
+      setTaxData({
+        ...taxData,
+        [name]: value
+      });
+    }
   };
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(taxData);
     onClose();
+  };
+  
+  const handleReset = () => {
+    setTaxData(initialTaxData);
   };
 
   if (!isOpen) return null;
@@ -40,87 +82,103 @@ const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="mb-6">
             {/* Tax Rate */}
-            <div>
-              <label className="block text-gray-700 mb-2">Tax Rate</label>
-              <div className="flex items-center">
-                <select 
-                  name="taxRate" 
-                  value={taxData.taxRate}
-                  onChange={handleChange}
-                  className="form-select w-full border rounded p-2"
-                >
-                  <option value="0%">0%</option>
-                  <option value="5%">5%</option>
-                  <option value="12%">12%</option>
-                  <option value="18%">18%</option>
-                  <option value="28%">28%</option>
-                </select>
-                
-              </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Tax Rate (%)</label>
+              <input 
+                type="text"
+                name="taxRate"
+                value={taxData.taxRate}
+                onChange={handleChange}
+                className="form-input w-full border border-gray-300 rounded-md p-2"
+                placeholder="5"
+              />
             </div>
 
-            {/* CGST & SGST */}
-            <div>
-              <label className="block text-gray-700 mb-2">CGST & SGST</label>
-              <div className="flex items-center">
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              {/* CGST */}
+              <div>
+                <label className="block text-gray-700 mb-2">CGST(%)</label>
                 <input 
                   type="text"
                   name="cgst"
                   value={taxData.cgst}
-                  onChange={handleChange}
-                  className="form-input w-1/2 border rounded p-2 mr-1"
-                  placeholder="CGST"
+                  readOnly
+                  className="form-input w-full border border-gray-300 rounded-md p-2 bg-gray-100"
+                  placeholder="2.5"
                 />
-                <span className="mx-1">|</span>
+              </div>
+
+              {/* SGST/UTGST */}
+              <div>
+                <label className="block text-gray-700 mb-2">SGST/UTGST(%)</label>
                 <input 
                   type="text"
                   name="sgst"
                   value={taxData.sgst}
-                  onChange={handleChange}
-                  className="form-input w-1/2 border rounded p-2 ml-1"
-                  placeholder="SGST"
+                  readOnly
+                  className="form-input w-full border border-gray-300 rounded-md p-2 bg-gray-100"
+                  placeholder="2.5"
                 />
-                
               </div>
             </div>
 
-            {/* IGST */}
-            <div>
-              <label className="block text-gray-700 mb-2">IGST</label>
-              <div className="flex items-center">
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              {/* IGST */}
+              <div>
+                <label className="block text-gray-700 mb-2">IGST(%)</label>
                 <input 
                   type="text"
                   name="igst"
                   value={taxData.igst}
                   onChange={handleChange}
-                  className="form-input w-full border rounded p-2"
-                  placeholder="IGST"
+                  className="form-input w-full border border-gray-300 rounded-md p-2"
+                  placeholder="5"
                 />
-                
+              </div>
+
+              {/* HSN Code */}
+              <div>
+                <label className="block text-gray-700 mb-2">HSN Code</label>
+                <input 
+                  type="text"
+                  name="hsnCode"
+                  value={taxData.hsnCode}
+                  onChange={handleChange}
+                  className="form-input w-full border border-gray-300 rounded-md p-2"
+                  placeholder="5"
+                />
+              </div>
+
+              {/* Categories */}
+              <div>
+                <label className="block text-gray-700 mb-2">Categories</label>
+                <div className="relative">
+                  <select 
+                    name="category" 
+                    value={taxData.category}
+                    onChange={handleChange}
+                    className="form-select w-full border border-gray-300 rounded-md p-2 appearance-none"
+                  >
+                    <option value="">Categories</option>
+                    <option value="Personal Care">Personal Care</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Appliances">Appliances</option>
+                    <option value="Furniture">Furniture</option>
+                    <option value="Food">Food</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <FaSortDown />
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* HSN Code */}
-            <div>
-              <label className="block text-gray-700 mb-2">HSN Code</label>
-              <input 
-                type="text"
-                name="hsnCode"
-                value={taxData.hsnCode}
-                onChange={handleChange}
-                className="form-input w-full border rounded p-2"
-                placeholder="e.g. ABC-123"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             {/* Description of Goods */}
             <div>
-              <label className="block text-gray-700 mb-2">Description of Goods</label>
+              <label className="block text-gray-700 mb-2">Description</label>
               <input 
                 type="text"
                 name="description"
@@ -130,40 +188,22 @@ const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
                 placeholder="e.g. Hair Oil | Face Cream | Shampoo"
               />
             </div>
-
-            {/* Category */}
-            <div>
-              <label className="block text-gray-700 mb-2">Category</label>
-              <select 
-                name="category" 
-                value={taxData.category}
-                onChange={handleChange}
-                className="form-select w-full border rounded p-2"
-              >
-                <option value="">Select a category</option>
-                <option value="Personal Care">Personal Care</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Appliances">Appliances</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Food">Food</option>
-              </select>
-            </div>
           </div>
 
           {/* Modal Footer */}
           <div className="flex justify-end mt-6">
             <button
               type="button"
-              onClick={onClose}
+              onClick={handleReset}
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded mr-2"
             >
-              Cancel
+              Reset
             </button>
             <button
               type="submit"
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
             >
-              Save
+              Submit
             </button>
           </div>
         </form>
