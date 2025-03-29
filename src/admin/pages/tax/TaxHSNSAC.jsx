@@ -31,7 +31,7 @@ const Taxes = () => {
                 <Navbar />
 
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-                    <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
+                    {/* <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
                         <div className="w-full mb-6">
                             <div className="max-w-full px-2 md:px-4">
                                 <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
@@ -78,8 +78,8 @@ const Taxes = () => {
                                     <option>Maggie</option>
                                 </select>
                             </div>
-                        </div>
-                    </div>
+                        </div> */}
+                    {/* </div> */}
 
 
                     <TaxTable />
