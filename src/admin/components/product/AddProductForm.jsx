@@ -1268,7 +1268,7 @@ const AddProductForm = () => {
       case 6:
         return (
           <div className="container p-4">
-            <div className="grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-3 gap-6">
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
                   Tax Country
@@ -1294,6 +1294,47 @@ const AddProductForm = () => {
         
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Code
+                </label>
+                <select
+                  value={formData.taxDetails.countryTaxCode}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        countryTaxCode: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                >
+                  <option value="">Select tax code...</option>
+                  <option value="HSN">HSN</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  HSN/SAC Code
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.hsnSacCode}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        hsnSacCode: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  placeholder="Enter HSN/SAC code"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
                   Tax Class
                 </label>
                 <select
@@ -1315,48 +1356,8 @@ const AddProductForm = () => {
                 </select>
               </div>
         
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Country Tax Code
-                </label>
-                <select
-                  value={formData.taxDetails.countryTaxCode}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        countryTaxCode: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax code...</option>
-                  <option value="HSN">HSN</option>
-                </select>
-              </div>
         
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  HSN/SAC Code
-                </label>
-                <input
-                  type="text"
-                  value={formData.taxDetails.hsnSacCode}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        hsnSacCode: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  placeholder="Enter HSN/SAC code"
-                />
-              </div>
+             
         
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
@@ -1381,6 +1382,30 @@ const AddProductForm = () => {
                 </select>
               </div>
         
+              
+        
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Title
+                </label>
+                <select
+                  value={formData.taxDetails.taxTitle}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxTitle: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                >
+                  <option value="">Select tax title...</option>
+                  <option value="CGST">CGST</option>
+                  <option value="SGST">SGST</option>
+                </select>
+              </div>
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
                   Tax Rate
@@ -1419,30 +1444,6 @@ const AddProductForm = () => {
                   min="0"
                 />
               </div>
-        
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Title
-                </label>
-                <select
-                  value={formData.taxDetails.taxTitle}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxTitle: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax title...</option>
-                  <option value="CGST">CGST</option>
-                  <option value="SGST">SGST</option>
-                </select>
-              </div>
-        
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
                   Cess Percentage
@@ -1463,6 +1464,28 @@ const AddProductForm = () => {
                   step="0.01"
                   min="0"
                   placeholder="Enter cess percentage"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                 Tax Amount
+                </label>
+                <input
+                  type="number"
+                  value={formData.taxDetails.taxAmount}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxAmount: Math.max(0, parseFloat(e.target.value) || 0),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  step="0.01"
+                  min="0"
+                  placeholder="Tax Amount"
                 />
               </div>
             </div>
