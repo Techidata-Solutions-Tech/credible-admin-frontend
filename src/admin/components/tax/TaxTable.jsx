@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { FaSortDown } from 'react-icons/fa';
+import { FaSortDown, FaTrash } from 'react-icons/fa';
 import CreateTax from "./CreateTax";
 import UploadCsv from "./UploadCsv";
+import { FiEdit } from 'react-icons/fi';
 
 const TaxTable = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,13 +93,11 @@ const TaxTable = () => {
   return (
     <div className="w-full shadow-lg rounded-lg border overflow-hidden py-8">
       {/* Header */}
-      <div className="flex justify-start p-4">
-        <h1 className='text-black font-semibold text-2xl px-4 py-2 rounded'>
+      <div className="flex justify-between p-4">
+        <h1 className='text-black font-semibold text-2xl px-4 py-2 rounded uppercase'>
           Manage Tax
         </h1>
-      </div>
-
-      {/* Create buttons */}
+         {/* Create buttons */}
       <div className="flex justify-end">
         <div className="flex gap-2">
           <button onClick={() => setIsModalOpen(true)} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
@@ -112,6 +111,9 @@ const TaxTable = () => {
           </button>
         </div>
       </div>
+      </div>
+
+     
 
       {/* Table */}
       <div className="px-4">
@@ -120,37 +122,49 @@ const TaxTable = () => {
             <tr>
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
-                  Tax Rate
+                  Tax Rate(%)
                 </div>
               </th>
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
-                  CGST & SGST
+                  CGST(%)
                   
                 </div>
               </th>
               <th className="px-4 py-2 text-left">
                 <div className="flex items-center">
-                  IGST
+                   SGST & UTGST(%)
+                  
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left">
+                <div className="flex items-center">
+                  IGST(%)
                  
                 </div>
               </th>
               <th className="px-4 py-2 text-left">HSN Code</th>
               <th className="px-4 py-2 text-left">Description of Goods</th>
               <th className="px-4 py-2 text-left">Category</th>
+              <th className="px-4 py-2 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
             {taxes.map((tax) => (
               <tr key={tax.id} className="bg-blue-100 border-b border-gray-300">
                 <td className="px-4 py-2">{tax.taxRate}</td>
-                <td className="px-4 py-2">{tax.cgst} | {tax.sgst}</td>
+                <td className="px-4 py-2">{tax.cgst}</td>
+                <td className="px-4 py-2">{tax.sgst}</td>
                 <td className="px-4 py-2">{tax.igst}</td>
                 <td className="px-4 py-2">{tax.hsnCode}</td>
                 <td className="px-4 py-2">
                   {tax.description.split(',').join(' | ')}
                 </td>
                 <td className="px-4 py-2">{tax.category}</td>
+                <td className="px-4 py-2 flex gap-4 items-center">
+                  <button><FiEdit/></button>
+                  <button><FaTrash /></button>
+                </td>
               </tr>
             ))}
           </tbody>

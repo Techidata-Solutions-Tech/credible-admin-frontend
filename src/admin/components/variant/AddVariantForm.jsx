@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import { FiEdit, FiTrash2, FiX, FiPlus, FiChevronDown, FiChevronUp, FiImage, FiVideo } from 'react-icons/fi';
-import Select from 'react-select';
-import { HexColorPicker } from 'react-colorful';
+import Select, { components } from 'react-select';
 const VariantManager = ({ productId, onClose }) => {
   const [variants, setVariants] = useState([]);
   const [attributes, setAttributes] = useState([]);
@@ -702,8 +701,7 @@ const initialSelectionMode = 'all'
       {/* Generated Variants Section */}
       {generatedVariants.length > 0 && (
         <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">New Variants ({generatedVariants.length})</h3>
+          <div className="flex justify-end items-center mb-4">
             <div className="flex space-x-2">
               <button
                 onClick={() => setGeneratedVariants([])}
@@ -807,7 +805,7 @@ const initialSelectionMode = 'all'
     >
       <FiEdit size={16} />
     </button>
-    <button
+    {/* <button
       onClick={() => {
         setEditingGeneratedVariant(index);
         setMediaType('images');
@@ -828,7 +826,7 @@ const initialSelectionMode = 'all'
       title="Edit videos"
     >
       <FiVideo size={16} />
-    </button>
+    </button> */}
     <button
       onClick={() => {
         const newVariants = [...generatedVariants];
@@ -851,7 +849,7 @@ const initialSelectionMode = 'all'
       )}
 
       {/* Existing Variants Table */}
-      <div className="overflow-x-auto">
+      {/* <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr className="border-b">
@@ -894,7 +892,7 @@ const initialSelectionMode = 'all'
                       <input 
                         type="checkbox" 
                         checked={variant.is_default} 
-                        onChange={() => {/* Toggle default */}}
+                        onChange={() => {}}
                       />
                     </td>
                     <td className="px-4 py-2 space-x-2">
@@ -963,7 +961,7 @@ const initialSelectionMode = 'all'
             )}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       <div className="mt-4 text-sm text-gray-600">
         Showing {variants.length} of {variants.length} records
@@ -972,7 +970,7 @@ const initialSelectionMode = 'all'
       {/* Single Variant Form */}
       {showAddVariantForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-auto p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 my-8">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 my-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Product Variants</h2>
           <button 
@@ -988,53 +986,64 @@ const initialSelectionMode = 'all'
             <table className="w-full">
               <thead className="sticky top-0 bg-white z-10">
                 <tr className="bg-gray-100 border-b">
-                  <th className="p-4 font-semibold text-left w-[200px] border-r">
+                  <th className="p-4 font-semibold text-center w-[200px] border-r">
                     Attribute Name
                   </th>
-                  <th className="p-4 font-semibold text-left w-2/3 border-r">
+                  <th className="p-4 font-semibold text-center border-r">
                     Attribute Values
                   </th>
-                  <th className="p-4 font-semibold text-left w-16">Action</th>
+                  <th className="p-4 font-semibold text-center w-16">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {/* Selected attributes rows */}
                 {selectedAttributes.map(attribute => (
                   <tr key={attribute.id} className="border-b last:border-b-0">
-                    <td className="p-4 font-medium w-1/3 border-r">
+                    <td className="p-4 font-medium border-r">
                       {attribute.name}
                     </td>
-                    <td className="p-4 w-2/3 border-r">
-                      <Select
-                        isMulti
-                        options={attribute.values.map(value => ({ 
-                          value, 
-                          label: value,
-                          attributeName: attribute.name
-                        }))}
-                        value={(selectedValues[attribute.id] || []).map(value => ({ 
-                          value, 
-                          label: value,
-                          attributeName: attribute.name
-                        }))}
-                        onChange={(selected) => {
-                          const newValues = selected ? selected.map(option => option.value) : [];
-                          setSelectedValues({
-                            ...selectedValues,
-                            [attribute.id]: newValues
-                          });
-                        }}
-                        placeholder={`Select ${attribute.name} values...`}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
-                        components={{
-                          Option: ColorOption
-                        }}
-                        menuPortalTarget={document.body}
-                        styles={{
-                          menuPortal: (base) => ({ ...base, zIndex: 9999 })
-                        }}
-                      />
+                    <td className="p-4  border-r">
+                    <Select
+  isMulti
+  options={attribute.values.map(value => ({ 
+    value, 
+    label: value,
+    attributeName: attribute.name
+  }))}
+  value={(selectedValues[attribute.id] || []).map(value => ({ 
+    value, 
+    label: value,
+    attributeName: attribute.name
+  }))}
+  onChange={(selected) => {
+    const newValues = selected ? selected.map(option => option.value) : [];
+    setSelectedValues({
+      ...selectedValues,
+      [attribute.id]: newValues
+    });
+  }}
+  placeholder={`Select ${attribute.name} values...`}
+  className="basic-multi-select"
+  classNamePrefix="select"
+  components={{
+    Option: ColorOption,
+    MultiValue: ColorMultiValue
+  }}
+  menuPortalTarget={document.body}
+  styles={{
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    multiValueLabel: (base) => ({
+      ...base,
+      padding: 0,
+      paddingLeft: 0
+    }),
+    multiValue: (base) => ({
+      ...base,
+      margin: '2px',
+      backgroundColor: 'transparent'
+    })
+  }}
+/>
                     </td>
                     <td className="p-4  flex justify-center items-center">
                       <button
@@ -1104,7 +1113,7 @@ const initialSelectionMode = 'all'
             }`}
             disabled={selectedAttributes.length === 0}
           >
-            Generate Variants
+            Submit
           </button>
         </div>
       </div>
@@ -1187,7 +1196,7 @@ const initialSelectionMode = 'all'
           <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-4xl p-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">
-                Edit {mediaType === 'images' ? 'Images' : 'Videos'} for Variant #{editingGeneratedVariant + 1}
+                Edit {mediaType === 'images' ? 'Images' : 'Videos'} 
               </h2>
               <button 
                 onClick={() => setShowMediaUpload(false)}
@@ -1199,28 +1208,20 @@ const initialSelectionMode = 'all'
 
             <div className="flex border-b mb-5">
               <button type='button'
-                  className={`p-2 w-1/2 ${mediaType === 'images' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+                  className={`p-2 w-1/2 ${mediaType === 'images' ? 'border-2 border-blue-500 font-bold bg-gray-100' : ''}`}
                   onClick={() => setMediaType('images')}>
                   Images
               </button>
               <button type='button'
-                  className={`p-2 w-1/2 ${mediaType === 'videos' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+                  className={`p-2 w-1/2 ${mediaType === 'videos' ? 'border-2 border-blue-500 font-bold bg-gray-100' : ''}`}
                   onClick={() => setMediaType('videos')}>
                   Videos
               </button>
             </div>
 
             <div className="flex border-b mb-5">
-              <button type='button'
-                  className={`p-2 w-1/2 ${selectedGalleryMedia.length === 0 ? 'border-b-2 border-blue-500 font-bold' : ''}`}
-                  onClick={() => setSelectedGalleryMedia([])}>
-                  Upload New
-              </button>
-              <button type='button'
-                  className={`p-2 w-1/2 ${selectedGalleryMedia.length > 0 ? 'border-b-2 border-blue-500 font-bold' : ''}`}
-                  onClick={() => setSelectedGalleryMedia(media)}>
-                  Choose from Gallery
-              </button>
+              
+             
             </div>
 
             {selectedGalleryMedia.length > 0 ? (
@@ -1350,3 +1351,31 @@ const initialSelectionMode = 'all'
 };
 
 export default VariantManager;
+
+
+const ColorMultiValue = ({ children, ...props }) => {
+  const getColor = (value) => {
+    const colorMap = {
+      'Red': '#ff0000',
+      'Blue': '#0000ff',
+      'Green': '#00ff00',
+      'Yellow': '#ffff00',
+      'Black': '#000000',
+      'White': '#ffffff',
+      // Add more mappings as needed
+    };
+    return colorMap[value] || '#cccccc';
+  };
+
+  return (
+    <components.MultiValue {...props}>
+      <div className="flex items-center" style={{ padding: '2px 5px' }}>
+        <div 
+          className="w-3 h-3 rounded-full mr-1 border border-gray-300"
+          style={{ backgroundColor: getColor(props.data.value) }}
+        />
+        <span className="text-sm">{children}</span>
+      </div>
+    </components.MultiValue>
+  );
+};
