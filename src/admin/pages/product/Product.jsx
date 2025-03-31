@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar'
 import ProductTable from '../../components/product/ProductTable'
 import { Link } from 'react-router-dom'
 import PillTabs from '../../components/PillTabs'
-import Loader from '../../../components/loader'
+import Loader from '../../../components/Loader'
 
 const Product = () => {
   const token = localStorage.getItem('token')
