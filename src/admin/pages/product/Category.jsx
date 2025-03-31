@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import CategoryTable from '../../components/category/CategoryTable';
 import { Link } from 'react-router-dom';
-import Loader from '../../../components/loader';
+import Loader from '../../../components/Loader';
 
 const Category = () => {
     const token = localStorage.getItem('token')
