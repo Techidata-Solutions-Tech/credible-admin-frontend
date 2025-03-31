@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import { FiEdit, FiTrash2, FiX, FiPlus, FiChevronDown, FiChevronUp, FiImage, FiVideo } from 'react-icons/fi';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 const VariantManager = ({ productId, onClose }) => {
   const [variants, setVariants] = useState([]);
   const [attributes, setAttributes] = useState([]);
@@ -210,8 +210,31 @@ const initialSelectionMode = 'all'
   const handleAddVariant = () => {
     setEditingVariant(null);
     setShowAddVariantForm(true);
+    setSelectedAttributes([])
     reset();
   };
+  const isColorAttribute = (name) => {
+    const colorNames = ['color', 'colours', 'colors', 'colour'];
+    return colorNames.some(colorName => 
+      name.toLowerCase().includes(colorName.toLowerCase())
+    );
+  };
+  
+  // Custom color option component for react-select
+  const ColorOption = ({ innerProps, data, isSelected }) => (
+    <div 
+      {...innerProps} 
+      className={`flex items-center p-2 ${isSelected ? 'bg-blue-100' : 'hover:bg-gray-100'}`}
+    >
+      {isColorAttribute(data.attributeName) && (
+        <div 
+          className="h-4 w-4 rounded-full mr-2 border border-gray-300" 
+          style={{ backgroundColor: data.value }}
+        />
+      )}
+      <span>{data.label}</span>
+    </div>
+  );
 
   const handleEditVariant = (variant) => {
     setEditingVariant(variant);
@@ -295,6 +318,7 @@ const initialSelectionMode = 'all'
     const newVariants = generateCombinations(selectedAttributes);
     setGeneratedVariants(newVariants);
     setShowSidebar(false);
+    setShowAddVariantForm(false)
     toast.success(`Generated ${newVariants.length} variants`);
   };
 
@@ -677,8 +701,7 @@ const initialSelectionMode = 'all'
       {/* Generated Variants Section */}
       {generatedVariants.length > 0 && (
         <div className="mb-8 bg-gray-50 p-4 rounded-lg">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium">New Variants ({generatedVariants.length})</h3>
+          <div className="flex justify-end items-center mb-4">
             <div className="flex space-x-2">
               <button
                 onClick={() => setGeneratedVariants([])}
@@ -782,7 +805,7 @@ const initialSelectionMode = 'all'
     >
       <FiEdit size={16} />
     </button>
-    <button
+    {/* <button
       onClick={() => {
         setEditingGeneratedVariant(index);
         setMediaType('images');
@@ -803,7 +826,7 @@ const initialSelectionMode = 'all'
       title="Edit videos"
     >
       <FiVideo size={16} />
-    </button>
+    </button> */}
     <button
       onClick={() => {
         const newVariants = [...generatedVariants];
@@ -826,7 +849,7 @@ const initialSelectionMode = 'all'
       )}
 
       {/* Existing Variants Table */}
-      <div className="overflow-x-auto">
+      {/* <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead>
             <tr className="border-b">
@@ -869,7 +892,7 @@ const initialSelectionMode = 'all'
                       <input 
                         type="checkbox" 
                         checked={variant.is_default} 
-                        onChange={() => {/* Toggle default */}}
+                        onChange={() => {}}
                       />
                     </td>
                     <td className="px-4 py-2 space-x-2">
@@ -938,7 +961,7 @@ const initialSelectionMode = 'all'
             )}
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       <div className="mt-4 text-sm text-gray-600">
         Showing {variants.length} of {variants.length} records
@@ -946,121 +969,155 @@ const initialSelectionMode = 'all'
 
       {/* Single Variant Form */}
       {showAddVariantForm && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-    <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Generate Variants</h2>
-        <button 
-          onClick={() => setShowAddVariantForm(false)}
-          className="text-gray-500 hover:text-gray-700"
-        >
-          <FiX size={24} />
-        </button>
-      </div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-auto p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 my-8">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Product Variants</h2>
+          <button 
+            onClick={() => setShowAddVariantForm(false)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <FiX size={24} />
+          </button>
+        </div>
 
-      <div className="mb-4">
-        <div className="border rounded-lg overflow-hidden">
-          <table className="w-full min-h-[10rem]">
-            <thead>
-              <tr className="bg-gray-100 border-b">
-                <th className="p-4 font-semibold text-left w-1/3 border-r">
-                  <Select
-                    options={attributes.filter(attr => 
-                      !selectedAttributes.some(a => a.id === attr.id)
-                    )}
-                    getOptionLabel={(option) => option.name}
-                    getOptionValue={(option) => option.id}
-                    onChange={(selected) => {
-                      if (selected) {
-                        setSelectedAttributes([...selectedAttributes, {
-                          id: selected.id,
-                          name: selected.name,
-                          values: selected.values
-                        }]);
-                        setSelectedValues({
-                          ...selectedValues,
-                          [selected.id]: []
-                        });
-                      }
-                    }}
-                    placeholder="Select Attributes"
-                    className="basic-select"
-                    classNamePrefix="select"
-                    isClearable
-                  />
-                </th>
-                <th className="p-4 font-semibold text-left w-2/3 border-r">   Select attribute first
-                </th>
-                <th className="p-4 font-semibold text-left w-16">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-            
-              {/* Selected attributes rows */}
-              {selectedAttributes.map(attribute => (
-                <tr key={attribute.id} className="border-b last:border-b-0">
-                  <td className="p-4 font-medium w-1/3 border-r">
-                    {attribute.name}
-                  </td>
-                  <td className="p-4 w-2/3 border-r">
+        <div className="mb-4 max-h-[70vh] overflow-y-auto">
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full">
+              <thead className="sticky top-0 bg-white z-10">
+                <tr className="bg-gray-100 border-b">
+                  <th className="p-4 font-semibold text-center w-[200px] border-r">
+                    Attribute Name
+                  </th>
+                  <th className="p-4 font-semibold text-center border-r">
+                    Attribute Values
+                  </th>
+                  <th className="p-4 font-semibold text-center w-16">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Selected attributes rows */}
+                {selectedAttributes.map(attribute => (
+                  <tr key={attribute.id} className="border-b last:border-b-0">
+                    <td className="p-4 font-medium border-r">
+                      {attribute.name}
+                    </td>
+                    <td className="p-4  border-r">
                     <Select
-                      isMulti
-                      options={attribute.values.map(value => ({ value, label: value }))}
-                      value={(selectedValues[attribute.id] || []).map(value => ({ value, label: value }))}
+  isMulti
+  options={attribute.values.map(value => ({ 
+    value, 
+    label: value,
+    attributeName: attribute.name
+  }))}
+  value={(selectedValues[attribute.id] || []).map(value => ({ 
+    value, 
+    label: value,
+    attributeName: attribute.name
+  }))}
+  onChange={(selected) => {
+    const newValues = selected ? selected.map(option => option.value) : [];
+    setSelectedValues({
+      ...selectedValues,
+      [attribute.id]: newValues
+    });
+  }}
+  placeholder={`Select ${attribute.name} values...`}
+  className="basic-multi-select"
+  classNamePrefix="select"
+  components={{
+    Option: ColorOption,
+    MultiValue: ColorMultiValue
+  }}
+  menuPortalTarget={document.body}
+  styles={{
+    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+    multiValueLabel: (base) => ({
+      ...base,
+      padding: 0,
+      paddingLeft: 0
+    }),
+    multiValue: (base) => ({
+      ...base,
+      margin: '2px',
+      backgroundColor: 'transparent'
+    })
+  }}
+/>
+                    </td>
+                    <td className="p-4  flex justify-center items-center">
+                      <button
+                        onClick={() => {
+                          setSelectedAttributes(selectedAttributes.filter(a => a.id !== attribute.id));
+                          const newValues = {...selectedValues};
+                          delete newValues[attribute.id];
+                          setSelectedValues(newValues);
+                        }}
+                        className="text-red-500 hover:text-red-700"
+                        title="Remove attribute"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                
+                {/* Add new attribute row */}
+                <tr>
+                  <td className="p-4 border-r">
+                    <Select
+                      options={attributes.filter(attr => 
+                        !selectedAttributes.some(a => a.id === attr.id)
+                      )}
+                      getOptionLabel={(option) => option.name}
+                      getOptionValue={(option) => option.id}
                       onChange={(selected) => {
-                        const newValues = selected ? selected.map(option => option.value) : [];
-                        setSelectedValues({
-                          ...selectedValues,
-                          [attribute.id]: newValues
-                        });
+                        if (selected) {
+                          setSelectedAttributes([...selectedAttributes, {
+                            id: selected.id,
+                            name: selected.name,
+                            values: selected.values
+                          }]);
+                          setSelectedValues({
+                            ...selectedValues,
+                            [selected.id]: []
+                          });
+                        }
                       }}
-                      placeholder={`Select ${attribute.name} values...`}
-                      className="basic-multi-select"
+                      placeholder="Select Attribute Name"
+                      className="basic-select"
                       classNamePrefix="select"
+                      isClearable
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 })
+                      }}
                     />
                   </td>
-                  <td className="p-4 w-16 flex justify-center">
-                    <button
-                      onClick={() => {
-                        setSelectedAttributes(selectedAttributes.filter(a => a.id !== attribute.id));
-                        const newValues = {...selectedValues};
-                        delete newValues[attribute.id];
-                        setSelectedValues(newValues);
-                      }}
-                      className="text-red-500 hover:text-red-700"
-                      title="Remove attribute"
-                    >
-                      <FiTrash2 size={18} />
-                    </button>
+                  <td colSpan="2" className="p-4 text-center text-gray-500 italic">
+                    Select Attribute Name First
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-3 pt-4 border-t">
+          <button
+            onClick={generateVariants}
+            className={`px-4 py-2 rounded ${
+              selectedAttributes.length === 0 
+                ? 'bg-gray-300 cursor-not-allowed' 
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
+            disabled={selectedAttributes.length === 0}
+          >
+            Submit
+          </button>
         </div>
       </div>
-
-      <div className="flex justify-end space-x-3 pt-4 border-t">
-        <button
-          onClick={() => setShowAddVariantForm(false)}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Close
-        </button>
-        <button
-          onClick={generateVariants}
-          className={`px-4 py-2 rounded ${
-            selectedAttributes.length === 0 
-              ? 'bg-gray-300 cursor-not-allowed' 
-              : 'bg-blue-600 text-white hover:bg-blue-700'
-          }`}
-          disabled={selectedAttributes.length === 0}
-        >
-          Continue
-        </button>
-      </div>
     </div>
-  </div>
 )}
 
       {/* Generate Variants Sidebar */}
@@ -1139,7 +1196,7 @@ const initialSelectionMode = 'all'
           <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-4xl p-8">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">
-                Edit {mediaType === 'images' ? 'Images' : 'Videos'} for Variant #{editingGeneratedVariant + 1}
+                Edit {mediaType === 'images' ? 'Images' : 'Videos'} 
               </h2>
               <button 
                 onClick={() => setShowMediaUpload(false)}
@@ -1151,28 +1208,20 @@ const initialSelectionMode = 'all'
 
             <div className="flex border-b mb-5">
               <button type='button'
-                  className={`p-2 w-1/2 ${mediaType === 'images' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+                  className={`p-2 w-1/2 ${mediaType === 'images' ? 'border-2 border-blue-500 font-bold bg-gray-100' : ''}`}
                   onClick={() => setMediaType('images')}>
                   Images
               </button>
               <button type='button'
-                  className={`p-2 w-1/2 ${mediaType === 'videos' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
+                  className={`p-2 w-1/2 ${mediaType === 'videos' ? 'border-2 border-blue-500 font-bold bg-gray-100' : ''}`}
                   onClick={() => setMediaType('videos')}>
                   Videos
               </button>
             </div>
 
             <div className="flex border-b mb-5">
-              <button type='button'
-                  className={`p-2 w-1/2 ${selectedGalleryMedia.length === 0 ? 'border-b-2 border-blue-500 font-bold' : ''}`}
-                  onClick={() => setSelectedGalleryMedia([])}>
-                  Upload New
-              </button>
-              <button type='button'
-                  className={`p-2 w-1/2 ${selectedGalleryMedia.length > 0 ? 'border-b-2 border-blue-500 font-bold' : ''}`}
-                  onClick={() => setSelectedGalleryMedia(media)}>
-                  Choose from Gallery
-              </button>
+              
+             
             </div>
 
             {selectedGalleryMedia.length > 0 ? (
@@ -1302,3 +1351,31 @@ const initialSelectionMode = 'all'
 };
 
 export default VariantManager;
+
+
+const ColorMultiValue = ({ children, ...props }) => {
+  const getColor = (value) => {
+    const colorMap = {
+      'Red': '#ff0000',
+      'Blue': '#0000ff',
+      'Green': '#00ff00',
+      'Yellow': '#ffff00',
+      'Black': '#000000',
+      'White': '#ffffff',
+      // Add more mappings as needed
+    };
+    return colorMap[value] || '#cccccc';
+  };
+
+  return (
+    <components.MultiValue {...props}>
+      <div className="flex items-center" style={{ padding: '2px 5px' }}>
+        <div 
+          className="w-3 h-3 rounded-full mr-1 border border-gray-300"
+          style={{ backgroundColor: getColor(props.data.value) }}
+        />
+        <span className="text-sm">{children}</span>
+      </div>
+    </components.MultiValue>
+  );
+};

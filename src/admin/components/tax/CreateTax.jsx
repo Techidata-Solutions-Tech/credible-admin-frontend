@@ -72,7 +72,7 @@ const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-3xl">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-7xl">
         {/* Modal Header */}
         <div className="bg-blue-500 text-white p-3 flex justify-between items-center rounded-t-lg">
           <h2 className="text-lg font-semibold">Create Tax</h2>
@@ -178,13 +178,13 @@ const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
 
             {/* Description of Goods */}
             <div>
-              <label className="block text-gray-700 mb-2">Description</label>
-              <input 
+              <label className="block text-gray-700 mb-2">Description of Goods</label>
+              <textarea 
                 type="text"
                 name="description"
                 value={taxData.description}
                 onChange={handleChange}
-                className="form-input w-full border rounded p-2"
+                className="form-input w-full border border-gray-400 rounded p-2 h-[200px]"
                 placeholder="e.g. Hair Oil | Face Cream | Shampoo"
               />
             </div>
