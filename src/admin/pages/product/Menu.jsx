@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import { Link } from 'react-router-dom';
-import Loader from '../../../components/loader';
+import Loader from '../../../components/Loader';
 import MenuTable from '../../components/menu/MenuTable';
 
 const Menu = () => {

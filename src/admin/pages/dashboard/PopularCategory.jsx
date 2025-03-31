@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import PillTabs from '../../components/PillTabs'
 import PopularCategoryTable from '../../components/dashboard/PopularCategoryTable'
-import Loader from '../../../components/loader'
+import Loader from '../../../components/Loader'
 
 const PopularCategory = () => {
     const token = localStorage.getItem('token');

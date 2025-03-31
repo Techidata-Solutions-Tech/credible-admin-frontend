@@ -3,7 +3,7 @@ import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import PillTabs from '../../components/PillTabs'
 import BannerTable from '../../components/dashboard/BannerTable'
-import Loader from '../../../components/loader'
+import Loader from '../../../components/Loader'
 
 const Banner = () => {
     const token = localStorage.getItem('token');
