@@ -2,17 +2,20 @@ import React, { useState, useEffect } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import SelectImageModal from "./SelectImageModal";
 
 const EditCategoryPopup = ({ show, onClose, category, onSave }) => {
   const [name, setName] = useState("");
   const [redirect, setRedirect] = useState("");
   const [image, setImage] = useState("");
-
+  const [index, setIndex] = useState(null);
+const token = localStorage.getItem('token')
   useEffect(() => {
     if (category) {
       setName(category.name || "");
       setRedirect(category.redirect || "");
       setImage(category.image || "");
+      setIndex(category.index || null)
     }
   }, [category]);
 
@@ -23,7 +26,11 @@ const EditCategoryPopup = ({ show, onClose, category, onSave }) => {
         `${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory/${
           category.id
         }`,
-        updatedCategory
+        updatedCategory,{
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
+        }
       );
       toast.success("Category updated successfully");
       onSave(updatedCategory);
@@ -36,7 +43,7 @@ const EditCategoryPopup = ({ show, onClose, category, onSave }) => {
   return show ? (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-semibold mb-4">Edit Category</h2>
+        <h2 className="text-xl font-semibold mb-4 uppercase">Edit Category</h2>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Name
@@ -61,14 +68,21 @@ const EditCategoryPopup = ({ show, onClose, category, onSave }) => {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Image URL
+            Order
           </label>
           <input
-            type="text"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
+            type="number"
+            value={index}
+            onChange={(e) => setIndex(parseInt(e.target.value))}
             className="w-full p-2 border rounded-lg mb-4"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Image URL
+          </label>
+          <SelectImageModal setImage={setImage}/>
+
         </div>
         <div className="flex justify-between">
           <button
@@ -93,7 +107,7 @@ const PopularCategoryTable = ({ popularCategory }) => {
   const [categories, setCategories] = useState(popularCategory);
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(null);
-
+const token = localStorage.getItem('token')
   useEffect(() => {
     setCategories(popularCategory);
   }, [popularCategory]);
@@ -101,7 +115,11 @@ const PopularCategoryTable = ({ popularCategory }) => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory/${id}`
+        `${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory/${id}`,{
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
+        }
       );
       if (response.success) {
         toast.success("Category deleted successfully");
@@ -114,13 +132,17 @@ const PopularCategoryTable = ({ popularCategory }) => {
 
   const handleToggleStatus = async (id) => {
     const categoryToUpdate = categories.find((category) => category.id === id);
-    const updatedStatus = categoryToUpdate.status === "true" ? "false" : "true"; 
+    const updatedStatus = !categoryToUpdate.status ; 
 
     try {
       await axios.put(
         `${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory/${id}`,
         {
           status: updatedStatus, 
+        },{
+          headers:{
+            Authorization: `Bearer ${token}`,
+          }
         }
       );
       setCategories(
@@ -167,6 +189,9 @@ const PopularCategoryTable = ({ popularCategory }) => {
                 Redirect URL
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Order
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -204,12 +229,20 @@ const PopularCategoryTable = ({ popularCategory }) => {
                 </td>
                 <td className="px-4 py-4 text-sm text-gray-900">
                   <button
+                  
+                    className={`px-4 py-2 rounded-lg`}
+                  >
+                    {category.index }
+                  </button>
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  <button
                     onClick={() => handleToggleStatus(category.id)}
                     className={`px-4 py-2 rounded-lg ${
-                      category.status === "true" ? "bg-green-500" : "bg-red-500"
+                      category.status ? "bg-green-500" : "bg-red-500"
                     } text-white`}
                   >
-                    {category.status === "true" ? "Active" : "Inactive"}
+                    {category.status  ? "Active" : "Inactive"}
                   </button>
                 </td>
                 <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">

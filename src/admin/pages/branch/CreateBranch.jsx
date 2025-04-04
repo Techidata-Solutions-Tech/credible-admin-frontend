@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const CreateWarehouse = () => {
   const [formData, setFormData] = useState({
@@ -122,16 +123,21 @@ const CreateWarehouse = () => {
     setErrors({});
     toast.info("Form reset");
   };
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Warehouses', href: '/admin/warehouse/table' },
+    { label: 'Add Warehouses', href: '/admin/warehouse/table' },
+  ];
   return (
     <div className="min-h-screen">
       <Navbar />
       <div className="flex flex-col md:flex-row bg-gray-100">
         <Sidebar />
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
-          <h2 className="text-xl font-bold bg-blue-700 text-white p-2 rounded-md mb-4">
-            Create Warehouse
-          </h2>
+        <Breadcrumbs
+              pageTitle="Create Warehouse"
+              items={breadcrumbItems}
+            />
           <form onSubmit={handleSubmit}>
             {/* Warehouse Details */}
             <div className="mb-4 p-4 border rounded-md">
@@ -342,7 +348,7 @@ const CreateWarehouse = () => {
                 type="submit"
                 className="bg-green-600 text-white px-4 py-2 rounded-md"
               >
-                Create
+                Submit
               </button>
             </div>
           </form>

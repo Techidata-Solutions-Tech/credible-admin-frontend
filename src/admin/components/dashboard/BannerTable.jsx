@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import SelectImageModal from "./SelectImageModal";
 
 const BannerTable = ({setToggle, banners }) => {
+  const token = localStorage.getItem('token')
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const {
@@ -44,7 +45,10 @@ const BannerTable = ({setToggle, banners }) => {
         `${import.meta.env.VITE_BASE_URL}/api/admin/get-banner/${id}`,
         {
           method: "DELETE",
-        }
+          headers:{
+             Authorization:`Bearer ${token}`
+          }
+        },
       );
       const result = await response.json();
       if (response.status) {
@@ -62,7 +66,7 @@ const BannerTable = ({setToggle, banners }) => {
     const payload = {
       image: image,
       redirectUrl: data.redirectUrl,
-      type: data.type,
+      // type: data.type,
       position: data.position,
       index: parseInt(data.index),
     };
@@ -75,6 +79,7 @@ const BannerTable = ({setToggle, banners }) => {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization:`Bearer ${token}`
           },
           body: JSON.stringify(payload),
         }
@@ -107,9 +112,7 @@ const BannerTable = ({setToggle, banners }) => {
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Redirect URL
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-              Type
-            </th>
+          
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               Position
             </th>
@@ -144,7 +147,7 @@ const BannerTable = ({setToggle, banners }) => {
                   {banner.redirectUrl}
                 </a>
               </td>
-              <td className="px-4 py-4 text-sm text-gray-900">{banner.type}</td>
+              {/* <td className="px-4 py-4 text-sm text-gray-900">{banner.type}</td> */}
               <td className="px-4 py-4 text-sm text-gray-900">
                 {banner.position}
               </td>
@@ -205,7 +208,6 @@ const BannerTable = ({setToggle, banners }) => {
                 </svg>
               </button>
 
-              <SelectImageModal setImage={setImage} />
 
               <form
                 onSubmit={handleSubmit(onSubmit)}
@@ -248,8 +250,8 @@ const BannerTable = ({setToggle, banners }) => {
                       className="w-full p-2 border rounded-md bg-transparent"
                       {...register("position")}
                     >
-                      <option value="HERO">Hero</option>
-                      <option value="BELOW_POPULAR">Below Popular</option>
+                      <option value="SLIDER">Slider</option>
+                      {/* <option value="BELOW_POPULAR">Below Popular</option> */}
                       <option value="BANNER">Banner</option>
                     </select>
                     {errors.position && (
@@ -258,7 +260,7 @@ const BannerTable = ({setToggle, banners }) => {
                       </p>
                     )}
                   </div>
-                  <div className="mb-4 w-1/2">
+                  {/* <div className="mb-4 w-1/2">
                     <label
                       htmlFor="type"
                       className="block text-sm font-semibold"
@@ -278,7 +280,7 @@ const BannerTable = ({setToggle, banners }) => {
                         {errors.type.message}
                       </p>
                     )}
-                  </div>
+                  </div> */}
                   <div className="mb-4 w-1/2">
                     <label
                       htmlFor="image"
@@ -286,21 +288,8 @@ const BannerTable = ({setToggle, banners }) => {
                     >
                       Choose Image
                     </label>
-                    <input
-                      id="image"
-                      type="text"
-                      className="w-full p-2 border rounded-md bg-transparent hidden"
-                      {...register("image", { required: "Image is required" })}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        document.getElementById("view_image").showModal()
-                      }
-                      className="w-full p-2 border rounded-md bg-blue-500 text-white font-semibold hover:bg-blue-600"
-                    >
-                      Choose Image
-                    </button>
+                    <SelectImageModal setImage={setImage} />
+
                     {image && (
                       <img
                         src={image}

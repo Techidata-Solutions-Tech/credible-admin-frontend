@@ -3,6 +3,7 @@ import { FaSortDown, FaSortUp } from "react-icons/fa";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const WarehouseTable = () => {
   const token = localStorage.getItem('token');
@@ -75,6 +76,7 @@ const WarehouseTable = () => {
         <div className="flex flex-1">
           <Sidebar />
           <div className="flex-1 p-4 overflow-hidden">
+        
             <div className="bg-white rounded shadow-lg p-4 h-full flex items-center justify-center">
               <p>Loading warehouses...</p>
             </div>
@@ -98,18 +100,23 @@ const WarehouseTable = () => {
       </div>
     );
   }
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Warehouses', href: '/admin/warehouse/table' },
+  ];
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <div className="flex flex-1">
         <Sidebar />
         <div className="flex-1 p-4 overflow-hidden">
-          <div className="bg-white rounded shadow-lg p-4 h-full flex flex-col">
-            <h2 className="text-lg font-semibold bg-blue-600 text-white p-2 rounded">
-              Manage Warehouses
-            </h2>
-            <div className="flex justify-between items-center my-2">
+        <Breadcrumbs
+              pageTitle="Manage Warehouses"
+              items={breadcrumbItems}
+            />
+          <div className="bg-white rounded shadow-lg px-4 pb-4 h-full flex flex-col">
+            
+            <div className="flex justify-between items-center mb-2">
               <Link
                 to={"/admin/warehouse/create"}
                 className="bg-green-500 text-white px-4 py-2 rounded"
@@ -131,8 +138,8 @@ const WarehouseTable = () => {
             <div className="overflow-auto max-h-[30rem] flex-1">
               <table className="min-w-full border-collapse border border-gray-300 text-sm">
                 <thead>
-                  <tr className="bg-gray-50 text-black">
-                    <th className="px-4 py-3 text-left text-[14px] font-[700]">
+                  <tr className="bg-gray-50 text-black uppercase">
+                    <th className="px-4 py-3 text-left text-[12px] font-[700]">
                       No
                     </th>
                     {[

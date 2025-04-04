@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaEye } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 
 const UserTable = () => {
@@ -64,7 +65,10 @@ const UserTable = () => {
     setSelectedUser(user);
     setIsModalOpen(true);
   };
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/admin' },
+    { label: 'Manage Users', href: '/admin/user/personal' }
+  ];
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -72,11 +76,14 @@ const UserTable = () => {
         <Sidebar />
         <div className="p-6 bg-gray-100 min-h-screen flex-1">
           <ToastContainer position="top-right" autoClose={3000} />
-          <h1 className="text-2xl mb-2 font-semibold">Manage Users</h1>
+          <Breadcrumbs
+              pageTitle="Manage Users"
+              items={breadcrumbItems}
+            />
           <div className="overflow-x-auto">
             <table className="w-full bg-white shadow-md rounded-lg">
               <thead>
-                <tr className="bg-blue-500 text-white">
+                <tr className="bg-gray-500 text-white uppercase">
                   <th className="p-3">ID</th>
                   <th className="p-3">Name</th>
                   <th className="p-3">Email</th>
@@ -131,7 +138,7 @@ const UserTable = () => {
           {isModalOpen && selectedUser && (
             <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
               <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-                <h2 className="text-xl font-semibold mb-4">User Details</h2>
+                <h2 className="text-xl font-semibold mb-4 uppercase">User Details</h2>
                 <p><strong>ID:</strong> {selectedUser.id}</p>
                 <p><strong>Name:</strong> {selectedUser.firstName || "N/A"} {selectedUser.lastName || ""}</p>
                 <p><strong>Email:</strong> {selectedUser.email}</p>

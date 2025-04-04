@@ -173,7 +173,7 @@ const UserTable = () => {
           <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_edit').close()}>
             &times;
           </button>
-          <h2 className="text-lg font-semibold">Edit User</h2>
+          <h2 className="text-lg font-semibold uppercase">Edit User</h2>
           <input type="text" value={modalData?.name} className="input input-bordered w-full mt-2" />
           <button className="btn btn-primary mt-4" onClick={() => updateUser(modalData)}>Save Changes</button>
         </form>
@@ -196,7 +196,7 @@ const UserTable = () => {
           <button type="button" className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_status').close()}>
             &times;
           </button>
-          <h2 className="text-lg font-semibold">Change Status</h2>
+          <h2 className="text-lg font-semibold uppercase">Change Status</h2>
           <select className="select select-bordered w-full mt-2" onChange={(e) => changeUserStatus(userId, e.target.value)}>
             <option value="1">Active</option>
             <option value="0">Inactive</option>

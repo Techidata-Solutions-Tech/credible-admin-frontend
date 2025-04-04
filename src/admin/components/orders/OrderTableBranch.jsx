@@ -187,7 +187,7 @@ const OrderTable = () => {
           >
             &times;
           </button>
-          <h2 className="text-lg font-semibold">Edit Order</h2>
+          <h2 className="text-lg font-semibold uppercase">Edit Order</h2>
           <input
             type="text"
             value={modalData?.customerName || ""}

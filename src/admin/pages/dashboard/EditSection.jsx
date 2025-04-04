@@ -6,12 +6,17 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const SectionDetail = () => {
   const token = localStorage.getItem('token');
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Sections', href: '/admin/dashboard/section/manage' },
+    { label: 'Edit Section', href: '//admin/dashboard/section/manage' }
+  ];
   const [section, setSection] = useState({ title: "", selectedProducts: [] });
   const [allProducts, setAllProducts] = useState([]);
 
@@ -24,7 +29,11 @@ const SectionDetail = () => {
     };
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts?page=0&limit=100`, config)
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/product?page=0&limit=100`, config,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+        }
+      })
       .then((response) => {
         const formattedProducts = response.data.data.map((product) => ({
           product_name: product.product_name,
@@ -39,7 +48,11 @@ const SectionDetail = () => {
       });
 
     axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, config)
+      .get(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, config,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+        }
+      })
       .then((response) => {
         if (response.data.status) {
           const sectionData = response.data.data;
@@ -88,7 +101,11 @@ const SectionDetail = () => {
     };
 
     axios
-      .put(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, data)
+      .put(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, data,{
+        headers:{
+          'Authorization': `Bearer ${token}`,
+        }
+      })
       .then((response) => {
         if (response.data.status) {
           toast.success("Section updated successfully!");
@@ -110,8 +127,12 @@ const SectionDetail = () => {
         <Sidebar />
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
           <form onSubmit={handleSubmit}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Section Details</h2>
+          <Breadcrumbs
+              pageTitle="Edit Section"
+              items={breadcrumbItems}
+            />
+            <div className="flex justify-end items-center mb-4">
+              
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded"

@@ -65,14 +65,14 @@ const ProductHome = () => {
       <div className="flex flex-col md:flex-row bg-gray-100">
         <Sidebar />
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
-          <h2 className="text-2xl font-bold text-center mb-4">Home Products</h2>
+          <h2 className="text-2xl font-bold text-center mb-4 uppercase">Home Products</h2>
           {loading ? (
             <p className="text-center text-lg">Loading...</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full border-collapse border border-gray-200">
                 <thead>
-                  <tr className="bg-gray-200">
+                  <tr className="bg-gray-200 uppercase">
                     <th className="border p-2">Image</th>
                     <th className="border p-2">Product Name</th>
                     <th className="border p-2">Brand</th>

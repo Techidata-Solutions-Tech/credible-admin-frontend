@@ -3,7 +3,9 @@ import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import { FiEdit, FiTrash2, FiX, FiPlus, FiChevronDown, FiChevronUp, FiImage, FiVideo } from 'react-icons/fi';
 import Select, { components } from 'react-select';
+import { useParams } from 'react-router-dom';
 const VariantManager = ({ productId, onClose }) => {
+  const {id} = useParams()
   const [variants, setVariants] = useState([]);
   const [attributes, setAttributes] = useState([]);
   const [showAddVariantForm, setShowAddVariantForm] = useState(false);
@@ -324,38 +326,70 @@ const initialSelectionMode = 'all'
 
   const saveGeneratedVariants = async () => {
     try {
-      const payload = generatedVariants.map(variant => ({
-        product_id: productId,
-        attributes: Object.entries(variant.attributes).map(([name, option]) => ({
-          name,
-          option
-        })),
-        sku: variant.sku || generateSKU(),
-        price: variant.price || '0',
-        stock_quantity: variant.quantity || 0,
-        weight: variant.weight || '',
-        dimensions: {
-          width: variant.dimensions.width || '',
-          length: variant.dimensions.length || '',
-          height: variant.dimensions.height || ''
-        },
-        images: variant.images || [],
-        videos: variant.videos || []
-      }));
-
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/variants`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}` 
-        },
-        body: JSON.stringify({ variants: payload })
+      // Get all unique attribute IDs from the generated variants
+      const attributeIds = [...new Set(
+        generatedVariants.flatMap(variant => 
+          Object.keys(variant.attributes).map(attrName => {
+            const attr = attributes.find(a => a.name === attrName);
+            return attr ? attr.id : null;
+          }).filter(Boolean)
+        )
+      )].join(',');
+  
+      // Prepare the payload in the required format
+      const payload = generatedVariants.map(variant => {
+        // Handle both single and multiple attributes
+        let attributeCombination;
+        const attributeEntries = Object.entries(variant.attributes);
+        
+        if (attributeEntries.length === 0) {
+          attributeCombination = '';
+        } else {
+          attributeCombination = attributeEntries
+            .map(([name, value]) => `${value}`)
+            .join('+');
+        }
+  
+        return {
+          attribute: attributeCombination,
+          mrp: parseFloat(variant.price) || 0,
+          price: parseFloat(variant.price) || 0,
+          quantity: parseInt(variant.quantity) || 0,
+          skuId: variant.sku || generateSKU(),
+          images: variant.images || [],
+          videos: variant.videos || []
+        };
       });
-
+      console.log("Line 363", attributeIds);
+      
+  console.log("Line 365",payload);
+  
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/variant/${id}?ids=${attributeIds}`,
+        {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}` 
+          },
+          body: JSON.stringify(payload) 
+        }
+      );
+  console.log(response);
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to save variants');
+      } else {
+        toast.success("Variants saved in Db successfully")
+      }
+  
       const result = await response.json();
       
-      if (!response.ok) throw new Error(result.message || 'Failed to add variants');
-
+      if (!result.status) {
+        throw new Error(result.message || 'Variant save operation failed');
+      }
+  
       toast.success(`${payload.length} variants added successfully`);
       setGeneratedVariants([]);
       fetchVariants();
@@ -466,7 +500,7 @@ const initialSelectionMode = 'all'
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div className="bg-white rounded-lg shadow-lg w-[90%] lg:w-[60%] h-[80vh] overflow-auto p-6">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Edit Variant #{editGeneratedVariantModal + 1}</h2>
+        <h2 className="text-xl font-semibold uppercase">Edit Variant #{editGeneratedVariantModal + 1}</h2>
         <button 
           onClick={() => setEditGeneratedVariantModal(null)}
           className="text-gray-500 hover:text-gray-700"
@@ -671,7 +705,7 @@ const initialSelectionMode = 'all'
 )}
 
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">Product Variants</h2>
+        <h2 className="text-xl font-semibold uppercase">Product Variants</h2>
         <div className="flex space-x-2">
           <button 
             className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 flex items-center"
@@ -710,6 +744,7 @@ const initialSelectionMode = 'all'
                 Cancel
               </button>
               <button
+              type='button'
                 onClick={saveGeneratedVariants}
                 className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 text-sm"
               >
@@ -972,7 +1007,7 @@ const initialSelectionMode = 'all'
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-50 overflow-y-auto p-4">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl p-6 my-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Product Variants</h2>
+          <h2 className="text-xl font-semibold uppercase">Product Variants</h2>
           <button 
             onClick={() => setShowAddVariantForm(false)}
             className="text-gray-500 hover:text-gray-700"
@@ -1126,7 +1161,7 @@ const initialSelectionMode = 'all'
   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Generate variants</h2>
+          <h2 className="text-xl font-semibold uppercase">Generate variants</h2>
           <button 
             onClick={() => setShowSidebar(false)}
             className="text-gray-500 hover:text-gray-700"
@@ -1195,7 +1230,7 @@ const initialSelectionMode = 'all'
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-[90%] max-w-4xl p-8">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">
+              <h2 className="text-xl font-semibold uppercase">
                 Edit {mediaType === 'images' ? 'Images' : 'Videos'} 
               </h2>
               <button 

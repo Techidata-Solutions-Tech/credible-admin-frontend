@@ -3,6 +3,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 const AttributeForm = () => {
   const [attributes, setAttributes] = useState([
     {
@@ -84,14 +85,21 @@ const AttributeForm = () => {
       toast.error("Error:", error);
     }
   };
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Attributes', href: '/admin/product/attributes' },
+    { label: 'Add Attributes', href: '/admin/product/attributes' },
+  ];
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar activeTab={1} />
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <h1 className="text-3xl font-bold mb-6">Add Attributes</h1>
+        <Breadcrumbs
+              pageTitle="Add Attributes"
+              items={breadcrumbItems}
+            />
 
           <div className="flex items-center mb-4">
             <label className="mr-4">Mode:</label>

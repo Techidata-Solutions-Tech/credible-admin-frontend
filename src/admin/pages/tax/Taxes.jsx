@@ -111,13 +111,13 @@ const TaxTable = () => {
         <Navbar />
         <div className="p-6">
      <div className="flex justify-between items-center">
-     <h2 className="text-xl font-bold mb-4">Tax Setting</h2>
+     <h2 className="text-xl font-bold mb-4 uppercase">Tax Setting</h2>
           <button onClick={() => setShowPopup(true)} className="bg-green-500 text-white px-4 py-2 rounded mb-4">+ Add New Tax</button>
        
      </div>
         <table className="w-full border border-gray-300">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 uppercase">
                 <th className="p-2 border">Sr. No</th>
                 <th className="p-2 border">Display Name</th>
                 <th className="p-2 border">Tax Name</th>

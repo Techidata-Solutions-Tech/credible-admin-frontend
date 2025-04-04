@@ -117,6 +117,7 @@ const AddCategory = () => {
       meta_title: data.meta_title,
       meta_keywords: data.meta_keywords,
       meta_description: data.meta_description,
+      index: parseInt(data.index),
       isFeatured: data.isFeatured || false,
       cat_type: formType,
     };
@@ -338,6 +339,21 @@ const AddCategory = () => {
                       {...register("meta_description")}
                     ></textarea>
                   </div>
+                  <div className="mb-4">
+                    <label
+                      htmlFor="index"
+                      className="block text-sm font-semibold"
+                    >
+                      Order
+                    </label>
+                    <input
+                      id="index"
+                      type="number"
+                      className="w-full p-2 border border-black rounded-md bg-transparent"
+                      rows="3"
+                      {...register("index")}
+                    ></input>
+                  </div>
 
                   
 
@@ -369,12 +385,13 @@ const AddCategory = () => {
                     </label>
                   </div>
                 </div>
-                <div className="mt-4 w-full" onClick={handleImageModalClick}>
-                    <SelectImageModal setImage={setFeatureImage} />
-                  </div>
+               
               </div>
               <div className="w-full flex items-center justify-center">
                 <div className="mb-4 w-full max-w-[300px]">
+                <div className="my-4 w-full" onClick={handleImageModalClick}>
+                    <SelectImageModal setImage={setFeatureImage} />
+                  </div>
                   {featureImage && (
                     <div className="w-full aspect-square">
                       <img

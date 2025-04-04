@@ -75,7 +75,7 @@ const CreateTaxModal = ({ isOpen, onClose, onSave }) => {
       <div className="bg-white rounded-lg shadow-lg w-full max-w-7xl">
         {/* Modal Header */}
         <div className="bg-blue-500 text-white p-3 flex justify-between items-center rounded-t-lg">
-          <h2 className="text-lg font-semibold">Create Tax</h2>
+          <h2 className="text-lg font-semibold uppercase">Create Tax</h2>
           <button onClick={onClose} className="text-white hover:text-gray-200">
             <FaTimes size={20} />
           </button>

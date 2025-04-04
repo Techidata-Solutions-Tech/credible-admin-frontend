@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar'
 import PillTabs from '../../components/PillTabs'
 import BannerTable from '../../components/dashboard/BannerTable'
 import Loader from '../../../components/Loader'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const Banner = () => {
     const token = localStorage.getItem('token');
@@ -17,7 +18,10 @@ const Banner = () => {
         { id: 4, label: 'Blocked (100)' },
         { id: 5, label: 'Tash (10)' },
     ];
-
+    const breadcrumbItems = [
+        { label: 'Home', href: '/admin' },
+        { label: 'Banners', href: '/admin/dashboard/banner/table' },
+      ];
     useEffect(()=>{
         const fetchBanners = async () => {
             try {
@@ -29,6 +33,8 @@ const Banner = () => {
                 }
               );
               const result = await response.json();
+              console.log(result);
+              
               if(response.status === 200){
                 setLoading(false)
                 setBanners(result.data)
@@ -48,6 +54,10 @@ const Banner = () => {
             <div className='flex flex-col md:flex-row bg-gray-100'>
                 <Sidebar />
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
+                <Breadcrumbs
+              pageTitle="Banners"
+              items={breadcrumbItems}
+            />
                     <div className="w-full mb-6">
                         <div className="max-w-full px-2 md:px-4">
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">

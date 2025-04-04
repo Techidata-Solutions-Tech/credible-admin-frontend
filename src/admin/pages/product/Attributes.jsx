@@ -3,6 +3,7 @@ import Sidebar from "../../components/Sidebar";
 import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const AttributeTable = () => {
   const [attributes, setAttributes] = useState([]);
@@ -125,7 +126,10 @@ const AttributeTable = () => {
   const indexOfLast = currentPage * perPage;
   const indexOfFirst = indexOfLast - perPage;
   const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Attributes', href: '/admin/product/attributes' },
+  ];
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar activeTab={1} />
@@ -133,8 +137,10 @@ const AttributeTable = () => {
       <div className="flex-1 flex flex-col overflow-hidden px-4">
         <Navbar />
         <ToastContainer />
-        <h1 className="text-3xl font-bold mb-4">Manage Attributes</h1>
-
+        <Breadcrumbs
+              pageTitle="Manage Attributes"
+              items={breadcrumbItems}
+            />
         {/* Search & Filter */}
         <div className="flex mb-4 space-x-4">
           <input
@@ -213,7 +219,7 @@ const AttributeTable = () => {
         {showEditModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg w-1/2">
-              <h2 className="text-2xl font-bold mb-4">Edit Attribute</h2>
+              <h2 className="text-2xl font-bold mb-4 uppercase">Edit Attribute</h2>
               <form onSubmit={handleEditSubmit}>
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>

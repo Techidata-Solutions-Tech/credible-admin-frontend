@@ -38,7 +38,7 @@ const TransactionSale = () => {
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white space-y-8">
                         {/* Header */}
                         <div className="mb-6">
-                            <h1 className="text-[28px] font-semibold text-blue-900">Transactions</h1>
+                            <h1 className="text-[28px] font-semibold text-blue-900 uppercase">Transactions</h1>
                             <p className="text-blue-600">Manage and monitor your payment transactions</p>
                         </div>
                         <div className="max-w-full px-2 md:px-4">

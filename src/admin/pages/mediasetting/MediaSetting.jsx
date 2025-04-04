@@ -3,13 +3,14 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
+import { Loader } from "lucide-react";
 
 const ImageGallery = () => {
   const token = localStorage.getItem('token');
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState(new Set());
   const [selectedFile, setSelectedFile] = useState(null);
-
+ const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetchImages();
   }, []);
@@ -26,6 +27,7 @@ const ImageGallery = () => {
       );
       const result = await response.json();
       setImages(result.data || []);
+      setLoading(false)
     } catch (error) {
       toast.error("Failed to fetch images");
     }
@@ -134,7 +136,8 @@ const ImageGallery = () => {
               Delete Selected
             </button>
           </div>
-          <div className="grid grid-cols-5 gap-4">
+          <div className="overflow-x-auto">
+                        { loading ? <Loader/> : <div className="grid grid-cols-5 gap-4">
             {images.map((url, index) => (
               <div key={index} className="relative border rounded p-2">
                 <img
@@ -148,7 +151,9 @@ const ImageGallery = () => {
                 )}
               </div>
             ))}
-          </div>
+          </div>}
+                        </div>
+          
           <ToastContainer />
         </div>
       </div>

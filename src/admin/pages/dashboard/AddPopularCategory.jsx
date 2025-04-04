@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import SelectImageModal from '../../components/dashboard/SelectImageModal'
 import 'react-toastify/dist/ReactToastify.css';
+import Breadcrumbs from '../../components/Breadcrumbs';
 const AddPopularCategory = () => {
   const token = localStorage.getItem('token');
   const { register, handleSubmit,setValue, formState: { errors } } = useForm();
@@ -19,6 +20,7 @@ const AddPopularCategory = () => {
       name: data.name,
       image: 'https://media.istockphoto.com/id/185278433/photo/black-digital-slr-camera-in-a-white-background.jpg?s=612x612&w=0&k=20&c=OOCbhvOF0W-eVhhrm-TxbgLfbKhFfs4Lprjd7hiQBNU=',
       redirectUrl: data.redirectUrl,
+      index: parseInt(data.index),
     }
     try {
       const response = await fetch( `${import.meta.env.VITE_BASE_URL}/api/admin/popularCategory`, {
@@ -42,14 +44,21 @@ const AddPopularCategory = () => {
       toast.error("Something went wrong!");
     }
   };
+  const breadcrumbItems = [
+    { label: 'Home', href: '/admin' },
+    { label: 'Popular Category', href: '/admin/dashboard/category/popular-table' },
+    { label: 'Add Popular Category', href: '/admin/dashboard/category/popular' }
+  ];
     return (
         <div className='min-h-screen'>
             <Navbar />
             <div className='flex flex-col md:flex-row bg-gray-100'>
                 <Sidebar />
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
-                <SelectImageModal setImage={setImage}/>
-
+                <Breadcrumbs
+              pageTitle="Add Popular Category"
+              items={breadcrumbItems}
+            />
                 <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md pt-[30px]">
 
                     <div className='flex justify-evenly gap-[50px]'>
@@ -73,13 +82,8 @@ const AddPopularCategory = () => {
                         className="w-full p-2 border rounded-md bg-transparent hidden"
                         {...register('image', { required: 'Image is required' })}
                         />
-                          <button
-                                type="button"
-                                onClick={() => document.getElementById('view_image').showModal()}
-                                className="w-full p-2 border rounded-md bg-blue-500 text-white font-semibold hover:bg-blue-600"
-                            >
-                                Choose Image
-                            </button>
+                                         <SelectImageModal setImage={setImage}/>
+
                             {image && <img src={image} alt="Preview" className="max-w-full h-auto rounded mt-2" />}
                     </div>
                     <div className="mb-4 w-1/2">
@@ -91,6 +95,16 @@ const AddPopularCategory = () => {
                             {...register('redirectUrl', { required: 'redirect URL is required' })}
                         />
                         {errors.redirectUrl && <p className="text-red-500 text-xs">{errors.redirectUrl.message}</p>}
+                        </div>
+                    <div className="mb-4 w-1/2">
+                        <label htmlFor="index" className="block text-sm font-semibold">Order</label>
+                        <input
+                            id="index"
+                            type="number"
+                            className="w-full p-2 border rounded-md bg-transparent"
+                            {...register('index', { required: 'Order is required' })}
+                        />
+                        {errors.index && <p className="text-red-500 text-xs">{errors.index.message}</p>}
                         </div>
                     </div>
 

@@ -14,23 +14,28 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
         const fetchMedia = async () => {
             try {
                 const token = localStorage.getItem('token'); 
-                const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/images`,
+                const type = mediaType === 'images' ? 'IMAGE' : 'VIDEO';
+                const response = await fetch(
+                    `${import.meta.env.VITE_BASE_URL}/api/admin/media?type=${type}`,
                     {
-                      method: 'GET',
-                      headers: {
-                        'Authorization': `Bearer ${token}`, 
-                        'Content-Type': 'application/json',
-                      },
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, 
+                            'Content-Type': 'application/json',
+                        },
                     }
-                  );
+                );
                 const result = await response.json();
                 setMedia(result.data);
             } catch (error) {
                 toast.error("Failed to fetch media");
             }
         };
-        fetchMedia();
-    }, []);
+        
+        if (isModalOpen) {
+            fetchMedia();
+        }
+    }, [isModalOpen, mediaType]);
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
@@ -44,11 +49,16 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
         }
 
         const formDataUpload = new FormData();
-        selectedFiles.forEach(file => formDataUpload.append('media', file)); 
+        selectedFiles.forEach(file => formDataUpload.append('media', file));
+        formDataUpload.append('type', mediaType === 'images' ? 'IMAGE' : 'VIDEO');
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/upload-multiple-images`, {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/upload-media`, {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 body: formDataUpload
             });
 
@@ -66,6 +76,20 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
                 }));
 
                 setSelectedFiles([]);
+                // Refresh the gallery after upload
+                const type = mediaType === 'images' ? 'IMAGE' : 'VIDEO';
+                const refreshResponse = await fetch(
+                    `${import.meta.env.VITE_BASE_URL}/api/admin/media?type=${type}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`, 
+                            'Content-Type': 'application/json',
+                        },
+                    }
+                );
+                const refreshResult = await refreshResponse.json();
+                setMedia(refreshResult.data);
             } else {
                 toast.error("Upload failed");
             }
