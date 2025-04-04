@@ -2,45 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsThreeDots } from "react-icons/bs";
 import axios from 'axios';
-const MenuTable = ({categories,setToggle}) => {
+const MenuTable = ({categories,setToggle, token}) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
 
-  // Sample category data
-  // const categories = [
-  //   {
-  //     id: 'C001',
-  //     image: '/51.png',
-  //     parentCategory: 'Electronics',
-  //     parentCategoryId: 'P001',
-  //     subCategory: 'Mobile Phones',
-  //     subCategoryId: 'S001',
-  //     childCategory: 'Smartphones',
-  //     status: 'Active',
-  //     createdAt: '2024-01-10',
-  //   },
-  //   {
-  //     id: 'C002',
-  //     image: '/56.png',
-  //     parentCategory: 'Fashion',
-  //     parentCategoryId: 'P002',
-  //     subCategory: 'Men',
-  //     subCategoryId: 'S002',
-  //     childCategory: 'T-Shirts',
-  //     status: 'Inactive',
-  //     createdAt: '2024-02-15',
-  //   },
-  //   {
-  //     id: 'C003',
-  //     image: '/53.png',
-  //     parentCategory: 'Home Appliances',
-  //     parentCategoryId: 'P003',
-  //     subCategory: 'Kitchen',
-  //     subCategoryId: 'S003',
-  //     childCategory: 'Blenders',
-  //     status: 'Active',
-  //     createdAt: '2024-03-20',
-  //   },
-  // ];
+
 
   const handleDeletePopUp = async (id) =>{
     setSelectedCategoryId(id)
@@ -49,7 +14,11 @@ const MenuTable = ({categories,setToggle}) => {
   }
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-single-category/${selectedCategoryId}`);
+      const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/admin/delete-single-category/${selectedCategoryId}`,{
+        headers:{
+          Authorization: `Bearer ${token}`,
+        }
+      });
       setToggle(Date.now())
       if (response.status === 200) {
         document.getElementById('delete_modal').close()
@@ -63,7 +32,11 @@ const MenuTable = ({categories,setToggle}) => {
 
   const handleStatusChange = async (id) =>{
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/admin/toggle-category-status/${id}`);
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/admin/toggle-category-status/${id}`,{
+        headers:{
+          Authorization: `Bearer ${token}`,
+        }
+      });
       setToggle(Date.now())
       if (response.status === 200) {
          toast.success("Menu status changed");

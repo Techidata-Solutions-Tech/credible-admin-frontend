@@ -5,6 +5,7 @@ import Sidebar from '../../components/Sidebar';
 import { useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const EditMenu = () => {
     const { register, handleSubmit, formState: { errors }, setValue } = useForm();
@@ -99,13 +100,21 @@ const EditMenu = () => {
             toast.error("Something went wrong!");
         }
     };
-
+    const breadcrumbItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Manage Menu', href: '/admin/product/attributes' },
+        { label: 'Edit Menu', href: '/admin/product/attributes' },
+      ];
     return (
         <div>
             <Navbar />
             <div className='flex bg-gray-100'>
                 <Sidebar />
                 <div className='rounded shadow-lg p-4 w-screen m-2 bg-white'>
+                <Breadcrumbs
+              pageTitle="Edit Menu"
+              items={breadcrumbItems}
+            />
                     <form onSubmit={handleSubmit(onSubmit)} className="p-4">
                         <div className="grid grid-cols-2 gap-4">
                             <div className="p-4 border rounded-md">

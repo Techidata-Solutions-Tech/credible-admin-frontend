@@ -118,7 +118,7 @@ const EditAttribute = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <h1 className="text-3xl font-bold mb-6">Edit Attribute</h1>
+          <h1 className="text-3xl font-bold mb-6 uppercase">Edit Attribute</h1>
 
           <div className="flex items-center mb-4">
             <label className="mr-4">Mode:</label>

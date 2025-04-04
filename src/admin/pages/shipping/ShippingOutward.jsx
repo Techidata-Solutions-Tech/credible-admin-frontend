@@ -13,7 +13,7 @@ const ShippingOutward = () => {
 
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
-                        <h2 className="text-2xl font-semibold text-blue-800 mb-6">Shipping Outward Management</h2>
+                        <h2 className="text-2xl font-semibold text-blue-800 mb-6 uppercase">Shipping Outward Management</h2>
 
                         <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
                             {/* Filter Dropdown */}

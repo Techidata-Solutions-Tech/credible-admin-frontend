@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import CategoryTable from '../../components/category/CategoryTable';
 import { Link } from 'react-router-dom';
 import Loader from '../../../components/Loader';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const Category = () => {
     const token = localStorage.getItem('token')
@@ -45,7 +46,10 @@ const Category = () => {
     const handleAdd = async () => {
         document.getElementById('my_modal_1').showModal();
     };
-
+    const breadcrumbItems = [
+        { label: 'Home', href: '/admin' },
+        { label: 'Product Category', href: '/admin/product/category' }
+      ];
     return (
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
@@ -53,6 +57,10 @@ const Category = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Navbar />
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+                <Breadcrumbs
+              pageTitle="Categories"
+              items={breadcrumbItems}
+            />
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
                         <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
                         <div className="flex items-center justify-between w-full sm:w-auto">

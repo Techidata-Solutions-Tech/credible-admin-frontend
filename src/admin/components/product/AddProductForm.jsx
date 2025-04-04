@@ -8,7 +8,6 @@ import SelectMultipleMedia from "./SelectMultipleImages";
 
 const AddProductForm = () => {
   const token = localStorage.getItem('token');
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     category: {
@@ -62,15 +61,16 @@ const AddProductForm = () => {
       codAvilable: "",
     },
     taxDetails: {
-      taxCountry: "",
-      taxClass: "1",
-      countryTaxCode: "",
-      hsnSacCode: "",
-      taxType: "",
-      taxRate: 0,
-      taxableAmount: 0,
-      taxTitle: "",
-      cessPercentage: 0,
+      categorieId: 0,
+      categorieName: "",
+      cgst: 0,
+      description: "",
+      hsn: "",
+      id: 0,
+      igst: 0,
+      sgst_utgst: 0,
+      status: true,
+      taxRate: 0
     },
     inventory: {
       saleableQty: 0,
@@ -82,6 +82,8 @@ const AddProductForm = () => {
     },
     warehouse: {
       warehouseId: 0,
+      location:"",
+      address:""
     },
     warrenty: {
       warrentyApplicable: "",
@@ -181,10 +183,10 @@ const AddProductForm = () => {
       if (response.ok) {
         setCategorySub(data.categories);
       } else {
-        toast.error(`Error fetching subcategories: ${data.message}`);
+        console.log(`Error fetching subcategories: ${data.message}`);
       }
     } catch (error) {
-      toast.error(`Error fetching subcategories: ${error.message}`);
+      console.log(`Error fetching subcategories: ${error.message}`);
     }
   };
 
@@ -205,10 +207,10 @@ const AddProductForm = () => {
       if (response.ok) {
         setCategoryChild(data.categories);
       } else {
-        toast.error(`Error fetching child categories: ${data.message}`);
+        console.log(`Error fetching child categories: ${data.message}`);
       }
     } catch (error) {
-      toast.error(`Error fetching child categories: ${error.message}`);
+      console.log(`Error fetching child categories: ${error.message}`);
     }
   };
 
@@ -300,7 +302,6 @@ const AddProductForm = () => {
   };
 
   const onSubmit = async () => {
-    console.log(formData);
 
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
@@ -358,15 +359,17 @@ const AddProductForm = () => {
         codAvilable: formData.pricing.codAvilable,
       },
       taxDetails: {
-        taxCountry: formData.taxDetails.taxCountry,
-        taxClass: formData.taxDetails.taxClass,
-        countryTaxCode: formData.taxDetails.countryTaxCode,
-        hsnSacCode: formData.taxDetails.hsnSacCode,
-        taxableAmount: Number(formData.taxDetails.taxableAmount),
-        taxType: formData.taxDetails.taxType,
-        taxRate: Number(formData.taxDetails.taxRate),
-        taxTitle: formData.taxDetails.taxTitle,
-        cessPercentage: Number(formData.taxDetails.cessPercentage),
+        taxId: Number(formData.taxDetails.id),
+     
+        // taxCountry: formData.taxDetails.taxCountry,
+        // taxClass: formData.taxDetails.taxClass,
+        // countryTaxCode: formData.taxDetails.countryTaxCode,
+        // hsnSacCode: formData.taxDetails.hsnSacCode,
+        // taxableAmount: Number(formData.taxDetails.taxableAmount),
+        // taxType: formData.taxDetails.taxType,
+        // taxRate: Number(formData.taxDetails.taxRate),
+        // taxTitle: formData.taxDetails.taxTitle,
+        // cessPercentage: Number(formData.taxDetails.cessPercentage),
       },
       inventory: {
         saleableQty: Number(formData.inventory.saleableQty),
@@ -425,6 +428,7 @@ const AddProductForm = () => {
         videos: formData.imageAndVideo.videos,
       }
     };
+console.log(payload.taxDetails);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product`, {
@@ -1269,226 +1273,226 @@ const AddProductForm = () => {
         return (
           <div className="container p-4">
             <div className="grid grid-cols-3 gap-6">
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Country
-                </label>
-                <select
-                  value={formData.taxDetails.taxCountry}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxCountry: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select country...</option>
-                  <option value="IN">India</option>
-                  <option value="US">United States</option>
-                </select>
-              </div>
-        
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Code
-                </label>
-                <select
-                  value={formData.taxDetails.countryTaxCode}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        countryTaxCode: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax code...</option>
-                  <option value="HSN">HSN</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  HSN/SAC Code
-                </label>
-                <input
-                  type="text"
-                  value={formData.taxDetails.hsnSacCode}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        hsnSacCode: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  placeholder="Enter HSN/SAC code"
-                />
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Class
-                </label>
-                <select
-                  value={formData.taxDetails.taxClass}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxClass: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax class...</option>
-                  <option value="taxable">Taxable</option>
-                  <option value="nontaxable">NonTaxable</option>
-                </select>
-              </div>
-        
-        
-             
-        
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Type
-                </label>
-                <select
-                  value={formData.taxDetails.taxType}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxType: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax type...</option>
-                  <option value="fix">Fix</option>
-                  <option value="percentage">Percentage</option>
-                </select>
-              </div>
-        
-              
-        
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Title
-                </label>
-                <select
-                  value={formData.taxDetails.taxTitle}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxTitle: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                >
-                  <option value="">Select tax title...</option>
-                  <option value="CGST">CGST</option>
-                  <option value="SGST">SGST</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Rate
-                </label>
-                <input
-                  type="number"
-                  value={formData.taxDetails.taxRate}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxRate: Math.max(0, parseFloat(e.target.value) || 0),
-                      },
-                    }))
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                      e.preventDefault();
-                      const currentValue = formData.taxDetails.taxRate || 0;
-                      const newValue = e.key === 'ArrowUp'
-                        ? currentValue + 0.01
-                        : Math.max(0, currentValue - 0.01);
-        
-                      setFormData((prev) => ({
-                        ...prev,
-                        taxDetails: {
-                          ...prev.taxDetails,
-                          taxRate: parseFloat(newValue.toFixed(2)),
-                        },
-                      }));
-                    }
-                  }}
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  step="0.01"
-                  min="0"
-                />
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Cess Percentage
-                </label>
-                <input
-                  type="number"
-                  value={formData.taxDetails.cessPercentage}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        cessPercentage: Math.max(0, parseFloat(e.target.value) || 0),
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  step="0.01"
-                  min="0"
-                  placeholder="Enter cess percentage"
-                />
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                 Tax Amount
-                </label>
-                <input
-                  type="number"
-                  value={formData.taxDetails.taxAmount}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxAmount: Math.max(0, parseFloat(e.target.value) || 0),
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  step="0.01"
-                  min="0"
-                  placeholder="Tax Amount"
-                />
-              </div>
-            </div>
+  {/* Tax Rate Selection */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Select Tax Rate
+    </label>
+    <select
+      value={formData.taxDetails.taxRate} // Set the selected tax rate here
+      onChange={(e) => {
+        const selectedTax = taxData.find(tax => tax.taxRate === parseFloat(e.target.value)); // Find the selected tax based on the taxRate
+        if (selectedTax) {
+          console.log(selectedTax.id);
+          
+          setFormData((prev) => ({
+            ...prev,
+            taxDetails: {
+              ...prev.taxDetails,
+              taxRate: selectedTax.taxRate,
+              cgst: selectedTax.cgst,
+              sgst_utgst: selectedTax.sgst_utgst,
+              igst: selectedTax.igst,
+              hsn: selectedTax.hsn,
+              description: selectedTax.description || "",
+              categorieName: selectedTax.categorieName || "",
+              status: true, 
+              id:selectedTax.id,
+            },
+          }));
+        }
+      }}
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select tax rate...</option>
+      {taxData.map((tax, index) => (
+        <option key={index} value={tax.taxRate}>{tax.taxRate}</option>
+      ))}
+    </select>
+  </div>
+
+  {/* HSN/SAC Code */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      HSN/SAC Code
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.hsn}  // Use the HSN value from selected tax
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            hsn: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      placeholder="Enter HSN/SAC code"
+    />
+  </div>
+
+  {/* CGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      CGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.cgst} // Fill in the CGST automatically based on tax selection
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            cgst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* SGST/UTGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      SGST/UTGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.sgst_utgst}  // Automatically populated SGST/UTGST value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            sgst_utgst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* IGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      IGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.igst} // Automatically filled IGST value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            igst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* Description */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Description
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.description}  // Fill in description automatically
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            description: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      placeholder="Enter description"
+    />
+  </div>
+
+  {/* Tax Class */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+    Category Name
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.categorieName}  // Automatically filled tax amount value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            categorieName: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    />
+  </div>
+
+  {/* Tax Type */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Tax Type
+    </label>
+    <select
+      value={formData.taxDetails.taxType}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            taxType: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select tax type...</option>
+      <option value="fix">Fix</option>
+      <option value="percentage">Percentage</option>
+    </select>
+  </div>
+
+  {/* Tax Amount */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Tax Amount
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.taxAmount}  // Automatically filled tax amount value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            taxAmount: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+</div>
+
           </div>
         );
 
@@ -1669,31 +1673,37 @@ const AddProductForm = () => {
         return (
           <div className="space-y-4 container shadow-lg rounded-md p-4">
 
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">
-                Select Warehouse
-              </label>
-              <select
-                value={formData.warehouse.warehouseId}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    warehouse: {
-                      ...prev.warehouse,
-                      warehouseId: parseInt(e.target.value),
-                    },
-                  }))
-                }
-                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-              >
-                <option value="">Select a warehouse...</option>
-                {warehouses.map((warehouse) => (
-                  <option key={warehouse.id} value={warehouse.id}>
-                    {warehouse.name} - {warehouse.city}, {warehouse.state}
-                  </option>
-                ))}
-              </select>
-            </div>
+<div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Select Warehouse
+    </label>
+    <select
+      value={formData.warehouse.warehouseId}
+      onChange={(e) => {
+        const selectedId = parseInt(e.target.value);
+        const warehouse = warehouses.find((wh) => wh.id === selectedId);
+
+        setFormData((prev) => ({
+          ...prev,
+          warehouse: {
+            ...prev.warehouse,
+            warehouseId: selectedId,
+          },
+        }));
+
+        // Set the selected warehouse for location and address
+        setSelectedWarehouse(warehouse); // Update the selected warehouse state
+      }}
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select a warehouse...</option>
+      {warehouses.map((warehouse) => (
+        <option key={warehouse.id} value={warehouse.id}>
+          {warehouse.name} - {warehouse.city}, {warehouse.state}
+        </option>
+      ))}
+    </select>
+  </div>
 
             {/* Warehouse Location */}
             <div>
@@ -2519,7 +2529,7 @@ const AddProductForm = () => {
 
   return (
     <div className="max-w-[1800px] mx-auto px-6 pb-4">
-      <h1 className="text-3xl my-2 font-semibold">Add Product</h1>
+      {/* <h1 className="text-3xl my-2 font-semibold uppercase">Add Product</h1> */}
       <Accordion
         steps={steps}
         currentStep={currentStep}
@@ -2603,7 +2613,7 @@ const CategoryStep = ({
   };
 
   return (
-    <div className="container mx-auto shadow-md rounded-md p-6">
+    <div className="container mx-auto shadow-md rounded-md px-6 pb-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">
@@ -2623,7 +2633,7 @@ const CategoryStep = ({
           </select>
         </div>
 
-        <div>
+       {categorySub.length> 0 && <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">
             Sub Category
           </label>
@@ -2640,9 +2650,9 @@ const CategoryStep = ({
               </option>
             ))}
           </select>
-        </div>
+        </div>}
 
-        <div>
+        {categoryChild.length> 0  && <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">
             Child Category
           </label>
@@ -2659,7 +2669,7 @@ const CategoryStep = ({
               </option>
             ))}
           </select>
-        </div>
+        </div>}
 
         <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">

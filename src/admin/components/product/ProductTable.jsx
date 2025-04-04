@@ -4,6 +4,7 @@ import { BsThreeDots } from "react-icons/bs";
 
 const ProductTable = ({products}) => {
   const [selectedProductId, setSelectedProductId] = useState(null);
+console.log(products);
 
   // const products = [
   //   {
@@ -97,7 +98,7 @@ const ProductTable = ({products}) => {
     <div className="w-full bg-gray-100 border rounded-lg shadow-md">
       <table className="w-full overflow-x-auto">
         <thead className="bg-gray-50 text-black">
-          <tr>
+          <tr className=' uppercase'>
             <th className="px-4 py-3 text-left text-[14px] font-[700] ">Image</th>
             <th className="px-4 py-3 text-left text-[14px] font-[700] ">ID</th>
             <th className="px-4 py-3 text-left text-[14px] font-[700] ">Category</th>
@@ -151,7 +152,7 @@ const ProductTable = ({products}) => {
                       </Link>
                     </li>
                     <li>
-                      <Link to="/admin/product/edit-product" className="hover:text-blue-500">
+                      <Link to={`/admin/product/edit-product/${product?.id}`} className="hover:text-blue-500">
                         Edit
                       </Link>
                     </li>

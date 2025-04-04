@@ -5,15 +5,21 @@ import Navbar from "../../components/Navbar";
 import Select from "react-select";
 import Sidebar from "../../components/Sidebar";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 const CreateSection = () => {
   const token = localStorage.getItem('token');
   const [title, setTitle] = useState("");
+  const [index, setIndex] = useState("");
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const navigate = useNavigate();
-
+  const breadcrumbItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Manage Sections', href: '/admin/dashboard/section/manage' },
+    { label: 'Create Section', href: '//admin/dashboard/section/manage' }
+  ];
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts`, {
+    fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -36,6 +42,7 @@ const CreateSection = () => {
     const selectedProductIds = selectedProducts.map((product) => product.value);
     const data = {
       name: title,
+      index: index,
       products: selectedProductIds,
     };
 
@@ -68,7 +75,10 @@ const CreateSection = () => {
       <div className="flex flex-col md:flex-row bg-gray-100">
         <Sidebar />
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
-          <h2 className="text-xl font-bold mb-4">Create HomePage Section</h2>
+        <Breadcrumbs
+              pageTitle="Create HomePage Section"
+              items={breadcrumbItems}
+            />
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block font-medium">Section Title</label>
@@ -77,6 +87,15 @@ const CreateSection = () => {
                 className="w-full p-2 border rounded"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block font-medium">Order</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded"
+                value={title}
+                onChange={(e) => setIndex(parseInt(e.target.value))}
               />
             </div>
             <div className="mb-4">

@@ -5,11 +5,16 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
 
 const SectionManager = () => {
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
   const [sections, setSections] = useState([]);
+  const breadcrumbItems = [
+    { label: 'Home', href: '/admin' },
+    { label: 'Manage Sections', href: '/create-product-category' }
+  ];
 
   useEffect(() => {
     const fetchSections = async () => {
@@ -96,17 +101,21 @@ const SectionManager = () => {
       <div className="flex flex-col md:flex-row bg-gray-100">
         <Sidebar />
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
+        <Breadcrumbs
+              pageTitle="Manage Sections"
+              items={breadcrumbItems}
+            />
        <div className="flex justify-between items-center mb-2">
-       <h2 className="text-xl font-bold mb-4">Manage Sections</h2>
           <Link to={'/admin/dashboard/section/create'}  className="bg-gray-700 text-white rounded-md p-3">Create section</Link>
           
        </div>
        <table className="w-full border-collapse border border-gray-300">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-gray-100 uppercase">
                 <th className="border border-gray-300 p-2">ID</th>
                 <th className="border border-gray-300 p-2">Name</th>
                 <th className="border border-gray-300 p-2">Status</th>
+                <th className="border border-gray-300 p-2">Order</th>
                 <th className="border border-gray-300 p-2">Actions</th>
               </tr>
             </thead>
@@ -125,6 +134,7 @@ const SectionManager = () => {
                       {section.status ? "Active" : "Inactive"}
                     </button>
                   </td>
+                  <td className="border border-gray-300 p-2">{section.index}</td>
                   <td className="items-center p-2 flex justify-center space-x-3">
                     <button
                       onClick={() => navigate(`/admin/dashboard/section/${section.id}`)}

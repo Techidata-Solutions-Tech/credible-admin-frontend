@@ -124,7 +124,7 @@ const OrderTable = () => {
           <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('product_detail').close()}>
             &times;
           </button>
-          <h2 className="text-lg font-semibold">Order Details</h2>
+          <h2 className="text-lg font-semibold uppercase">Order Details</h2>
           <p><strong>Order ID:</strong> {modalData?.id}</p>
           <p><strong>Customer Name:</strong> {modalData?.customerName}</p>
           <p><strong>Branch ID:</strong> {modalData?.branchId}</p>
@@ -140,7 +140,7 @@ const OrderTable = () => {
           <button type="button" className="absolute text-3xl top-2 right-2 text-gray-500 hover:text-gray-800" onClick={() => document.getElementById('my_modal_edit').close()}>
             &times;
           </button>
-          <h2 className="text-lg font-semibold">Edit Order</h2>
+          <h2 className="text-lg font-semibold uppercase">Edit Order</h2>
           <input
             type="text"
             value={modalData?.customerName || ''}

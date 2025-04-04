@@ -5,6 +5,7 @@ import ProductTable from '../../components/product/ProductTable'
 import { Link } from 'react-router-dom'
 import PillTabs from '../../components/PillTabs'
 import Loader from '../../../components/Loader'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const Product = () => {
   const token = localStorage.getItem('token')
@@ -41,6 +42,10 @@ const Product = () => {
     
         fetchCategories();
       }, [toggle]);
+      const breadcrumbItems = [
+        { label: 'Home', href: '/admin' },
+        { label: 'Products', href: '/admin/product' }
+      ];
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -53,6 +58,10 @@ const Product = () => {
         
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+        <Breadcrumbs
+              pageTitle="Products"
+              items={breadcrumbItems}
+            />
           <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
             {/* Tabs Section */}
             <div className="w-full mb-6">

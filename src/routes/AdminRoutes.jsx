@@ -116,7 +116,7 @@ const AdminRoutes = () => {
           {/* products */}
           <Route path='/product' element={<Product/>}/>
           <Route path='/product/add-product' element={<AddProduct/>}/>
-          <Route path='/product/edit-product' element={<EditProduct/>}/>
+          <Route path='/product/edit-product/:id' element={<EditProduct/>}/>
           <Route path='/product/category' element={<Category/>}/>
           <Route path='/product/category/add-category' element={<AddCategory/>}/>
           <Route path='/product/category/edit-category/:id' element={<EditCategory/>}/>

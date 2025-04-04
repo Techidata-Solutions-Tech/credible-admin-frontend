@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 
 const Breadcrumbs = ({ pageTitle, items }) => {
     return (
-      <div className="w-full px-4 py-3 bg-white flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-900">
+      <div className="w-full px-4 py-3 my-3 bg-white flex justify-between items-center">
+        <h1 className="text-2xl font-semibold text-gray-900 ">
           {pageTitle}
         </h1>
         <div className="flex items-center text-sm">

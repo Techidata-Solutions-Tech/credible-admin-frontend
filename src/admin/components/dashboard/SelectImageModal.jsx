@@ -58,6 +58,7 @@ const SelectImageModal = ({ setImage }) => {
     return (
         <div>
             <button
+            type='button'
                 onClick={() => document.getElementById('view_image').showModal()}
                 className="flex items-center justify-between border border-gray-300 bg-white text-gray-600 px-4 py-2 rounded-md shadow-sm w-[280px]"
             >
@@ -72,12 +73,14 @@ const SelectImageModal = ({ setImage }) => {
                     <h3 className="font-bold text-lg pb-5">Choose Image</h3>
                     <div className="flex border-b mb-5">
                         <button
+                        type='button'
                             className={`p-2 w-1/2 ${activeTab === 'gallery' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
                             onClick={() => setActiveTab('gallery')}
                         >
                             Choose Image From Gallery
                         </button>
                         <button
+                        type='button'
                             className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-b-2 border-blue-500 font-bold' : ''}`}
                             onClick={() => setActiveTab('upload')}
                         >
@@ -95,6 +98,7 @@ const SelectImageModal = ({ setImage }) => {
                                 className="p-2 border rounded w-full"
                             />
                             <button
+                            type='button'
                                 onClick={handleUpload}
                                 className="btn bg-blue-500 text-white p-2 rounded w-full"
                             >

@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar'
 import PillTabs from '../../components/PillTabs'
 import PopularCategoryTable from '../../components/dashboard/PopularCategoryTable'
 import Loader from '../../../components/Loader'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const PopularCategory = () => {
     const token = localStorage.getItem('token');
@@ -41,13 +42,20 @@ const PopularCategory = () => {
       
           fetchPopularCategory();
     },[toggle])
-
+    const breadcrumbItems = [
+        { label: 'Home', href: '/admin' },
+        { label: 'Popular Category', href: '/admin/dashboard/category/popular-table' },
+      ];
     return (
         <div className='min-h-screen'>
             <Navbar />
             <div className='flex flex-col md:flex-row bg-gray-100'>
                 <Sidebar />
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
+                <Breadcrumbs
+              pageTitle="Manage Popular Category"
+              items={breadcrumbItems}
+            />
                     <div className="w-full mb-6">
                         <div className="max-w-full px-2 md:px-4">
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">

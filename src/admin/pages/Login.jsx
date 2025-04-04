@@ -58,7 +58,7 @@ const Login = () => {
           />
         </figure>
         <div className="flex justify-center items-center pt-2">
-          <h1 className="text-5xl md:text-5xl font-bold text-gray-800 text-center">
+          <h1 className="text-5xl md:text-5xl font-bold text-gray-800 text-center uppercase">
             Welcome to Credible!
           </h1>
         </div>

@@ -4,6 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import { Link } from 'react-router-dom';
 import Loader from '../../../components/Loader';
 import MenuTable from '../../components/menu/MenuTable';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const Menu = () => {
     const token = localStorage.getItem('token')
@@ -47,7 +48,10 @@ const Menu = () => {
     const handleAdd = async () => {
         document.getElementById('my_modal_1').showModal();
     };
-
+    const breadcrumbItems = [
+        { label: 'Home', href: '/' },
+        { label: 'Manage Menu', href: '/admin/product/attributes' },
+      ];
     return (
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
@@ -55,6 +59,10 @@ const Menu = () => {
             <div className="flex-1 flex flex-col overflow-hidden">
                 <Navbar />
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+                <Breadcrumbs
+              pageTitle="Manage Menu"
+              items={breadcrumbItems}
+            />
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
                         <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
                         <div className="flex items-center justify-between w-full sm:w-auto">
@@ -101,18 +109,10 @@ const Menu = () => {
                         </div>
 
                         <div className="overflow-x-auto">
-                        { loading ? <Loader/> :<MenuTable categories={categories} setToggle={setToggle} />}
+                        { loading ? <Loader/> :<MenuTable categories={categories} setToggle={setToggle} token={token}/>}
                         </div>
                     </div>
 
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
