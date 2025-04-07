@@ -3,12 +3,14 @@ import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import EditProductForm from '../../components/product/EditProductForm'
 import Breadcrumbs from '../../components/Breadcrumbs'
+import { useParams } from 'react-router-dom'
 const breadcrumbItems = [
   { label: 'Home', href: '/admin' },
   { label: 'Products', href: '/admin/product' },
   { label: 'Edit Product', href: '/admin/add-product' },
 ];
 const EditProduct = () => {
+  const {id} = useParams();
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
@@ -26,7 +28,7 @@ const EditProduct = () => {
               items={breadcrumbItems}
             />
           <div className="rounded shadow-lg p-4 bg-white">
-            <EditProductForm />
+            <EditProductForm productId={id}/>
           </div>
         </div>
       </div>
