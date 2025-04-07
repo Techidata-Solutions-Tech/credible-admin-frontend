@@ -11,7 +11,7 @@ import { Link, useParams } from "react-router-dom";
 import Breadcrumbs from '../../components/Breadcrumbs'
 const breadcrumbItems = [
   { label: 'Home', href: '/' },
-  { label: 'Products', href: '/admin/products' },
+  { label: 'Products', href: '/admin/product' },
   { label: 'Product Variants', href: '/admin/products' }
 ];
 

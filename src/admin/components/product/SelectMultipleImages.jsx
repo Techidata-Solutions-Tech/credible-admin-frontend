@@ -51,7 +51,6 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
         const formDataUpload = new FormData();
         selectedFiles.forEach(file => formDataUpload.append('media', file));
         formDataUpload.append('type', mediaType === 'images' ? 'IMAGE' : 'VIDEO');
-
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/upload-media`, {
@@ -61,22 +60,21 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
                 },
                 body: formDataUpload
             });
-
+    
             const result = await response.json();
-
-            if (result && result.mediaUrls) { 
+    
+            if (result && result.imageUrl) { 
                 toast.success("Media uploaded successfully");
-
+    setIsModalOpen(false);
                 setFormData((prev) => ({
                     ...prev,
                     imageAndVideo: {
                         ...prev.imageAndVideo,
-                        [mediaType]: [...(prev.imageAndVideo?.[mediaType] || []), ...result.mediaUrls]
+                        [mediaType]: [...(prev.imageAndVideo?.[mediaType] || []), result.imageUrl]
                     }
                 }));
-
+    
                 setSelectedFiles([]);
-                // Refresh the gallery after upload
                 const type = mediaType === 'images' ? 'IMAGE' : 'VIDEO';
                 const refreshResponse = await fetch(
                     `${import.meta.env.VITE_BASE_URL}/api/admin/media?type=${type}`,
@@ -106,23 +104,40 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
         }
     };
 
-    const handleAddGalleryMedia = () => {
-        if (selectedGalleryMedia.length === 0) {
-            toast.error("No media selected!");
-            return;
+const handleAddGalleryMedia = () => {
+    if (selectedGalleryMedia.length === 0) {
+        toast.error("No media selected!");
+        return;
+    }
+
+    setFormData((prev) => ({
+        ...prev,
+        imageAndVideo: {
+            ...prev.imageAndVideo,
+            [mediaType]: [...(prev.imageAndVideo?.[mediaType] || []), ...selectedGalleryMedia]
         }
+    }));
 
-        setFormData((prev) => ({
-            ...prev,
-            imageAndVideo: {
-                ...prev.imageAndVideo,
-                [mediaType]: [...(prev.imageAndVideo?.[mediaType] || []), ...selectedGalleryMedia]
-            }
-        }));
+    toast.success("Gallery media added successfully");
+    setSelectedGalleryMedia([]);
+    setIsModalOpen(false);
+};
 
-        toast.success("Gallery media added successfully");
-        setSelectedGalleryMedia([]);
-        setIsModalOpen(false);
+    const removeMediaItem = (type, index) => {
+        setFormData(prev => {
+            const updatedMedia = [...prev.imageAndVideo[type]];
+            updatedMedia.splice(index, 1);
+            
+            return {
+                ...prev,
+                imageAndVideo: {
+                    ...prev.imageAndVideo,
+                    [type]: updatedMedia
+                }
+            };
+        });
+        
+        toast.success(`${type === 'images' ? 'Image' : 'Video'} removed successfully`);
     };
 
     return (
@@ -230,7 +245,17 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
                 <h3 className="font-bold mb-2">Selected Images:</h3>
                 <div className="flex flex-wrap gap-2">
                     {formData.imageAndVideo.images.map((img, index) => (
-                        <img key={`img-${index}`} src={img} alt={`img-${index}`} className="w-32 h-32 object-cover rounded" />
+                        <div key={`img-${index}`} className="relative group">
+                            <img src={img} alt={`img-${index}`} className="w-32 h-32 object-cover rounded" />
+                            <button
+                                type="button"
+                                onClick={() => removeMediaItem('images', index)}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                aria-label={`Remove image ${index + 1}`}
+                            >
+                                &times;
+                            </button>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -239,10 +264,20 @@ const SelectMultipleMedia = ({ formData, setFormData }) => {
                 <h3 className="font-bold mb-2">Selected Videos:</h3>
                 <div className="flex flex-wrap gap-2">
                     {formData.imageAndVideo.videos.map((video, index) => (
-                        <video key={`vid-${index}`} className="w-32 h-32 object-cover rounded" controls>
-                            <source src={video} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
+                        <div key={`vid-${index}`} className="relative group">
+                            <video className="w-32 h-32 object-cover rounded" controls>
+                                <source src={video} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            <button
+                                type="button"
+                                onClick={() => removeMediaItem('videos', index)}
+                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                aria-label={`Remove video ${index + 1}`}
+                            >
+                                &times;
+                            </button>
+                        </div>
                     ))}
                 </div>
             </div>
