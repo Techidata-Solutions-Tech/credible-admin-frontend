@@ -23,7 +23,7 @@ const AddCategory = () => {
 
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Product Categories', href: '/product-categories' },
+    { label: 'Product Categories', href: '/admin/product/category' },
     { label: 'Create Product Category', href: '/create-product-category' }
   ];
 

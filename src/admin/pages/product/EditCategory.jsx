@@ -55,7 +55,7 @@ const EditCategory = () => {
 
         const categoryData = await response.json();
         const category = categoryData.category;
-
+        setFeatureImage(category.featureimage || "");
         if (category.parentCat === 0) {
           setFormType("category");
           resetForm(category);
@@ -73,7 +73,7 @@ const EditCategory = () => {
 
           const parentData = await parentResponse.json();
           const parentCategory = parentData.category;
-
+setFeatureImage(parentCategory.featureimage || "");
           if (parentCategory.parentCat === 0) {
             setFormType("subcategory");
             setCurrentParentId(category.parentCat);
@@ -262,7 +262,7 @@ const EditCategory = () => {
   }
   const breadcrumbItems = [
     { label: 'Home', href: '/' },
-    { label: 'Product Categories', href: '/admin/product-categories' },
+    { label: 'Product Categories', href: '/admin/product/category' },
     { label: 'Edit Product Category', href: '/create-product-category' }
   ];
   return (
