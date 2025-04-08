@@ -94,7 +94,7 @@ const CreateSection = () => {
               <input
                 type="number"
                 className="w-full p-2 border rounded"
-                value={title}
+                value={index}
                 onChange={(e) => setIndex(parseInt(e.target.value))}
               />
             </div>

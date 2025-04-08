@@ -73,6 +73,17 @@ const AddBanner = () => {
                 />
                 {errors.redirectUrl && <p className="text-red-500 text-xs">{errors.redirectUrl.message}</p>}
               </div>
+              <div className="mb-4 w-1/2">
+              <label htmlFor="index" className="block text-sm font-semibold">Index</label>
+              <input
+                id="index"
+                type="number"
+                min={0}
+                className="w-full p-2 border border-gray-400 rounded-md bg-transparent"
+                {...register('index', { required: 'Index is required' })}
+              />
+              {errors.index && <p className="text-red-500 text-xs">{errors.index.message}</p>}
+            </div>
             </div>
 
             <div className='flex justify-evenly gap-[50px]'>
@@ -104,17 +115,7 @@ const AddBanner = () => {
 
             </div>
 
-            <div className="mb-4 w-1/2">
-              <label htmlFor="index" className="block text-sm font-semibold">Index</label>
-              <input
-                id="index"
-                type="number"
-                min={0}
-                className="w-full p-2 border border-gray-400 rounded-md bg-transparent"
-                {...register('index', { required: 'Index is required' })}
-              />
-              {errors.index && <p className="text-red-500 text-xs">{errors.index.message}</p>}
-            </div>
+           
             <button type="submit" className=" p-2 bg-blue-600 text-white rounded-md">
               Submit
             </button>

@@ -56,7 +56,7 @@ const Pagination = ({ totalRecords, recordsPerPage, onPageChange }) => {
         <span className="flex items-center">
           🌐 Show from {(currentPage - 1) * perPage + 1} to{" "}
           {Math.min(currentPage * perPage, totalRecords)} in
-          <span className="ml-1 px-2 py-1 bg-gray-600 text-white rounded-md font-semibold">
+          <span className="ml-1 px-2 py-1 inline-block mr-2 bg-gray-600 text-white rounded-md font-semibold">
             {totalRecords}
           </span>
           records

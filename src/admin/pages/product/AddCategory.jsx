@@ -5,7 +5,7 @@ import Sidebar from "../../components/Sidebar";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import SelectImageModal from "../../components/dashboard/SelectImageModal";
+import SelectImageModal from "../../components/product/SelectImageModal";
 
 const AddCategory = () => {
   const {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PillTabs = ({tabs}) => {
+const TopTabs = ({tabs}) => {
 
   
   const [activeTab, setActiveTab] = useState(tabs[0].label);
@@ -28,4 +28,4 @@ const PillTabs = ({tabs}) => {
   );
 };
 
-export default PillTabs;
+export default TopTabs;

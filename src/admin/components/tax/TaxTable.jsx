@@ -4,7 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "../Pagination";
-
+import TopTabs from "../../pages/customer/TopTabs";
 const TaxTable = ({ token }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
@@ -60,7 +60,19 @@ const TaxTable = ({ token }) => {
       toast.error("Failed to delete tax");
     }
   };
-
+  const calculateTaxRateCounts = (taxes) => {
+    const counts = {};
+    taxes.forEach((tax) => {
+      const rate = `${tax.taxRate}%`;
+      counts[rate] = (counts[rate] || 0) + 1;
+    });
+    return Object.entries(counts).map(([rate, count],i) => ({
+      id:i,
+      label :`${rate}  (${count})`
+    }));
+  };
+  console.log(calculateTaxRateCounts(taxes));
+  
   const handleStatusChange = async (tax) => {
     try {
       const updatedTax = { status: !tax.status };
@@ -134,6 +146,17 @@ const TaxTable = ({ token }) => {
 
   return (
     <div className="w-full shadow-lg rounded-lg border overflow-hidden py-8">
+       <div className="w-full my-2">
+              <div className="max-w-full px-4">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <div className="w-full overflow-x-auto py-2">
+                    <div className="flex flex-col justify-center min-w-full">
+                      <TopTabs tabs={calculateTaxRateCounts(taxes)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
       <ToastContainer />
       <dialog id="delete_modal" className="modal">
         <div className="modal-box">

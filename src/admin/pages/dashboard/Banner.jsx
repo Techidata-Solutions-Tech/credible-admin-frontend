@@ -5,19 +5,14 @@ import PillTabs from '../../components/PillTabs'
 import BannerTable from '../../components/dashboard/BannerTable'
 import Loader from '../../../components/Loader'
 import Breadcrumbs from '../../components/Breadcrumbs'
+import TopTabs from '../customer/TopTabs'
 
 const Banner = () => {
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [banners, setBanners] = useState([]);
     const [toggle, setToggle] = useState(Date.now());
-    const tabs_user = [
-        { id: 1, label: 'All (1000)' },
-        { id: 2, label: 'Active (800)' },
-        { id: 3, label: 'Inactive (100)' },
-        { id: 4, label: 'Blocked (100)' },
-        { id: 5, label: 'Tash (10)' },
-    ];
+   
     const breadcrumbItems = [
         { label: 'Home', href: '/admin' },
         { label: 'Banners', href: '/admin/dashboard/banner/table' },
@@ -47,7 +42,11 @@ const Banner = () => {
       
           fetchBanners();
     },[toggle])
-
+    const tabs_user = [
+        { id: 1, label: `All (${banners.length})` },
+        { id: 2, label: `Banner (${banners.filter(banner=> banner.position === "BANNER").length})` },
+        { id: 3, label: `Slider (${banners.filter(banner=> banner.position === "SLIDER").length})`},
+    ];
     return (
         <div className='min-h-screen'>
             <Navbar />
@@ -63,7 +62,7 @@ const Banner = () => {
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
                                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
                                     <div className="min-w-full flex justify-center">
-                                        <PillTabs tabs={tabs_user} />
+                                        <TopTabs tabs={tabs_user} />
                                     </div>
                                 </div>
                             </div>

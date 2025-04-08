@@ -7,9 +7,10 @@ const SelectImageModal = ({ setImage }) => {
     const [images, setImages] = useState([]);
     const [activeTab, setActiveTab] = useState('gallery');
     const [selectedFile, setSelectedFile] = useState(null);
+    const [key, setKey] = useState(Date.now()); 
     const token = localStorage.getItem('token');
     const dialogRef = useRef(null);
-
+    const fileInputRef = useRef(null);
     useEffect(() => {
         const fetchImages = async () => {
             try {
@@ -27,17 +28,7 @@ const SelectImageModal = ({ setImage }) => {
         fetchImages();
     }, []);
 
-    const openModal = () => {
-        if (dialogRef.current) {
-            dialogRef.current.showModal();
-        }
-    };
-
-    const closeModal = () => {
-        if (dialogRef.current) {
-            dialogRef.current.close();
-        }
-    };
+ 
 
     const handleUpload = async () => {
         if (!selectedFile) {
@@ -67,6 +58,25 @@ const SelectImageModal = ({ setImage }) => {
             }
         } catch (error) {
             toast.error("Error uploading image");
+        }
+    };
+    const openModal = () => {
+        if (dialogRef.current) {
+            dialogRef.current.showModal();
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+                setSelectedFile(null);
+            }
+        }
+    };
+
+    const closeModal = () => {
+        if (dialogRef.current) {
+            dialogRef.current.close();
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+                setSelectedFile(null);
+            }
         }
     };
 
@@ -104,7 +114,10 @@ const SelectImageModal = ({ setImage }) => {
                         <button
                             type='button'
                             className={`p-2 w-1/2 ${activeTab === 'upload' ? 'border-2 border-blue-500 bg-gray-100 font-bold' : ''}`}
-                            onClick={() => setActiveTab('upload')}
+                            onClick={() => {
+                                setActiveTab('upload');
+                                setKey(Date.now());
+                            }}
                         >
                             Upload New Image
                         </button>
@@ -121,19 +134,26 @@ const SelectImageModal = ({ setImage }) => {
                         />
                     ) : (
                         <div className="flex flex-col items-center gap-4">
-                            <input
-                                type="file"
-                                onChange={(e) => setSelectedFile(e.target.files[0])}
-                                className="p-2 border rounded w-full"
-                            />
-                            <button
-                                type='button'
-                                onClick={handleUpload}
-                                className="btn bg-blue-500 text-white p-2 rounded w-full"
-                            >
-                                Upload
-                            </button>
-                        </div>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            key={activeTab} 
+                            onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                    setSelectedFile(e.target.files[0]);
+                                }
+                            }}
+                            className="p-2 border rounded w-full"
+                            onClick={(e) => e.stopPropagation()} 
+                        />
+                        <button
+                            type='button'
+                            onClick={handleUpload}
+                            className="btn bg-blue-500 text-white p-2 rounded w-full"
+                        >
+                            Upload
+                        </button>
+                    </div>
                     )}
                  </div>
                 </div>

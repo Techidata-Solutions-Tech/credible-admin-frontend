@@ -154,7 +154,7 @@ const BannerTable = ({setToggle, banners }) => {
               <td className="px-4 py-4 text-sm text-gray-900">
                 {banner.index}
               </td>
-              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
+              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex  gap-1">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button
                     tabIndex={0}
@@ -235,6 +235,26 @@ const BannerTable = ({setToggle, banners }) => {
                       </p>
                     )}
                   </div>
+                  <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="index"
+                    className="block text-sm font-semibold"
+                  >
+                    Index
+                  </label>
+                  <input
+                    id="index"
+                    type="number"
+                    min={0}
+                    className="w-full p-2 border rounded-md bg-transparent"
+                    {...register("index", { required: "Index is required" })}
+                  />
+                  {errors.index && (
+                    <p className="text-red-500 text-xs">
+                      {errors.index.message}
+                    </p>
+                  )}
+                </div>
                 </div>
 
                 <div className="flex justify-evenly gap-[50px]">
@@ -300,26 +320,7 @@ const BannerTable = ({setToggle, banners }) => {
                   </div>
                 </div>
 
-                <div className="mb-4 w-1/2">
-                  <label
-                    htmlFor="index"
-                    className="block text-sm font-semibold"
-                  >
-                    Index
-                  </label>
-                  <input
-                    id="index"
-                    type="number"
-                    min={0}
-                    className="w-full p-2 border rounded-md bg-transparent"
-                    {...register("index", { required: "Index is required" })}
-                  />
-                  {errors.index && (
-                    <p className="text-red-500 text-xs">
-                      {errors.index.message}
-                    </p>
-                  )}
-                </div>
+           
                 <button
                   type="submit"
                   className=" p-2 bg-blue-600 text-white rounded-md"

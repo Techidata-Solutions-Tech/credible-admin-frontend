@@ -4,7 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import SelectImageModal from "./SelectImageModal";
 
-const EditCategoryPopup = ({ show, onClose, category, onSave }) => {
+const EditCategoryPopup = ({ show, onClose, category, onSave ,setToggle}) => {
   const [name, setName] = useState("");
   const [redirect, setRedirect] = useState("");
   const [image, setImage] = useState("");
@@ -33,6 +33,7 @@ const token = localStorage.getItem('token')
         }
       );
       toast.success("Category updated successfully");
+      setToggle(Date.now())
       onSave(updatedCategory);
       onClose();
     } catch (error) {
@@ -103,7 +104,7 @@ const token = localStorage.getItem('token')
   ) : null;
 };
 
-const PopularCategoryTable = ({ popularCategory }) => {
+const PopularCategoryTable = ({setToggle, popularCategory }) => {
   const [categories, setCategories] = useState(popularCategory);
   const [editPopupVisible, setEditPopupVisible] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(null);
@@ -122,6 +123,7 @@ const token = localStorage.getItem('token')
         }
       );
       if (response.success) {
+        setToggle(Date.now())
         toast.success("Category deleted successfully");
         setCategories(categories.filter((category) => category.id !== id));
       }
@@ -145,6 +147,7 @@ const token = localStorage.getItem('token')
           }
         }
       );
+      setToggle(Date.now())
       setCategories(
         categories.map((category) =>
           category.id === id ? { ...category, status: updatedStatus } : category
@@ -280,6 +283,7 @@ const token = localStorage.getItem('token')
         onClose={() => setEditPopupVisible(false)}
         category={currentCategory}
         onSave={handleSaveEdit}
+        setToggle={setToggle}
       />
       <ToastContainer />
     </>
