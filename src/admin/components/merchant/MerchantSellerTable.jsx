@@ -48,7 +48,7 @@ const MerchantSellerTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {sellerData.map((seller) => (
+          {sellerData?.map((seller) => (
             <tr key={seller.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{seller.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{seller.sellerName}</td>

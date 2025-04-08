@@ -68,8 +68,7 @@ const PopularCategory = () => {
                         </div>
                     </div>
 
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 container items-center w-full mt-10'>
-                        <div className='flex gap-2 flex-wrap'>
+                    <div className='flex gap-2 flex-wrap justify-between w-[100%] my-3'>
                             <div className="dropdown">
                                 <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                     Filter
@@ -80,23 +79,21 @@ const PopularCategory = () => {
                                     <li><label><input type="checkbox" /> Checkbox Label</label></li>
                                 </ul>
                             </div>
+                            <div className="">
+                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
+                                <i className="ri-search-line"></i>
+                                <input type="text" className="grow" placeholder="Popular Category" />
+                            </label>
+                        </div>
                             <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                 <option disabled selected>Sort</option>
-                                <option>Homer</option>
+                                <option>Home</option>
                                 <option>Marge</option>
                                 <option>Bart</option>
                                 <option>Lisa</option>
                                 <option>Maggie</option>
                             </select>
                         </div>
-
-                        <div className="w-full">
-                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                                <i className="ri-search-line"></i>
-                                <input type="text" className="grow" placeholder="Customer" />
-                            </label>
-                        </div>
-                    </div>
 
                     {loading?<Loader/> :
                         <PopularCategoryTable setToggle={setToggle} popularCategory={popularCategory}/>}

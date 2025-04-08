@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaTrash, FaEye } from "react-icons/fa";
+import { FaTrash, FaEye, FaEdit } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
@@ -105,10 +105,36 @@ const SectionManager = () => {
               pageTitle="Manage Sections"
               items={breadcrumbItems}
             />
-       <div className="flex justify-between items-center mb-2">
+       <div className="flex justify-end items-center mb-2">
           <Link to={'/admin/dashboard/section/create'}  className="bg-gray-700 text-white rounded-md p-3">Create section</Link>
           
        </div>
+       <div className='flex gap-2 flex-wrap justify-between w-[100%] my-3'>
+                            <div className="dropdown">
+                                <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                    Filter
+                                </div>
+                                <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
+                                    <li><label><input type="checkbox" /></label></li>
+                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                    <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                </ul>
+                            </div>
+                            <div className="">
+                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
+                                <i className="ri-search-line"></i>
+                                <input type="text" className="grow" placeholder="Sections" />
+                            </label>
+                        </div>
+                            <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                <option disabled selected>Sort</option>
+                                <option>Homer</option>
+                                <option>Marge</option>
+                                <option>Bart</option>
+                                <option>Lisa</option>
+                                <option>Maggie</option>
+                            </select>
+                        </div>
        <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100 uppercase">
@@ -140,7 +166,7 @@ const SectionManager = () => {
                       onClick={() => navigate(`/admin/dashboard/section/${section.id}`)}
                       className="text-blue-500"
                     >
-                      <FaEye />
+                      <FaEdit />
                     </button>
                     <button onClick={() => deleteSection(section.id)} className="text-red-500">
                       <FaTrash />

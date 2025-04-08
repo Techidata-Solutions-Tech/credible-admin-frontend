@@ -61,9 +61,7 @@ const Category = () => {
               pageTitle="Categories"
               items={breadcrumbItems}
             />
-                    <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
-                        <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between w-full sm:w-auto">
+             <div className="flex items-center justify-end w-full sm:w-auto pb-3">
                                 <Link
                                     to={'/admin/product/category/add-category'}
                                     className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
@@ -71,7 +69,19 @@ const Category = () => {
                                     Add Category
                                 </Link>
                             </div>
-
+                    <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
+                        <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
+                       
+                        <div className="dropdown">
+                                    <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                        Filter
+                                    </div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
+                                        <li><label><input type="checkbox" /></label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                    </ul>
+                                </div>
                             {/* Search Input */}
                             <div className="flex-1 max-w-md">
                                 <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
@@ -83,16 +93,7 @@ const Category = () => {
                             </div>
 
                             <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                                <div className="dropdown">
-                                    <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                                        Filter
-                                    </div>
-                                    <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                                        <li><label><input type="checkbox" /></label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    </ul>
-                                </div>
+                                
                                 <select className="select bg-white border-blue-200 hover:border-blue-300 text-blue-700 w-full sm:w-auto font-semibold">
                                     <option disabled selected>Sort</option>
                                     <option>Homer</option>

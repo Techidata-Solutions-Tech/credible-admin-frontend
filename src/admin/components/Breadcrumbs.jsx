@@ -9,7 +9,7 @@ const Breadcrumbs = ({ pageTitle, items }) => {
           {pageTitle}
         </h1>
         <div className="flex items-center text-sm">
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
                 <ChevronRight className="w-4 h-4 mx-2 text-gray-400" />

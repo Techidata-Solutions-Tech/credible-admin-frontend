@@ -81,17 +81,8 @@ const Brand = () => {
 
 
             {/* Filters and Search */}
-            <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full">
-              <div className="flex items-center justify-between gap-4">
-                <div className="w-full sm:w-auto">
-                  <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                    <i className="ri-search-line text-gray-800"></i>
-                    <input type="text" className="grow" placeholder="Tax" />
-                  </label>
-                </div>
-                
-              </div>
-              <div className="flex items-center justify-end gap-2 sm:gap-4 flex-wrap ml-auto">
+         
+              <div className="flex items-center justify-between gap-2 sm:gap-4 mb-3 flex-wrap ml-auto">
                   <div className="dropdown">
                     <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                       Filter
@@ -102,6 +93,12 @@ const Brand = () => {
                       <li><label><input type="checkbox" /> Checkbox Label</label></li>
                     </ul>
                   </div>
+                  <div className="w-full sm:w-auto">
+                  <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
+                    <i className="ri-search-line text-gray-800"></i>
+                    <input type="text" className="grow" placeholder="Brand" />
+                  </label>
+                </div>
                   <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                     <option disabled selected>Sort</option>
                     <option>Homer</option>
@@ -111,9 +108,6 @@ const Brand = () => {
                     <option>Maggie</option>
                   </select>
                 </div>
-
-
-            </div>
 
             {/* Product Table */}
             <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
@@ -132,7 +126,7 @@ const Brand = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {brandData.map((brand) => (
+                  {brandData?.map((brand) => (
                     <tr key={brand.id} className="hover:bg-gray-50 border-b border-gray-300">
                       <td className="px-4 py-4 text-sm text-gray-900">{brand.id}</td>
                       <td className="px-4 py-4 text-sm text-gray-900">{brand.category}</td>

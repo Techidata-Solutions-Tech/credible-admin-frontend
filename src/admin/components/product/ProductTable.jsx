@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BsThreeDots } from "react-icons/bs";
+import { toast } from 'react-toastify';
 
 const ProductTable = ({products}) => {
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -89,10 +90,34 @@ console.log(products);
   //   },
   // ];
 
-  const handleDelete = (productId) => {
-    setSelectedProductId(productId);
-    document.getElementById('my_modal_delete').showModal();
-  };
+  const handleDelete = async (productId) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('No token found in localStorage');
+      }
+  
+      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      toast.success('Product deleted successfully:');
+      return data;
+      
+    } catch (error) {
+      toast.error('Error deleting product:');
+      throw error;
+    } };
 
   return (
     <div className="w-full bg-gray-100 border rounded-lg shadow-md">

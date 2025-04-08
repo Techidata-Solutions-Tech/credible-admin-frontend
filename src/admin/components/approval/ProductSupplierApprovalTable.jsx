@@ -88,7 +88,7 @@ const ProductSupplierApprovalTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {productData.map((product) => (
+          {productData?.map((product) => (
             <tr key={product.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{product.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{product.category}</td>

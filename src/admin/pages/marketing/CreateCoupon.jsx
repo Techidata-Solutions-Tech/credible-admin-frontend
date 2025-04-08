@@ -39,7 +39,7 @@ const CreateCoupon = () => {
         const prodData = data?.data;
         console.log(prodData);
         
-        setProducts(prodData.map(product => ({ value: product.id, label: product.product_name, sku: product.SKU, brand: product.brand_name })));
+        setProducts(prodData?.map(product => ({ value: product.id, label: product.product_name, sku: product.SKU, brand: product.brand_name })));
       } catch (error) {
         toast.error('Failed to fetch products');
       }

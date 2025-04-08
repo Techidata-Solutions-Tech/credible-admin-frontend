@@ -206,7 +206,7 @@ const MediaGallery = () => {
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                {media.map((url, index) => (
+                {media?.map((url, index) => (
                   <div key={index} className="relative border rounded p-2 group">
                     {activeTab === 'images' ? (
                       <img

@@ -87,7 +87,7 @@ const CustomerTicketTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {ticketData.map((ticket) => (
+          {ticketData?.map((ticket) => (
             <tr key={ticket.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.ticketNo}</td>
