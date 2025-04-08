@@ -58,7 +58,7 @@ const Banner = () => {
               pageTitle="Banners"
               items={breadcrumbItems}
             />
-                    <div className="w-full mb-6">
+                    <div className="w-full mb-3">
                         <div className="max-w-full px-2 md:px-4">
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
                                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
@@ -69,9 +69,7 @@ const Banner = () => {
                             </div>
                         </div>
                     </div>
-
-                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 container items-center w-full mt-10'>
-                        <div className='flex gap-2 flex-wrap'>
+                    <div className='flex gap-2 flex-wrap justify-between w-[100%]'>
                             <div className="dropdown">
                                 <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                     Filter
@@ -82,6 +80,12 @@ const Banner = () => {
                                     <li><label><input type="checkbox" /> Checkbox Label</label></li>
                                 </ul>
                             </div>
+                            <div className="">
+                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
+                                <i className="ri-search-line"></i>
+                                <input type="text" className="grow" placeholder="Banner" />
+                            </label>
+                        </div>
                             <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                 <option disabled selected>Sort</option>
                                 <option>Homer</option>
@@ -91,13 +95,10 @@ const Banner = () => {
                                 <option>Maggie</option>
                             </select>
                         </div>
+                    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 container items-center w-full mt-4'>
+                       
 
-                        <div className="w-full">
-                            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                                <i className="ri-search-line"></i>
-                                <input type="text" className="grow" placeholder="Customer" />
-                            </label>
-                        </div>
+                   
                     </div>
                    { loading ? <Loader/> :
                      <BannerTable setToggle={setToggle} banners={banners}/> 

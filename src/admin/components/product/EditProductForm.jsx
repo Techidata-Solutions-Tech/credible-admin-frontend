@@ -1,278 +1,1268 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import Select from "react-select";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Accordion from "./Accordion";
+import SelectMultipleMedia from "./SelectMultipleImages";
 
-
-const EditProductForm = () => {
+const EditProductForm = ({productId}) => {
+  const token = localStorage.getItem('token');
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    category: {
+      category: 0,
+      // subCategory: "",
+      // childCategory: "",
+    },
+    productDetails: {
+      product_name: "",
+      brand_name: "",
+      brand_auth_letter: "https://credible.storage.s3.ap-south-1.amazonaws.com/1741850469797-bus-stop.png",
+      model_name: "",
+      model_number: "",
+      modelSeries: "",
+      standardProductIdentifier: "",
+      standardProductIdentifierNumber: "",
+      SKU: "",
+    },
+    productFeatured: {
+      material: "",
+      color: "",
+      capacity: 0,
+      withLid: "",
+      finish: "",
+      nonStick: "",
+      packContains: "",
+      productStatus: "",
+      productTag: "",
+      scratchResistant: "",
+      breakResistant: "",
+      microwaveSafe: "",
+      dishwasherSafe: "",
+      disposable: "",
+      custom: "",
+      length: 0,
+      width: 0,
+      depth: 0,
+      weigth: 0,
+      productDescription: "",
+    },
+    bulkPurchase: {
+      quantity: "", setPrice: ""
+    },
+    pricing: {
+      purchasePrice: 0,
+      mrp: 0,
+      sellerPrice: 0,
+      giftPackingAvilable: "",
+      packingPrice: 0,
+      startFrom: "",
+      codAvilable: "",
+    },
+    taxDetails: {
+      categorieId: 0,
+      categorieName: "",
+      cgst: 0,
+      description: "",
+      hsn: "",
+      id: 0,
+      igst: 0,
+      sgst_utgst: 0,
+      status: true,
+      taxRate: 0
+    },
+    inventory: {
+      saleableQty: 0,
+      measuringUnits: "",
+      minimumQty: 0,
+      maximumQty: 0,
+      stockStatus: "",
+      lowStockAlert: 0,
+    },
+    warehouse: {
+      warehouseId: 0,
+      location:"",
+      address:""
+    },
+    warrenty: {
+      warrentyApplicable: "",
+      warrentyType: "",
+      warrenty: "1",
+      warrentyLocation: "",
+      warrentyDuration: "",
+    },
+    packingAndShipping: {
+      length: 0,
+      width: 0,
+      depth: 0,
+      weight: 0,
+      shippingType: "",
+      shippingOrder: 0,
+      shippingDays: 0,
+      shippingZone: "",
+      shippingCharges: 0,
+    },
+    manufacturingDetails: {
+      manufacturingName: "",
+      manufacturingAddress: "",
+      countryOfOrigin: "",
+      batchNumber: "",
+      manufacturingDate: "",
+      expiryDate: "",
+      importerName: "",
+      importerAddress: "",
+    },
+    seoSection: {
+      metaTitle: "",
+      metaURL: "",
+      metaKeyword: "",
+      metaDescription: "",
+    },
+    imageAndVideo: {
+      images: [],
+      videos: [],
+    },
+    // shippingCancellationReturn: {
+    //   shippingPolicy: "",        
+    //   shippingDuration: "",        
+    //   returnPolicy: "",           
+    //   returnDays: "",              
+    //   cancellationPolicy: "",    
+    //   cancellationDuration: "",  
+    // }
+  });
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [firstStep, setFirstStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
-
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+  const [taxData, setTaxData] = useState([]);
+  const [selectedTaxes, setSelectedTaxes] = useState([]);
+  const [warehouses, setWarehouses] = useState([]);
+  const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+  const [images, setImages] = useState([]);
+  const [categoryParent, setCategoryParent] = useState([]);
+  const [categorySub, setCategorySub] = useState([]);
+  const [categoryChild, setCategoryChild] = useState([]);
   const steps = [
-    { number: 1, label: 'Category' },
-    { number: 2, label: 'Product Details' },
-    { number: 3, label: 'Features' },
-    { number: 4, label: 'Dimensions' },
-    { number: 5, label: 'Price' },
-    { number: 6, label: 'Tax & Inventory' },
-    { number: 7, label: 'Warehouse' },
-    { number: 8, label: 'Shipping' },
-    { number: 9, label: 'Manufacturing' },
-    { number: 10, label: 'SEO' },
-    { number: 11, label: 'Images' },
+    { number: 1, label: "Category" },
+    { number: 2, label: "Product Details" },
+    { number: 3, label: "Features" },
+    { number: 4, label: "Allow Product to Bulk Purchase" },
+    { number: 5, label: "Price" },
+    { number: 6, label: "Tax Details" },
+    { number: 7, label: "Inventory Details" },
+    { number: 8, label: "Warehouse Details" },
+    { number: 9, label: "Warranty Details" },
+    { number: 10, label: "Cancellation, Replacement & Return Policy" },
+    { number: 11, label: "Shipping" },
+    { number: 12, label: "Manufacturing" },
+    { number: 13, label: "SEO" },
+    { number: 14, label: "Images & Videos" },
   ];
-
-  const onSubmit = (data) => {
-    console.log(data);
-    if (currentStep < steps.length) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      // Handle final submission
-      console.log('Final form data:', data);
+  const fetchCategorySub = async (parentId) => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=${parentId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setCategorySub(data.categories);
+      } else {
+        console.log(`Error fetching subcategories: ${data.message}`);
+      }
+    } catch (error) {
+      console.log(`Error fetching subcategories: ${error.message}`);
     }
   };
 
+  const fetchCategoryChild = async (parentId) => {
+    try {
+
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=${parentId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setCategoryChild(data.categories);
+      } else {
+        console.log(`Error fetching child categories: ${data.message}`);
+      }
+    } catch (error) {
+      console.log(`Error fetching child categories: ${error.message}`);
+    }
+  };
+
+  const handleImageSelect = (imageUrl) => {
+    const updatedImages = [...images];
+    updatedImages[selectedIndex] = imageUrl;
+    setImages(updatedImages);
+    setShowModal(false);
+  };
+
+  useEffect(() => {
+    const fetchCategoryParent = async () => {
+      try {
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=0`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await response.json();
+        setCategoryParent(data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    const fetchTaxData = async () => {
+      try {
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/admin/tax`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setTaxData(data.data);
+        } else {
+          toast.error(`Error fetching tax data: ${data.message}`);
+        }
+      } catch (error) {
+        toast.error(`Error fetching tax data: ${error.message}`);
+      }
+    };
+
+    const fetchWarehouses = async () => {
+      try {
+
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/warehouse`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await response.json();
+        if (data.success) {
+          setWarehouses(data.data);
+        } else {
+          console.error("Failed to fetch warehouses");
+        }
+      } catch (error) {
+        console.error("Error fetching warehouses:", error);
+      }
+    };
+
+
+    fetchWarehouses();
+    fetchTaxData();
+    fetchCategoryParent();
+  }, []);
+
+  const openModal = (index) => {
+    setSelectedImageIndex(index);
+    setIsModalOpen(true);
+  };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/admin/product/${productId}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        const data = await response.json();
+        
+        if (response.ok) {
+          const product = data.data;
+      console.log(product);
+          setFormData((prev) => ({
+            ...prev,
+            category: {
+              category: product.category?.id || 0,
+              // subCategory: "",
+              // childCategory: "",
+            },
+            productDetails: {
+              product_name: product.product_name || "",
+              brand_name: product.__productFeatured?.brand_name || "",
+              brand_auth_letter: product.__productFeatured?.brand_auth_letter || "https://credible.storage.s3.ap-south-1.amazonaws.com/1741850469797-bus-stop.png",
+              model_name: product.__productFeatured?.model_name || "",
+              model_number: product.__productFeatured?.model_number || "",
+              modelSeries: product.__productFeatured?.model_series || "",
+              standardProductIdentifier: product.__productFeatured?.standardProductIdentifier || "",
+              standardProductIdentifierNumber: product.__productFeatured?.standardProductIdentifierNumber || "",
+              SKU: product.__productFeatured?.SKU || "",
+            },
+            productFeatured: {
+              material: product.__productFeatured?.material || "",
+              color: product.__productFeatured?.color || "",
+              capacity: Number(product.__productFeatured?.capacity) || 0,
+              withLid: product.__productFeatured?.widthLid || "",
+              finish: product.__productFeatured?.finish || "",
+              nonStick: product.__productFeatured?.nonStick || "",
+              packContains: product.__productFeatured?.packContains || "",
+              productStatus: product.__productFeatured?.productStatus || "",
+              productTag: product.__productFeatured?.productTag || "",
+              scratchResistant: product.__productFeatured?.scratchResistant || "",
+              breakResistant: product.__productFeatured?.breakResistant || "",
+              microwaveSafe: product.__productFeatured?.microwaveSafe || "",
+              dishwasherSafe: product.__productFeatured?.disinfectantSafe || "",
+              disposable: product.__productFeatured?.disposable || "",
+              custom: product.__productFeatured?.customFeature || "",
+              length: Number(product.__productFeatured?.length) || 0,
+              width: Number(product.__productFeatured?.width) || 0,
+              depth: Number(product.__productFeatured?.depth) || 0,
+              weigth: Number(product.__productFeatured?.weight) || 0,
+              productDescription: product.__productFeatured?.productDescription || "",
+            },
+            bulkPurchase: {
+              quantity: "", 
+              setPrice: ""
+            },
+            pricing: {
+              purchasePrice: product.purchase_price || 0,
+              mrp: product.mrp || 0,
+              sellerPrice: product.seller_price || 0,
+              giftPackingAvilable: product.__productShipping?.gift_packaging ? "yes" : "no",
+              packingPrice: product.__productShipping?.packing_price || 0,
+              startFrom: product.startFrom || "",
+              codAvilable: product.codAvailable ? "yes" : "no",
+            },
+            taxDetails: {
+              taxCountry: product.__productTax?.taxCountry || "",
+              taxClass: product.__productTax?.taxClass || "1",
+              countryTaxCode: product.__productTax?.countryTaxCode || "",
+              hsnSacCode: product.__productTax?.hsnSacCode || "",
+              taxType: product.__productTax?.taxType || "",
+              taxRate: Number(product.__productTax?.taxRate) || 0,
+              taxableAmount: Number(product.__productTax?.taxableAmount) || 0,
+              taxTitle: product.__productTax?.taxTitle || "",
+              cessPercentage: Number(product.__productTax?.cessPercentage) || 0,
+            },
+            inventory: {
+              saleableQty: product.__productInventory?.saleableQty || 0,
+              measuringUnits: product.__productInventory?.measuringUnits || "",
+              minimumQty: product.__productInventory?.minimumQty || 0,
+              maximumQty: product.__productInventory?.maximumQty || 0,
+              stockStatus: product.__productInventory?.stockStatus ? "inStock" : "outOfStock",
+              lowStockAlert: product.__productInventory?.lowStockAlert || 0,
+            },
+            warehouse: {
+              warehouseId: product.__warehouse?.id || 0,
+            },
+            warrenty: {
+              warrentyApplicable: product.__productWarranty?.warrantyApplicable || "",
+              warrentyType: product.__productWarranty?.warrantyType || "",
+              warrenty: product.__productWarranty?.warranty || "1",
+              warrentyLocation: product.__productWarranty?.warrantyLocation || "",
+              warrentyDuration: product.__productWarranty?.warrantyDuration || "",
+            },
+            packingAndShipping: {
+              length: product.__productShipping?.ship_length || 0,
+              width: product.__productShipping?.ship_width || 0,
+              depth: product.__productShipping?.ship_depth || 0,
+              weight: product.__productShipping?.ship_weight || 0,
+              shippingType: product.__productShipping?.shippingType || "",
+              shippingOrder: product.__productShipping?.shippingOrder || 0,
+              shippingDays: product.__productShipping?.shippingDays || 0,
+              shippingZone: product.__productShipping?.shippingZone || "",
+              shippingCharges: product.__productShipping?.shippingCharges || 0,
+            },
+            manufacturingDetails: {
+              manufacturingName: product.__productManufacture?.manufacturingName || "",
+              manufacturingAddress: product.__productManufacture?.manufacturingAddress || "",
+              countryOfOrigin: product.__productManufacture?.countryOfOrigin || "",
+              batchNumber: product.__productManufacture?.batchNumber || "",
+              manufacturingDate: product.__productManufacture?.manufacturingDate || "",
+              expiryDate: product.__productManufacture?.expiryDate || "",
+              importerName: product.__productManufacture?.importerName || "",
+              importerAddress: product.__productManufacture?.importerAddress || "",
+            },
+            seoSection: {
+              metaTitle: product.__productSeo__?.metaTitle || "",
+              metaURL: product.__productSeo__?.metaURL || "",
+              metaKeyword: product.__productSeo__?.metaKeyword || "",
+              metaDescription: product.__productSeo__?.metaDescription || "",
+            },
+            imageAndVideo: {
+              images: product.images || [],
+              videos: product.videos || [],
+            },
+          }))
+          
+          // Fetch category hierarchy based on the product's category
+          await fetchCategoryHierarchy(product.category.id);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        toast.error(`Error fetching product: ${error.message}`);
+        setIsLoading(false);
+      }
+    };
+    
+    fetchProduct();
+  }, [productId]);
+  const onSubmit = async () => {
+
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+      return;
+    }
+
+    const payload = {
+      category: {
+        category: Number(formData.category.category),
+      },
+      productDetails: {
+        product_name: formData.productDetails.product_name,
+        brand_name: formData.productDetails.brand_name,
+        brand_auth_letter: formData.productDetails.brand_auth_letter, // URL string
+        model_name: formData.productDetails.model_name,
+        model_number: formData.productDetails.model_number,
+        modelSeries: formData.productDetails.modelSeries,
+        standardProductIdentifier: formData.productDetails.standardProductIdentifier,
+        standardProductIdentifierNumber: formData.productDetails.standardProductIdentifierNumber,
+        SKU: formData.productDetails.SKU,
+      },
+      productFeatured: {
+        material: formData.productFeatured.material,
+        color: formData.productFeatured.color,
+        capacity: formData.productFeatured.capacity,
+        withLid: formData.productFeatured.withLid,
+        finish: formData.productFeatured.finish,
+        nonStick: formData.productFeatured.nonStick,
+        packContains: formData.productFeatured.packContains,
+        productStatus: formData.productFeatured.productStatus,
+        productTag: formData.productFeatured.productTag,
+        scratchResistant: formData.productFeatured.scratchResistant,
+        breakResistant: formData.productFeatured.breakResistant,
+        microwaveSafe: formData.productFeatured.microwaveSafe,
+        dishwasherSafe: formData.productFeatured.dishwasherSafe,
+        disposable: formData.productFeatured.disposable,
+        custom: formData.productFeatured.custom,
+        length: formData.productFeatured.length,
+        width: formData.productFeatured.width,
+        depth: formData.productFeatured.depth,
+        weigth: formData.productFeatured.weigth,
+        productDescription: formData.productFeatured.productDescription,
+      },
+      bulkPurchase: {
+        quantity: Number(formData.bulkPurchase.quantity),
+        setPrice: Number(formData.bulkPurchase.setPrice),
+      },
+      pricing: {
+        purchasePrice: Number(formData.pricing.purchasePrice),
+        mrp: Number(formData.pricing.mrp),
+        sellerPrice: Number(formData.pricing.sellerPrice),
+        giftPackingAvilable: formData.pricing.giftPackingAvilable,
+        packingPrice: Number(formData.pricing.packingPrice),
+        startFrom: formData.pricing.startFrom,
+        codAvilable: formData.pricing.codAvilable,
+      },
+      taxDetails: {
+        taxId: Number(formData.taxDetails.id),
+     
+        // taxCountry: formData.taxDetails.taxCountry,
+        // taxClass: formData.taxDetails.taxClass,
+        // countryTaxCode: formData.taxDetails.countryTaxCode,
+        // hsnSacCode: formData.taxDetails.hsnSacCode,
+        // taxableAmount: Number(formData.taxDetails.taxableAmount),
+        // taxType: formData.taxDetails.taxType,
+        // taxRate: Number(formData.taxDetails.taxRate),
+        // taxTitle: formData.taxDetails.taxTitle,
+        // cessPercentage: Number(formData.taxDetails.cessPercentage),
+      },
+      inventory: {
+        saleableQty: Number(formData.inventory.saleableQty),
+        measuringUnits: formData.inventory.measuringUnits,
+        minimumQty: Number(formData.inventory.minimumQty),
+        maximumQty: Number(formData.inventory.maximumQty),
+        stockStatus: formData.inventory.stockStatus,
+        lowStockAlert: Number(formData.inventory.lowStockAlert),
+      },
+      warehouse: {
+        warehouseId: Number(formData.warehouse.warehouseId),
+      },
+      warrenty: {
+        warrentyApplicable: formData.warrenty.warrentyApplicable,
+        warrentyType: formData.warrenty.warrentyType,
+        warrenty: formData.warrenty.warrenty,
+        warrentyLocation: formData.warrenty.warrentyLocation,
+        warrentyDuration: formData.warrenty.warrentyDuration,
+      },
+      // shippingCancellationReturn: {
+      //   shippingPolicy: formData.shippingCancellationReturn.shippingPolicy,
+      //   shippingDuration: formData.shippingCancellationReturn.shippingDuration,
+      //   returnPolicy: formData.shippingCancellationReturn.returnPolicy,
+      //   returnDays: formData.shippingCancellationReturn.returnDays,
+      //   cancellationPolicy: formData.shippingCancellationReturn.cancellationPolicy,
+      //   cancellationDuration: formData.shippingCancellationReturn.cancellationDuration,
+      // },
+      packingAndShipping: {
+        length: Number(formData.packingAndShipping.length),
+        width: Number(formData.packingAndShipping.width),
+        depth: Number(formData.packingAndShipping.depth),
+        weight: Number(formData.packingAndShipping.weight),
+        shippingType: formData.packingAndShipping.shippingType,
+        shippingOrder: Number(formData.packingAndShipping.shippingOrder),
+        shippingDays: Number(formData.packingAndShipping.shippingDays),
+        shippingZone: formData.packingAndShipping.shippingZone,
+        shippingCharges: Number(formData.packingAndShipping.shippingCharges),
+      },
+      manufacturingDetails: {
+        manufacturingName: formData.manufacturingDetails.manufacturingName,
+        manufacturingAddress: formData.manufacturingDetails.manufacturingAddress,
+        countryOfOrigin: formData.manufacturingDetails.countryOfOrigin,
+        batchNumber: formData.manufacturingDetails.batchNumber,
+        manufacturingDate: formData.manufacturingDetails.manufacturingDate,
+        expiryDate: formData.manufacturingDetails.expiryDate,
+        importerName: formData.manufacturingDetails.importerName,
+        importerAddress: formData.manufacturingDetails.importerAddress,
+      },
+      seoSection: {
+        metaTitle: formData.seoSection.metaTitle,
+        metaURL: formData.seoSection.metaURL,
+        metaKeyword: formData.seoSection.metaKeyword,
+        metaDescription: formData.seoSection.metaDescription,
+      }, imageAndVideo: {
+        images: formData.imageAndVideo.images,
+        videos: formData.imageAndVideo.videos,
+      }
+    };
+console.log(payload.taxDetails);
+
+try {
+  const response = await fetch(
+    `${import.meta.env.VITE_BASE_URL}/api/admin/product/${productId}`,
+    {
+      method: "PUT",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload), // Use the same payload structure
+    }
+  );
+
+  if (!response.ok) throw new Error(await response.text());
+
+  toast.success("Product updated successfully!");
+} catch (error) {
+  toast.error(error.message || "Update failed");
+}
+  };
+  // Add this function to fetch the category hierarchy
+const fetchCategoryHierarchy = async (categoryId) => {
+  try {
+    // First, check if this is a child category
+    const childResponse = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/api/admin/category/${categoryId}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+    );
+    const categoryData = await childResponse.json();
+    
+    if (categoryData.parentCat !== 0) {
+      // It's a child or sub category
+      fetchCategoryChild(categoryData.parentCat);
+      
+      // Check if parent has a parent (meaning current is child)
+      const parentResponse = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/category/${categoryData.parentCat}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+      const parentData = await parentResponse.json();
+      
+      if (parentData.parentCat !== 0) {
+        // Current is a child category, parent is sub category
+        fetchCategorySub(parentData.parentCat);
+      } else {
+        // Current is a sub category
+        fetchCategorySub(categoryData.parentCat);
+      }
+    }
+  } catch (error) {
+    console.error("Error fetching category hierarchy:", error);
+  }
+};
   const renderFormFields = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4 container shadow-lg rounded-md p-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Main Category</label>
-                <select
-                  {...register("mainCategory", { required: "Main category is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                >
-                  <option value="">Select main category...</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="furniture">Furniture</option>
-                </select>
-                {errors.mainCategory && (
-                  <p className="text-red-500 text-sm mt-1">{errors.mainCategory.message}</p>
-                )}
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Sub Category</label>
-                <select
-                  {...register("subCategory", { required: "Sub category is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                >
-                  <option value="">Select sub category...</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="furniture">Furniture</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Child Category</label>
-                <select
-                  {...register("childCategory")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                >
-                  <option value="">Select child category...</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="furniture">Furniture</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Is Featured</label>
-                <select
-                  {...register("isFeatured")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                >
-                  <option value="no">No</option>
-                  <option value="yes">Yes</option>
-                </select>
-              </div>
-            </div>
-          </div>
+          <CategoryStep
+            formData={formData}
+            setFormData={setFormData}
+            categoryParent={categoryParent}
+            categorySub={categorySub}
+            categoryChild={categoryChild}
+            fetchCategorySub={fetchCategorySub}
+            fetchCategoryChild={fetchCategoryChild}
+          />
+
         );
 
       case 2:
         return (
-          <div className="space-y-4 container shadow-lg rounded-md p-4">
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Product Name</label>
-              <input
-                {...register("productName", { required: "Product name is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Brand Name</label>
-              <input
-                {...register("brandName", { required: "Brand name is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Brand Authorization Letter</label>
-              <input
-                type="file"
-                {...register("brandAuthorization")}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Model Name</label>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Product Name
+                </label>
                 <input
-                  {...register("modelName")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.productDetails.product_name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        product_name: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-40 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
                 />
               </div>
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Model Number</label>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Brand Name
+                </label>
                 <input
-                  {...register("modelNumber")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.productDetails.brand_name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        brand_name: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400  rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">SKU</label>
-              <input
-                {...register("sku", { required: "SKU is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Brand Authorization Letter
+                </label>
+                <input
+                  type="file"
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        brand_auth_letter: e.target.files[0],
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400  rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Model Name
+                </label>
+                <input
+                  value={formData.productDetails.model_name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        model_name: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Model Number
+                </label>
+                <input
+                  value={formData.productDetails.model_number}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        model_number: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Model Series
+                </label>
+                <input
+                  value={formData.productDetails.modelSeries}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        modelSeries: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Standard Product Identifier
+                </label>
+                <input
+                  value={formData.productDetails.standardProductIdentifier}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        standardProductIdentifier: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Standard Product Identifier Number
+                </label>
+                <input
+                  value={formData.productDetails.standardProductIdentifierNumber}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        standardProductIdentifierNumber: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  SKU
+                </label>
+                <input
+                  value={formData.productDetails.SKU}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productDetails: {
+                        ...prev.productDetails,
+                        SKU: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                />
+              </div>
             </div>
           </div>
         );
 
-
       case 3:
         return (
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-2 gap-8">
-              {/* Left Container */}
-              <div className="space-y-4 container mx-auto shadow-lg rounded-md p-6">
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Material</label>
-                  <input
-                    type="text"
-                    {...register("material", { required: "Material is required" })}
-                    className="w-full px-4 py-2 border rounded-md bg-transparent"
-                    placeholder="Enter material"
-                  />
-                </div>
-
-                {/* Color */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Color</label>
-                  <input
-                    type="text"
-                    {...register("color")}
-                    className="w-full px-4 py-2 border rounded-md bg-transparent"
-                    placeholder="Enter color"
-                  />
-                </div>
-
-                {/* Capacity */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Capacity</label>
-                  <input
-                    type="text"
-                    {...register("capacity")}
-                    className="w-full px-4 py-2 border rounded-md bg-transparent"
-                    placeholder="Enter capacity"
-                  />
-                </div>
-
-                {/* Width Lid */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Width Lid</label>
-                  <input
-                    type="text"
-                    {...register("widthLid")}
-                    className="w-full px-4 py-2 border rounded-md bg-transparent"
-                    placeholder="Enter width lid"
-                  />
-                </div>
-
-                {/* Finish */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Finish</label>
-                  <input
-                    type="text"
-                    {...register("finish")}
-                    className="w-full px-4 py-2 border rounded-md bg-transparent"
-                    placeholder="Enter finish type"
-                  />
-                </div>
-
-                {/* Non-Stick */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Non-Stick</label>
-                  <select {...register("nonStick")} className="w-full px-4 py-2 border rounded-md bg-transparent">
-                    <option value="">Select option...</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
-                </div>
-
-                {/* Pack Contains */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Pack Contains</label>
-                  <input
-                    type="text"
-                    {...register("packContains")}
-                    className="w-full px-4 py-2 border rounded-md  bg-transparent"
-                    placeholder="Enter pack details"
-                  />
-                </div>
+          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Material */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Material
+                </label>
+                <input
+                  value={formData.productFeatured.material}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        material: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
               </div>
-              <div className="grid grid-cols-2 gap-8 shadow-lg rounded-md p-4">
-                {/* Product Status */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Product Status</label>
-                  <select {...register("productStatus")} className="w-full px-4 py-2 border rounded-md  bg-transparent">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                </div>
 
-                {/* Product Tag */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Product Tag</label>
-                  <select {...register("productTag")} className="w-full px-4 py-2 border rounded-md  bg-transparent">
-                    <option value="">Select tag...</option>
-                    <option value="new">New</option>
-                    <option value="bestseller">Bestseller</option>
-                    <option value="featured">Featured</option>
-                  </select>
-                </div>
-
-                {/* Other Features */}
-                <div>
-                  <label className="block text-md font-semibold text-gray-700 mb-1">Other Features</label>
-                  <div className="space-y-2">
-                    {[
-                      { name: "scratchResistant", label: "Scratch Resistant" },
-                      { name: "breakResistant", label: "Break Resistant" },
-                      { name: "microwaveSafe", label: "Microwave Safe" },
-                      { name: "disinfectantSafe", label: "Disinfectant Safe" },
-                      { name: "disposable", label: "Disposable" },
-                    ].map((feature) => (
-                      <div key={feature.name} className="flex items-center space-x-4">
-                        <span>{feature.label}</span>
-                        <select {...register(feature.name)} className="px-4 py-2 border rounded-md  bg-transparent">
-                          <option value="yes">Yes</option>
-                          <option value="no">No</option>
-                        </select>
-                      </div>
-                    ))}
-
-                    {/* Custom Feature Input */}
-                    <div>
-                      <label className="block text-md font-semibold text-gray-700 mb-1">Custom Feature</label>
-                      <input
-                        type="text"
-                        {...register("customFeature")}
-                        className="w-full px-4 py-2 border rounded-md  bg-transparent"
-                        placeholder="Enter custom feature"
-                      />
-                    </div>
-                  </div>
-                </div>
+              {/* Color */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Color
+                </label>
+                <input
+                  value={formData.productFeatured.color}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        color: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
               </div>
+
+              {/* Capacity */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Capacity
+                </label>
+                <input
+                  type="number"
+                  value={formData.productFeatured.capacity}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        capacity: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* With Lid */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  With Lid
+                </label>
+                <select
+                  value={formData.productFeatured.withLid}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        withLid: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Finish */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Finish
+                </label>
+                <input
+                  value={formData.productFeatured.finish}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        finish: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Non-Stick */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Non-Stick
+                </label>
+                <select
+                  value={formData.productFeatured.nonStick}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        nonStick: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Pack Contains */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Pack Contains
+                </label>
+                <input
+                  value={formData.productFeatured.packContains}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        packContains: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Product Status */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Product Status
+                </label>
+                <select
+                  value={formData.productFeatured.productStatus}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        productStatus: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+
+              {/* Product Tag */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Product Tag
+                </label>
+                <input
+                  value={formData.productFeatured.productTag}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        productTag: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Scratch Resistant */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Scratch Resistant
+                </label>
+                <select
+                  value={formData.productFeatured.scratchResistant}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        scratchResistant: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Break Resistant */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Break Resistant
+                </label>
+                <select
+                  value={formData.productFeatured.breakResistant}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        breakResistant: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Microwave Safe */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Microwave Safe
+                </label>
+                <select
+                  value={formData.productFeatured.microwaveSafe}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        microwaveSafe: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Dishwasher Safe */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Dishwasher Safe
+                </label>
+                <select
+                  value={formData.productFeatured.dishwasherSafe}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        dishwasherSafe: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Disposable */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Disposable
+                </label>
+                <select
+                  value={formData.productFeatured.disposable}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        disposable: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select...</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              {/* Custom */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Custom
+                </label>
+                <input
+                  value={formData.productFeatured.custom}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        custom: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Length */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Length
+                </label>
+                <input
+                  type="number"
+                  value={formData.productFeatured.length}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        length: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Width */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Width
+                </label>
+                <input
+                  type="number"
+                  value={formData.productFeatured.width}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        width: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Depth */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Depth
+                </label>
+                <input
+                  type="number"
+                  value={formData.productFeatured.depth}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        depth: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Weight */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Weight
+                </label>
+                <input
+                  type="number"
+                  value={formData.productFeatured.weigth}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      productFeatured: {
+                        ...prev.productFeatured,
+                        weigth: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+            </div>
+
+            {/* Product Description */}
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-2">
+                Product Description
+              </label>
+              <textarea
+                value={formData.productFeatured.productDescription}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    productFeatured: {
+                      ...prev.productFeatured,
+                      productDescription: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                rows="4"
+              />
             </div>
           </div>
         );
@@ -280,141 +1270,143 @@ const EditProductForm = () => {
 
       case 4:
         return (
-          <div className="space-y-4 conatiner shadow-lg rounded-md p-4">
+          <div className="grid sm:grid-cols-2 gap-4 container mx-auto shadow-lg rounded-md p-6">
             <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Length (cm)</label>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Quantity
+              </label>
               <input
                 type="number"
-                {...register("length", { required: "Length is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
+                value={formData.bulkPurchase.quantity}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    bulkPurchase: {
+                      ...prev.bulkPurchase,
+                      quantity: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Width (cm)</label>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Set Price
+              </label>
               <input
                 type="number"
-                {...register("width")}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
+                value={formData.bulkPurchase.setPrice}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    bulkPurchase: {
+                      ...prev.bulkPurchase,
+                      setPrice: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
               />
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Depth (cm)</label>
-              <input
-                type="number"
-                {...register("depth")}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Weight (kg)</label>
-              <input
-                type="number"
-                {...register("weight")}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Product Description</label>
-              <textarea
-                {...register("productDescription")}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-                rows="4"
-              ></textarea>
             </div>
           </div>
-        );
 
+
+        );
 
       case 5:
         return (
-          <div className="space-y-4 container shadow-lg rounded-md p-4 ">
-            {/* Bulk Purchase Section */}
-            <div>
-              <label className="block text-lg font-medium mb-2">Allow Product to Bulk Purchase</label>
+          <div className="space-y-4 container shadow-lg rounded-md p-4">
 
-              {/* Quantity */}
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Quantity</label>
-                <input
-                  type="number"
-                  {...register("bulkQuantity", { required: "Quantity is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                  placeholder="Enter quantity"
-                />
-                {errors.bulkQuantity && (
-                  <p className="text-red-500 text-sm mt-1">{errors.bulkQuantity.message}</p>
-                )}
-              </div>
-
-              {/* Discounted Price */}
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Discounted Price</label>
-                <input
-                  type="number"
-                  {...register("discountedPrice", { required: "Discounted price is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
-                  placeholder="Enter discounted price"
-                />
-                {errors.discountedPrice && (
-                  <p className="text-red-500 text-sm mt-1">{errors.discountedPrice.message}</p>
-                )}
-              </div>
-            </div>
 
             {/* Price Details Section */}
-            <div>
-              <label className="block text-xl text-black font-medium mb-6 text-center">Price Details</label>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
               {/* Purchase Price */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Purchase Price</label>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Purchase Price
+                </label>
                 <input
                   type="number"
-                  {...register("purchasePrice", { required: "Purchase price is required " })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.pricing.purchasePrice}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        purchasePrice: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
                   placeholder="Enter purchase price"
                 />
-                {errors.purchasePrice && (
-                  <p className="text-red-500 text-sm mt-1">{errors.purchasePrice.message}</p>
-                )}
               </div>
 
               {/* MRP */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">MRP</label>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  MRP
+                </label>
                 <input
                   type="number"
-                  {...register("mrp", { required: "MRP is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.pricing.mrp}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        mrp: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
                   placeholder="Enter MRP"
                 />
-                {errors.mrp && (
-                  <p className="text-red-500 text-sm mt-1">{errors.mrp.message}</p>
-                )}
               </div>
 
               {/* Seller Price */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Seller Price</label>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Seller Price
+                </label>
                 <input
                   type="number"
-                  {...register("sellerPrice", { required: "Seller price is required" })}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.pricing.sellerPrice}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        sellerPrice: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
                   placeholder="Enter seller price"
                 />
-                {errors.sellerPrice && (
-                  <p className="text-red-500 text-sm mt-1">{errors.sellerPrice.message}</p>
-                )}
               </div>
 
               {/* Gift Packing Available */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Gift Packing Available</label>
-                <select {...register("giftPacking")} className="w-full px-4 py-2 border rounded-md bg-transparent">
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Gift Packing Available
+                </label>
+                <select
+                  value={formData.pricing.giftPackingAvilable}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        giftPackingAvilable: e.target.value === "yes",
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                >
                   <option value="yes">Yes</option>
                   <option value="no">No</option>
                 </select>
@@ -422,22 +1414,44 @@ const EditProductForm = () => {
 
               {/* Packing Price */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Packing Price</label>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Packing Price
+                </label>
                 <input
                   type="number"
-                  {...register("packingPrice")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.pricing.packingPrice}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        packingPrice: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
                   placeholder="Enter packing price"
                 />
               </div>
 
               {/* Starting From Date */}
               <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">Starting From Date</label>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Starting From Date
+                </label>
                 <input
                   type="date"
-                  {...register("startDate")}
-                  className="w-full px-4 py-2 border rounded-md bg-transparent"
+                  value={formData.pricing.startFrom}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      pricing: {
+                        ...prev.pricing,
+                        startFrom: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
                 />
               </div>
             </div>
@@ -446,704 +1460,1472 @@ const EditProductForm = () => {
 
       case 6:
         return (
-          <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 w-full">
-          {/* Tax Details Section (Left Side) */}
-          <div className="space-y-4 shadow-lg p-4 rounded-md w-full">
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Tax Country</label>
-              <select
-                {...register("taxCountry", { required: "Tax country is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select country...</option>
-                <option value="IN">India</option>
-                <option value="US">United States</option>
-                {/* Add more countries as needed */}
-              </select>
-              {errors.taxCountry && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxCountry.message}</p>
-              )}
+          <div className="container p-4">
+            <div className="grid grid-cols-3 gap-6">
+  {/* Tax Rate Selection */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Select Tax Rate
+    </label>
+    <select
+      value={formData.taxDetails.taxRate} // Set the selected tax rate here
+      onChange={(e) => {
+        const selectedTax = taxData.find(tax => tax.taxRate === parseFloat(e.target.value)); // Find the selected tax based on the taxRate
+        if (selectedTax) {
+          console.log(selectedTax.id);
+          
+          setFormData((prev) => ({
+            ...prev,
+            taxDetails: {
+              ...prev.taxDetails,
+              taxRate: selectedTax.taxRate,
+              cgst: selectedTax.cgst,
+              sgst_utgst: selectedTax.sgst_utgst,
+              igst: selectedTax.igst,
+              hsn: selectedTax.hsn,
+              description: selectedTax.description || "",
+              categorieName: selectedTax.categorieName || "",
+              status: true, 
+              id:selectedTax.id,
+            },
+          }));
+        }
+      }}
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select tax rate...</option>
+      {taxData?.map((tax, index) => (
+        <option key={index} value={tax.taxRate}>{tax.taxRate}</option>
+      ))}
+    </select>
+  </div>
+
+  {/* HSN/SAC Code */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      HSN/SAC Code
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.hsn}  // Use the HSN value from selected tax
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            hsn: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      placeholder="Enter HSN/SAC code"
+    />
+  </div>
+
+  {/* CGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      CGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.cgst} // Fill in the CGST automatically based on tax selection
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            cgst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* SGST/UTGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      SGST/UTGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.sgst_utgst}  // Automatically populated SGST/UTGST value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            sgst_utgst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* IGST */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      IGST
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.igst} // Automatically filled IGST value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            igst: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+
+  {/* Description */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Description
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.description}  // Fill in description automatically
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            description: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      placeholder="Enter description"
+    />
+  </div>
+
+  {/* Tax Class */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+    Category Name
+    </label>
+    <input
+      type="text"
+      value={formData.taxDetails.categorieName}  // Automatically filled tax amount value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            categorieName: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    />
+  </div>
+
+  {/* Tax Type */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Tax Type
+    </label>
+    <select
+      value={formData.taxDetails.taxType}
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            taxType: e.target.value,
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select tax type...</option>
+      <option value="fix">Fix</option>
+      <option value="percentage">Percentage</option>
+    </select>
+  </div>
+
+  {/* Tax Amount */}
+  <div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Tax Amount
+    </label>
+    <input
+      type="number"
+      value={formData.taxDetails.taxAmount}  // Automatically filled tax amount value
+      onChange={(e) =>
+        setFormData((prev) => ({
+          ...prev,
+          taxDetails: {
+            ...prev.taxDetails,
+            taxAmount: Math.max(0, parseFloat(e.target.value) || 0),
+          },
+        }))
+      }
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+      step="0.01"
+      min="0"
+    />
+  </div>
+</div>
+
+          </div>
+        );
+
+      case 7:
+        return (
+          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Saleable Quantity */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Saleable Quantity
+                </label>
+                <input
+                  type="number"
+                  value={formData.inventory.saleableQty}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        saleableQty: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  min="0"
+                />
+              </div>
+
+              {/* Measuring Units */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Measuring Units
+                </label>
+                <select
+                  value={formData.inventory.measuringUnits}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        measuringUnits: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select unit</option>
+                  <option value="pieces">Pieces</option>
+                  <option value="kg">Kilograms</option>
+                  <option value="g">Grams</option>
+                  <option value="l">Liters</option>
+                  <option value="ml">Milliliters</option>
+                  <option value="box">Box</option>
+                  <option value="pack">Pack</option>
+                </select>
+              </div>
+
+              {/* Minimum Quantity */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Minimum Quantity
+                </label>
+                <input
+                  type="number"
+                  value={formData.inventory.minimumQty}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        minimumQty: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  min="0"
+                />
+              </div>
+
+              {/* Maximum Quantity */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Maximum Quantity
+                </label>
+                <input
+                  type="number"
+                  value={formData.inventory.maximumQty}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        maximumQty: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  min="0"
+                />
+              </div>
+
+              {/* Stock Status */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Stock Status
+                </label>
+                <select
+                  value={formData.inventory.stockStatus}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        stockStatus: e.target.value === 'in_stock', // Converts to boolean
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                >
+                  <option value="">Select status</option>
+                  <option value="in_stock">In Stock</option>
+                  <option value="out_of_stock">Out of Stock</option>
+                </select>
+              </div>
+
+
+              {/* Low Stock Alert */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Low Stock Alert
+                </label>
+                <input
+                  type="number"
+                  value={formData.inventory.lowStockAlert}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      inventory: {
+                        ...prev.inventory,
+                        lowStockAlert: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  min="0"
+                />
+              </div>
             </div>
 
+            {/* Additional Inventory Notes */}
             <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Tax Class</label>
-              <select
-                {...register("taxClass", { required: "Tax class is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select tax class...</option>
-                <option value="standard">Standard</option>
-                <option value="exempt">Exempt</option>
-              </select>
-              {errors.taxClass && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxClass.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Country Tax Code</label>
-              <select
-                {...register("countryTaxCode", { required: "Country tax code is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select tax code...</option>
-                <option value="GST">GST</option>
-                <option value="VAT">VAT</option>
-              </select>
-              {errors.countryTaxCode && (
-                <p className="text-red-500 text-sm mt-1">{errors.countryTaxCode.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">HSN/SAC Code</label>
-              <input
-                type="text"
-                {...register("hsnSacCode", { required: "HSN/SAC code is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
+              <label className="block text-md font-semibold text-gray-700 mb-2">
+                Inventory Notes (Optional)
+              </label>
+              <textarea
+                value={formData.inventory.notes || ''}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    inventory: {
+                      ...prev.inventory,
+                      notes: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                rows="3"
+                placeholder="Any additional inventory notes..."
               />
-              {errors.hsnSacCode && (
-                <p className="text-red-500 text-sm mt-1">{errors.hsnSacCode.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Tax Type</label>
-              <select
-                {...register("taxType", { required: "Tax type is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select tax type...</option>
-                <option value="inclusive">Inclusive</option>
-                <option value="exclusive">Exclusive</option>
-              </select>
-              {errors.taxType && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxType.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Tax Rate</label>
-              <input
-                type="number"
-                {...register("taxRate", { required: "Tax rate is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-                step="0.01"
-              />
-              {errors.taxRate && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxRate.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Taxable Amount</label>
-              <input
-                type="number"
-                {...register("taxableAmount", { required: "Taxable amount is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-                step="0.01"
-              />
-              {errors.taxableAmount && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxableAmount.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Tax Title</label>
-              <input
-                type="text"
-                {...register("taxTitle", { required: "Tax title is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.taxTitle && (
-                <p className="text-red-500 text-sm mt-1">{errors.taxTitle.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Cess %</label>
-              <input
-                type="number"
-                {...register("cessPercentage", { required: "Cess percentage is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-                step="0.01"
-              />
-              {errors.cessPercentage && (
-                <p className="text-red-500 text-sm mt-1">{errors.cessPercentage.message}</p>
-              )}
-            </div>
-            </div>
-
-            {/* Inventory Details Section */}
-            <div className="space-y-4 shadow-lg p-4 rounded-md w-full">
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Saleable Quantity</label>
-              <input
-                type="number"
-                {...register("saleableQty", { required: "Saleable quantity is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.saleableQty && (
-                <p className="text-red-500 text-sm mt-1">{errors.saleableQty.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Measuring Units</label>
-              <input
-                type="text"
-                {...register("measuringUnits", { required: "Measuring units are required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.measuringUnits && (
-                <p className="text-red-500 text-sm mt-1">{errors.measuringUnits.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Minimum Quantity</label>
-              <input
-                type="number"
-                {...register("minimumQty", { required: "Minimum quantity is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.minimumQty && (
-                <p className="text-red-500 text-sm mt-1">{errors.minimumQty.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Maximum Quantity</label>
-              <input
-                type="number"
-                {...register("maximumQty", { required: "Maximum quantity is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.maximumQty && (
-                <p className="text-red-500 text-sm mt-1">{errors.maximumQty.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Stock Status</label>
-              <select
-                {...register("stockStatus", { required: "Stock status is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              >
-                <option value="">Select stock status...</option>
-                <option value="in_stock">In Stock</option>
-                <option value="out_of_stock">Out of Stock</option>
-              </select>
-              {errors.stockStatus && (
-                <p className="text-red-500 text-sm mt-1">{errors.stockStatus.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-md font-semibold text-gray-700 mb-1">Low Stock Alert</label>
-              <input
-                type="number"
-                {...register("lowStockAlert", { required: "Low stock alert is required" })}
-                className="w-full px-4 py-2 border rounded-md bg-transparent"
-              />
-              {errors.lowStockAlert && (
-                <p className="text-red-500 text-sm mt-1">{errors.lowStockAlert.message}</p>
-              )}
             </div>
           </div>
-          </div>
-         
         );
 
 
 
-      case 7: return (
-        <div className="space-y-4">
-          {/* Warehouse Details Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse ID</label>
-            <input
-              type="text"
-              {...register("warehouseId", { required: "Warehouse ID is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.warehouseId && (
-              <p className="text-red-500 text-sm mt-1">{errors.warehouseId.message}</p>
-            )}
+      case 8:
+        return (
+          <div className="space-y-4 container shadow-lg rounded-md p-4">
+
+<div>
+    <label className="block text-md font-semibold text-gray-700 mb-1">
+      Select Warehouse
+    </label>
+    <select
+      value={formData.warehouse.warehouseId}
+      onChange={(e) => {
+        const selectedId = parseInt(e.target.value);
+        const warehouse = warehouses.find((wh) => wh.id === selectedId);
+
+        setFormData((prev) => ({
+          ...prev,
+          warehouse: {
+            ...prev.warehouse,
+            warehouseId: selectedId,
+          },
+        }));
+
+        // Set the selected warehouse for location and address
+        setSelectedWarehouse(warehouse); // Update the selected warehouse state
+      }}
+      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+    >
+      <option value="">Select a warehouse...</option>
+      {warehouses.map((warehouse) => (
+        <option key={warehouse.id} value={warehouse.id}>
+          {warehouse.name} - {warehouse.city}, {warehouse.state}
+        </option>
+      ))}
+    </select>
+  </div>
+
+            {/* Warehouse Location */}
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warehouse Location
+              </label>
+              <input
+                value={selectedWarehouse ? selectedWarehouse.location : ""}
+                readOnly
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              />
+            </div>
+
+            {/* Warehouse Address */}
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warehouse Address
+              </label>
+              <textarea
+                value={selectedWarehouse ? selectedWarehouse.address : ""}
+                readOnly
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                rows="3"
+              />
+            </div>
+
           </div>
+        );
+      case 9:
+        return (
+          <div className="gap-4 container shadow-lg rounded-md p-4 grid md:grid-cols-2 xl:grid-cols-3">
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warranty
+              </label>
+              <input
+                value={formData.warrenty.warrenty}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    warrenty: {
+                      ...prev.warrenty,
+                      warrenty: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warranty Applicable
+              </label>
+              <select
+                value={formData.warrenty.warrentyApplicable}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    warrenty: {
+                      ...prev.warrenty,
+                      warrentyApplicable: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              >
+                <option value="">Select warranty applicability...</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Type</label>
-            <select
-              {...register("warrantyType", { required: "Warranty type is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            >
-              <option value="">Select warranty type...</option>
-              <option value="standard">Standard</option>
-              <option value="extended">Extended</option>
-              <option value="none">None</option>
-            </select>
-            {errors.warrantyType && (
-              <p className="text-red-500 text-sm mt-1">{errors.warrantyType.message}</p>
-            )}
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warranty Type
+              </label>
+              <select
+                value={formData.warrenty.warrentyType}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    warrenty: {
+                      ...prev.warrenty,
+                      warrentyType: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              >
+                <option value="">Select warranty type...</option>
+                <option value="standard">Standard</option>
+                <option value="extended">Extended</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warranty Duration (months)
+              </label>
+              <input
+                value={formData.warrenty.warrentyDuration}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    warrenty: {
+                      ...prev.warrenty,
+                      warrentyDuration: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Warranty Location
+              </label>
+              <input
+                value={formData.warrenty.warrentyLocation}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    warrenty: {
+                      ...prev.warrenty,
+                      warrentyLocation: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              />
+            </div>
           </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Location</label>
-            <input
-              type="text"
-              {...register("warehouseLocation", { required: "Warehouse location is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.warehouseLocation && (
-              <p className="text-red-500 text-sm mt-1">{errors.warehouseLocation.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warehouse Address</label>
-            <textarea
-              {...register("warehouseAddress", { required: "Warehouse address is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-              rows="3"
-            />
-            {errors.warehouseAddress && (
-              <p className="text-red-500 text-sm mt-1">{errors.warehouseAddress.message}</p>
-            )}
-          </div>
-
-          {/* Warranty Details Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Applicable</label>
-            <select
-              {...register("warrantyApplicable", { required: "Warranty applicable is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            >
-              <option value="">Select warranty applicability...</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-            {errors.warrantyApplicable && (
-              <p className="text-red-500 text-sm mt-1">{errors.warrantyApplicable.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Type</label>
-            <select
-              {...register("warrantyTypeDetails", { required: "Warranty type is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            >
-              <option value="">Select warranty type...</option>
-              <option value="standard">Standard</option>
-              <option value="extended">Extended</option>
-              <option value="none">None</option>
-            </select>
-            {errors.warrantyTypeDetails && (
-              <p className="text-red-500 text-sm mt-1">{errors.warrantyTypeDetails.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty</label>
-            <input
-              type="text"
-              {...register("warranty", { required: "Warranty is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.warranty && (
-              <p className="text-red-500 text-sm mt-1">{errors.warranty.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Location</label>
-            <input
-              type="text"
-              {...register("warrantyLocation", { required: "Warranty location is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.warrantyLocation && (
-              <p className="text-red-500 text-sm mt-1">{errors.warrantyLocation.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Warranty Duration (months)</label>
-            <input
-              type="number"
-              {...register("warrantyDuration", { required: "Warranty duration is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.warrantyDuration && (
-              <p className="text-red-500 text-sm mt-1">{errors.warrantyDuration.message}</p>
-            )}
-          </div>
-        </div>
-      );
+        );
+      case 10:
+        return (
+          <div>GO TO NEXT PLEASE</div>
+          // <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          //   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          //      {/* Cancellation Policy */}
+          //      <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Cancellation Policy
+          //       </label>
+          //       <textarea
+          //         value={formData.shippingCancellationReturn.cancellationPolicy}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               cancellationPolicy: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //         rows="4"
+          //       />
+          //     </div>
+          //     {/* Shipping Policy */}
+          //     <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Shipping Policy
+          //       </label>
+          //       <textarea
+          //         value={formData.shippingCancellationReturn.shippingPolicy}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               shippingPolicy: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //         rows="4"
+          //       />
+          //     </div>
 
 
-      case 8: return (
-        <div className="space-y-4">
-          {/* Cancellation, Replacement and Return Policy Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">COD Available</label>
-            <select
-              {...register("codAvailable", { required: "COD availability is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            >
-              <option value="">Select COD availability...</option>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
-            {errors.codAvailable && (
-              <p className="text-red-500 text-sm mt-1">{errors.codAvailable.message}</p>
-            )}
-          </div>
+          //     {/* Return Policy */}
+          //     <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Return Policy
+          //       </label>
+          //       <textarea
+          //         value={formData.shippingCancellationReturn.returnPolicy}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               returnPolicy: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //         rows="4"
+          //       />
+          //     </div>
+          //   </div>
 
-          {/* Packing and Shipping Details Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Length (CM)</label>
-            <input
-              type="number"
-              {...register("ship_length", { required: "Length is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.ship_length && (
-              <p className="text-red-500 text-sm mt-1">{errors.ship_length.message}</p>
-            )}
-          </div>
+          //   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          //       {/* Shipping Duration */}
+          //       <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Shipping Duration
+          //       </label>
+          //       <input
+          //         value={formData.shippingCancellationReturn.shippingDuration}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               shippingDuration: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //       />
+          //     </div>
 
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Width (CM)</label>
-            <input
-              type="number"
-              {...register("ship_width", { required: "Width is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.ship_width && (
-              <p className="text-red-500 text-sm mt-1">{errors.ship_width.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Depth (CM)</label>
-            <input
-              type="number"
-              {...register("ship_depth", { required: "Depth is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.ship_depth && (
-              <p className="text-red-500 text-sm mt-1">{errors.ship_depth.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Weight (kg)</label>
-            <input
-              type="number"
-              {...register("ship_weight", { required: "Weight is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.ship_weight && (
-              <p className="text-red-500 text-sm mt-1">{errors.ship_weight.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Shipping Type</label>
-            <select
-              {...register("shippingType", { required: "Shipping type is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            >
-              <option value="">Select shipping type...</option>
-              <option value="free">Free</option>
-              <option value="paid">Paid</option>
-            </select>
-            {errors.shippingType && (
-              <p className="text-red-500 text-sm mt-1">{errors.shippingType.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Shipping Order</label>
-            <input
-              type="number"
-              {...register("shippingOrder", { required: "Shipping order is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.shippingOrder && (
-              <p className="text-red-500 text-sm mt-1">{errors.shippingOrder.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Shipping Days</label>
-            <input
-              type="number"
-              {...register("shippingDays", { required: "Shipping days are required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.shippingDays && (
-              <p className="text-red-500 text-sm mt-1">{errors.shippingDays.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Shipping Zone</label>
-            <input
-              type="text"
-              {...register("shippingZone", { required: "Shipping zone is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.shippingZone && (
-              <p className="text-red-500 text-sm mt-1">{errors.shippingZone.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Shipping Charges</label>
-            <input
-              type="number"
-              {...register("shippingCharges", { required: "Shipping charges are required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.shippingCharges && (
-              <p className="text-red-500 text-sm mt-1">{errors.shippingCharges.message}</p>
-            )}
-          </div>
-        </div>
-      );
+          //     {/* Return Days */}
+          //     <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Return Days
+          //       </label>
+          //       <input
+          //         type="number"
+          //         value={formData.shippingCancellationReturn.returnDays}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               returnDays: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //       />
+          //     </div>
 
 
-      case 9: return (
-        <div className="space-y-4">
-          {/* Manufacturing Details Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Manufacturing Name</label>
-            <input
-              type="text"
-              {...register("manufacturingName", { required: "Manufacturing name is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.manufacturingName && (
-              <p className="text-red-500 text-sm mt-1">{errors.manufacturingName.message}</p>
-            )}
-          </div>
 
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Manufacturing Address</label>
-            <textarea
-              {...register("manufacturingAddress", { required: "Manufacturing address is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-              rows="3"
-            />
-            {errors.manufacturingAddress && (
-              <p className="text-red-500 text-sm mt-1">{errors.manufacturingAddress.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Country</label>
-            <input
-              type="text"
-              {...register("manufacturingCountry", { required: "Country is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.manufacturingCountry && (
-              <p className="text-red-500 text-sm mt-1">{errors.manufacturingCountry.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Country of Origin</label>
-            <input
-              type="text"
-              {...register("countryOfOrigin", { required: "Country of origin is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.countryOfOrigin && (
-              <p className="text-red-500 text-sm mt-1">{errors.countryOfOrigin.message}</p>
-            )}
-          </div>
-
-          {/* Importer Details Section */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Importer Name</label>
-            <input
-              type="text"
-              {...register("importerName", { required: "Importer name is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.importerName && (
-              <p className="text-red-500 text-sm mt-1">{errors.importerName.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Importer Address</label>
-            <textarea
-              {...register("importerAddress", { required: "Importer address is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-              rows="3"
-            />
-            {errors.importerAddress && (
-              <p className="text-red-500 text-sm mt-1">{errors.importerAddress.message}</p>
-            )}
-          </div>
-        </div>
-      );
-
-      case 10: return (
-        <div className="space-y-4">
-          {/* Meta Title */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Meta Title</label>
-            <input
-              type="text"
-              {...register("metaTitle", { required: "Meta title is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.metaTitle && (
-              <p className="text-red-500 text-sm mt-1">{errors.metaTitle.message}</p>
-            )}
-          </div>
-
-          {/* Meta URL */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Meta URL</label>
-            <input
-              type="text"
-              {...register("metaURL", { required: "Meta URL is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.metaURL && (
-              <p className="text-red-500 text-sm mt-1">{errors.metaURL.message}</p>
-            )}
-          </div>
-
-          {/* Meta Keyword */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Meta Keyword</label>
-            <input
-              type="text"
-              {...register("metaKeyword", { required: "Meta keyword is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-            />
-            {errors.metaKeyword && (
-              <p className="text-red-500 text-sm mt-1">{errors.metaKeyword.message}</p>
-            )}
-          </div>
-
-          {/* Meta Description */}
-          <div>
-            <label className="block text-md font-semibold text-gray-700 mb-1">Meta Description</label>
-            <textarea
-              {...register("metaDescription", { required: "Meta description is required" })}
-              className="w-full px-4 py-2 border rounded-md"
-              rows="3"
-            />
-            {errors.metaDescription && (
-              <p className="text-red-500 text-sm mt-1">{errors.metaDescription.message}</p>
-            )}
-          </div>
-        </div>
-      );
-
+          //     {/* Cancellation Duration */}
+          //     <div>
+          //       <label className="block text-md font-semibold text-gray-700 mb-2">
+          //         Cancellation Duration
+          //       </label>
+          //       <input
+          //         type="number"
+          //         value={formData.shippingCancellationReturn.cancellationDuration}
+          //         onChange={(e) =>
+          //           setFormData((prev) => ({
+          //             ...prev,
+          //             shippingCancellationReturn: {
+          //               ...prev.shippingCancellationReturn,
+          //               cancellationDuration: e.target.value,
+          //             },
+          //           }))
+          //         }
+          //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          //       />
+          //     </div>
+          //   </div>
+          // </div>
+        );
 
       case 11:
         return (
-          <div className="space-y-4">
-            <div className="grid grid-cols-3 gap-4">
-              {[1, 2, 3].map((index) => (
-                <div key={index} className="border-2 border-dashed rounded-lg p-4 text-center">
-                  <div className="flex flex-col items-center space-y-2">
-                    <i class="ri-upload-line w-8 h-8 text-gray-400"></i>
-                    <span className="text-sm text-gray-500">Upload Image {index}</span>
-                    <input
-                      type="file"
-                      {...register(`image${index}`)}
-                      className="hidden"
-                      accept="image/*"
-                      id={`image${index}`}
-                    />
-                    <label
-                      htmlFor={`image${index}`}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600"
-                    >
-                      Choose File
-                    </label>
-                  </div>
-                </div>
-              ))}
+          <div className=" container mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium pb-1">
+                COD Available
+              </label>
+              <select
+                value={formData.pricing.codAvilable}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    pricing: {
+                      ...prev.pricing,
+                      codAvilable: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              >
+                <option value="">Select COD availability...</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Length (CM)
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.length}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      length: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Width (CM)
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.width}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      width: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Depth (CM)
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.depth}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      depth: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Weight (kg)
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.weight}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      weight: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Shipping Type
+              </label>
+              <select
+                value={formData.packingAndShipping.shippingType}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      shippingType: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              >
+                <option value="">Select shipping type...</option>
+                <option value="free">Free</option>
+                <option value="paid">Paid</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Shipping Order
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.shippingOrder}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      shippingOrder: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Shipping Days
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.shippingDays}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      shippingDays: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Shipping Zone
+              </label>
+              <input
+                value={formData.packingAndShipping.shippingZone}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      shippingZone: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Shipping Charges
+              </label>
+              <input
+                type="number"
+                value={formData.packingAndShipping.shippingCharges}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    packingAndShipping: {
+                      ...prev.packingAndShipping,
+                      shippingCharges: parseInt(e.target.value),
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
             </div>
           </div>
         );
 
+      case 12:
+        return (
+          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Manufacturing Name */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Manufacturing Name
+                </label>
+                <input
+                  value={formData.manufacturingDetails.manufacturingName}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        manufacturingName: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Manufacturing Address */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Manufacturing Address
+                </label>
+                <textarea
+                  value={formData.manufacturingDetails.manufacturingAddress}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        manufacturingAddress: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  rows="3"
+                />
+              </div>
+
+              {/* Country of Origin */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Country of Origin
+                </label>
+                <input
+                  value={formData.manufacturingDetails.countryOfOrigin}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        countryOfOrigin: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Batch Number */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Batch Number
+                </label>
+                <input
+                  value={formData.manufacturingDetails.batchNumber}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        batchNumber: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Manufacturing Date */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Manufacturing Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.manufacturingDetails.manufacturingDate}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        manufacturingDate: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Expiry Date */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Expiry Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.manufacturingDetails.expiryDate}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        expiryDate: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Importer Name */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Importer Name
+                </label>
+                <input
+                  value={formData.manufacturingDetails.importerName}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        importerName: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                />
+              </div>
+
+              {/* Importer Address */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-2">
+                  Importer Address
+                </label>
+                <textarea
+                  value={formData.manufacturingDetails.importerAddress}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      manufacturingDetails: {
+                        ...prev.manufacturingDetails,
+                        importerAddress: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                  rows="3"
+                />
+              </div>
+            </div>
+          </div>
+        );
+
+
+
+      case 13:
+        return (
+          <div className=" grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Meta Title
+              </label>
+              <input
+                value={formData.seoSection.metaTitle}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    seoSection: {
+                      ...prev.seoSection,
+                      metaTitle: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            {/* Meta URL */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Meta URL</label>
+              <input
+                value={formData.seoSection.metaURL}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    seoSection: {
+                      ...prev.seoSection,
+                      metaURL: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            {/* Meta Keyword */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Meta Keyword
+              </label>
+              <input
+                value={formData.seoSection.metaKeyword}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    seoSection: {
+                      ...prev.seoSection,
+                      metaKeyword: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+              />
+            </div>
+
+            {/* Meta Description */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Meta Description
+              </label>
+              <textarea
+                value={formData.seoSection.metaDescription}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    seoSection: {
+                      ...prev.seoSection,
+                      metaDescription: e.target.value,
+                    },
+                  }))
+                }
+                className="w-full px-4 py-2 border border-gray-400 rounded-md"
+                rows="3"
+              />
+            </div>
+          </div>
+        );
+
+      case 14:
+        return (
+          <div className="space-y-4 p-5">
+            <SelectMultipleMedia formData={formData} setFormData={setFormData} />
+
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Selected Images:</h3>
+              {formData.imageAndVideo.images?.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {formData.imageAndVideo.images.map((img, index) => (
+                    <div key={`img-${index}`} className="relative group">
+                      <img
+                        src={img}
+                        alt={`img-${index}`}
+                        className="w-32 h-32 object-cover rounded border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({
+                            ...prev,
+                            imageAndVideo: {
+                              ...prev.imageAndVideo,
+                              images: prev.imageAndVideo.images.filter((_, i) => i !== index)
+                            }
+                          }))
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        X
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No images selected</p>
+              )}
+            </div>
+
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold mb-2">Selected Videos:</h3>
+              {formData.imageAndVideo.videos?.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {formData.imageAndVideo.videos.map((video, index) => (
+                    <div key={`vid-${index}`} className="relative group">
+                      <video
+                        className="w-32 h-32 object-cover rounded border"
+                        controls
+                      >
+                        <source src={video} type="video/mp4" />
+                        Your browser does not support the video tag.
+                      </video>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData(prev => ({
+                            ...prev,
+                            imageAndVideo: {
+                              ...prev.imageAndVideo,
+                              videos: prev.imageAndVideo.videos.filter((_, i) => i !== index)
+                            }
+                          }))
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No videos selected</p>
+              )}
+            </div>
+          </div>
+        );
       default:
-        return null;
+        return (
+          <div className="text-green-600 text-center font-semibold mt-4 h-[200px] flex justify-center">
+            <p>All details added successfully!</p>
+          </div>
+        );
     }
   };
 
   return (
-    <div className="max-w-[1800px] mx-auto p-6">
-      {/* Progress Stepper */}
-<div className="mb-8 pb-4 overflow-x-auto">
-  <div className="flex flex-nowrap min-w-max">
-    {steps.map((step, index) => (
-      <div key={step.number} className="relative flex items-center">
-        <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center border-2 
-            ${step.number <= currentStep
-              ? 'bg-blue-500 border-blue-500 text-white'
-              : 'bg-white border-gray-300 text-gray-500'
-            }`}
-        >
-          {step.number}
-        </div>
-        <span
-          className={`ml-2 text-sm font-medium whitespace-nowrap
-            ${step.number <= currentStep ? 'text-blue-500' : 'text-gray-500'}`}
-        >
-          {step.label}
-        </span>
-        {index < steps.length - 1 && (
-          <div
-            className={`w-12 h-0.5 mx-2
-              ${step.number < currentStep ? 'bg-blue-500' : 'bg-gray-200'}`}
-          />
+    <div className="max-w-[1800px] mx-auto px-6 pb-4">
+      {/* <h1 className="text-3xl my-2 font-semibold uppercase">Add Product</h1> */}
+      <Accordion
+        steps={steps}
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
+        firstStep={firstStep}
+      >
+        {(stepNumber) => (
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+            {renderFormFields(stepNumber)}
+            <div className="mt-6 flex justify-between">
+              <button
+                type="button"
+                onClick={() => setCurrentStep((prev) => Math.max(1, prev - 1))}
+                className={`px-6 py-2 bg-gray-100 text-gray-600 rounded hover:bg-gray-200
+                  ${stepNumber === 1 ? "invisible" : "visible"}`}
+              >
+                Previous
+              </button>
+
+              <button
+                type="submit"
+                className="px-6 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                {stepNumber === steps.length ? "Submit" : "Next"}
+              </button>
+            </div>
+          </form>
         )}
-      </div>
-    ))}
-  </div>
-</div>
-
-
-      {/* Form */}
-      <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
-        {renderFormFields()}
-
-        {/* Navigation Buttons */}
-        <div className="mt-6 flex justify-between">
-          <button
-            type="button"
-            onClick={() => setCurrentStep(prev => Math.max(1, prev - 1))}
-            className={`px-4 py-2 bg-gray-100 text-gray-600 rounded hover:bg-gray-200
-              ${currentStep === 1 ? 'invisible' : 'visible'}`}
-          >
-            Previous
-          </button>
-
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            {currentStep === steps.length ? 'Submit' : 'Next'}
-          </button>
-        </div>
-      </form>
+      </Accordion>
+      <ToastContainer autoClose={3000} closeButton={true} />
     </div>
   );
 };
 
 export default EditProductForm;
+
+const CategoryStep = ({
+  formData,
+  setFormData,
+  categoryParent,
+  categorySub,
+  categoryChild,
+  fetchCategorySub,
+  fetchCategoryChild,
+  productCategoryId,
+}) => {
+  const [categoryLevel, setCategoryLevel] = useState(null);
+const token = localStorage.getItem("token");
+  useEffect(() => {
+    // Determine if the product's category is parent, sub, or child
+    const determineCategoryLevel = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${productCategoryId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+        const category = await response.json();
+        
+        if (category.parentCat === 0) {
+          setCategoryLevel('parent');
+        } else {
+          const parentResponse = await fetch(
+            `${import.meta.env.VITE_BASE_URL}/api/admin/single-category-info-by-id/${category.parentCat}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${token}`,
+              },
+            }
+          );
+          const parentCategory = await parentResponse.json();
+          
+          if (parentCategory.parentCat === 0) {
+            setCategoryLevel('sub');
+          } else {
+            setCategoryLevel('child');
+          }
+        }
+      } catch (error) {
+        console.error("Error determining category level:", error);
+      }
+    };
+    
+    determineCategoryLevel();
+  }, [productCategoryId]);
+
+  const handleCategoryChange = (e) => {
+    const selectedCategory = parseInt(e.target.value);
+
+    setFormData((prev) => ({
+      ...prev,
+      category: {
+        category: selectedCategory,
+      },
+    }));
+
+    fetchCategorySub(selectedCategory);
+  };
+
+  const handleSubCategoryChange = (e) => {
+    const selectedSubCategory = parseInt(e.target.value);
+
+    setFormData((prev) => ({
+      ...prev,
+      category: {
+        category: selectedSubCategory,
+      },
+    }));
+
+    fetchCategoryChild(selectedSubCategory);
+  };
+
+  const handleChildCategoryChange = (e) => {
+    const selectedChildCategory = parseInt(e.target.value);
+
+    setFormData((prev) => ({
+      ...prev,
+      category: {
+        category: selectedChildCategory,
+      },
+    }));
+  };
+
+  return (
+    <div className="container mx-auto shadow-md rounded-md px-6 pb-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="block text-md font-semibold text-gray-700 mb-2">
+            Main Category
+          </label>
+          <select
+            value={formData.category.category}
+            onChange={handleCategoryChange}
+            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          >
+            <option value="">Select a Category</option>
+            {categoryParent?.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+       {categorySub.length> 0 && <div>
+          <label className="block text-md font-semibold text-gray-700 mb-2">
+            Sub Category
+          </label>
+          <select
+            value={formData.category.category}
+            onChange={handleSubCategoryChange}
+            className="w-full px-4 py-2 border border-gray-400  rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+            disabled={!categorySub || categorySub.length === 0}
+          >
+            <option value="">Select sub category</option>
+            {categorySub?.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>}
+
+        {categoryChild.length> 0  && <div>
+          <label className="block text-md font-semibold text-gray-700 mb-2">
+            Child Category
+          </label>
+          <select
+            value={formData.category.category}
+            onChange={handleChildCategoryChange}
+            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+            disabled={!categoryChild || categoryChild.length === 0}
+          >
+            <option value="">Select a Category</option>
+            {categoryChild?.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>}
+
+        <div>
+          <label className="block text-md font-semibold text-gray-700 mb-2">
+            Is Featured
+          </label>
+          <select
+            value={formData.category.isFeatured}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                category: {
+                  ...prev.category,
+                  isFeatured: e.target.value === "true",
+                },
+              }))
+            }
+            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+          >
+            <option value={false}>No</option>
+            <option value={true}>Yes</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  );
+};

@@ -55,7 +55,7 @@ const ShippingInwardTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {shippingData.map((item) => (
+          {shippingData?.map((item) => (
             <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{item.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{item.shippingDate}</td>

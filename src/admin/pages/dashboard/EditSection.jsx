@@ -35,7 +35,7 @@ const SectionDetail = () => {
         }
       })
       .then((response) => {
-        const formattedProducts = response.data.data.map((product) => ({
+        const formattedProducts = response.data.data?.map((product) => ({
           product_name: product.product_name,
           value: product.id,
           main_image: product.main_image,

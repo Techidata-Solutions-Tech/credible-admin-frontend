@@ -110,7 +110,7 @@ const Sidebar = (props) => {
             <li>
         <details className="group">
           <summary className="flex items-center gap-2 p-4 cursor-pointer hover:bg-gray-100">
-          <i className="ri-dashboard-line text-xl"></i>Dashboard
+          <i className="ri-dashboard-line text-xl"></i>Website Setting
           </summary>
           <ul className="ml-6">
             <li><Link to="#">Banner</Link>
@@ -137,23 +137,21 @@ const Sidebar = (props) => {
             </li>
           </ul>
           
-          <ul className="ml-6">
+          {/* <ul className="ml-6">
             <li><Link to="#">Product</Link>
               <ul>
                 <li><Link to={"/admin/dashboard/product/add-product"}> Add product to home</Link></li>
                 <li><Link to={"/admin/dashboard/product/manage-product"}> Manage product to home</Link></li>
-                {/* <li><Link to={"/admin/user/business"}> Business User</Link></li> */}
               </ul>
             </li>
-          </ul>
-          <ul className="ml-6">
+          </ul> */}
+          {/* <ul className="ml-6">
             <li><Link to="#">Media settings</Link>
               <ul>
                 <li><Link to={"/admin/dashboard/image/upload"}> Upload Image</Link></li>
-                {/* <li><Link to={"/admin/user/business"}> Business User</Link></li> */}
               </ul>
             </li>
-          </ul>
+          </ul> */}
           <ul className="ml-6">
             <li><Link to="#">Category</Link>
               <ul>

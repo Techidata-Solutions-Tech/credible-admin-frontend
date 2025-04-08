@@ -85,7 +85,7 @@ const ReferralCodeTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {referralData.map((referral) => (
+          {referralData?.map((referral) => (
             <tr key={referral.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{referral.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{referral.name}</td>

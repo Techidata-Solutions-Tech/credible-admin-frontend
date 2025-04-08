@@ -69,7 +69,7 @@ const ReviewTable = () => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {reviewData.map((item) => (
+            {reviewData?.map((item) => (
               <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300 ">
                 <td className="px-4 py-4 text-sm text-gray-900">{item.id}</td>
                 <td className="px-4 py-4 text-sm text-gray-900">{item.customerName}</td>

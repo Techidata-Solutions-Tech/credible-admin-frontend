@@ -107,7 +107,7 @@ const OrderTable = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {orderData.map((order) => (
+                  {orderData?.map((order) => (
                     <tr
                       key={order.id}
                       className="hover:bg-gray-50 border-b border-gray-300"

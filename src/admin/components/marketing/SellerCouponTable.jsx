@@ -99,7 +99,7 @@ const SellerCouponTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {couponData.map((coupon) => (
+          {couponData?.map((coupon) => (
             <tr key={coupon.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{coupon.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{coupon.name}</td>

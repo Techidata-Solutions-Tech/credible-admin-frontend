@@ -28,12 +28,24 @@ const AttributeTable = () => {
     fetchAttributes();
   }, []);
 
+  useEffect(() => {
+    const debounceSearch = setTimeout(() => {
+      const filtered = attributes.filter((attr) =>
+        attr.name.toLowerCase().includes(search.toLowerCase())
+      );
+      setFilteredData(filtered);
+      setCurrentPage(1); 
+    }, 300);
+
+    return () => clearTimeout(debounceSearch); 
+  }, [search, attributes]); 
+
   const fetchAttributes = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute`, {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, 
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -45,14 +57,6 @@ const AttributeTable = () => {
     }
   };
 
-  const handleSearch = () => {
-    const filtered = attributes.filter((attr) =>
-      attr.name.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredData(filtered);
-    setCurrentPage(1);
-  };
-
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this attribute?")) {
       return;
@@ -61,7 +65,7 @@ const AttributeTable = () => {
       await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute/${id}`, {
         method: 'DELETE',
         headers: {
-          'Authorization': `Bearer ${token}`, 
+          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -130,6 +134,7 @@ const AttributeTable = () => {
     { label: 'Home', href: '/' },
     { label: 'Manage Attributes', href: '/admin/product/attributes' },
   ];
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar activeTab={1} />
@@ -138,25 +143,45 @@ const AttributeTable = () => {
         <Navbar />
         <ToastContainer />
         <Breadcrumbs
-              pageTitle="Manage Attributes"
-              items={breadcrumbItems}
-            />
-        {/* Search & Filter */}
-        <div className="flex mb-4 space-x-4">
+          pageTitle="Manage Attributes"
+          items={breadcrumbItems}
+        />
+
+<div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
+                       
+                       <div className="dropdown">
+                                   <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                       Filter
+                                   </div>
+                                   <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
+                                       <li><label><input type="checkbox" /></label></li>
+                                       <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                       <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                   </ul>
+                               </div>
           <input
             type="text"
             placeholder="Search by name..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border p-2 rounded w-1/3"
+            onChange={(e) => setSearch(e.target.value)} 
+            className="border border-gray-400 p-2 rounded w-1/3"
           />
-          <button
-            onClick={handleSearch}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Search
-          </button>
-        </div>
+
+                           <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+                               
+                               <select className="select bg-white border-blue-200 hover:border-blue-300 text-blue-700 w-full sm:w-auto font-semibold">
+                                   <option disabled selected>Sort</option>
+                                   <option>Homer</option>
+                                   <option>Marge</option>
+                                   <option>Bart</option>
+                                   <option>Lisa</option>
+                                   <option>Maggie</option>
+                               </select>
+                           </div>
+
+                          
+                       </div>
+     
 
         {/* Table */}
         <table className="w-full table-auto bg-white shadow-md rounded-lg">
@@ -174,7 +199,7 @@ const AttributeTable = () => {
               <tr key={attr.id} className="text-center">
                 <td className="p-4">{index + 1 + (currentPage - 1) * perPage}</td>
                 <td className="p-4">{attr.name}</td>
-                <td className="p-4">{attr.value.join(", ")}</td>
+                <td className="p-4">{attr.value.join(" | ")}</td>
                 <td className="p-4">{attr.type}</td>
                 <td className="p-4">
                   <button

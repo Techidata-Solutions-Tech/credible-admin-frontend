@@ -83,24 +83,28 @@ const CustomerBusinessUserTable = () => {
       <table className="w-full table-auto mb-10 min-w-[1000px]">
         <thead className="bg-gray-50">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><input type="check" /></th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Business Name</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nature</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Registration</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact Person</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone Number</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email Id</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zipcode</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">State</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created Date</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {businessData.map((business) => (
+          {businessData?.map((business) => (
             <tr key={business.id} className="hover:bg-gray-50 border-b border-gray-300">
+              <td className="px-4 py-4 text-sm text-gray-900"><input type="check" /></td>
+              <td className="px-4 py-4 text-sm text-gray-900">{business.image}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.businessName}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.businessNature}</td>

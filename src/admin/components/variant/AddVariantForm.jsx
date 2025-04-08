@@ -167,7 +167,7 @@ const VariantManager = () => {
 
       if (data.status && data.data) {
         setAttributes(
-          data.data.map((attr) => ({
+          data.data?.map((attr) => ({
             id: attr.id,
             name: attr.name,
             values: Array.isArray(attr.value) ? attr.value : [attr.value],

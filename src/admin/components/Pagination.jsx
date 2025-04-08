@@ -16,7 +16,7 @@ const Pagination = ({ totalRecords, recordsPerPage, onPageChange }) => {
     const totalNumbers = 5;
     const siblingCount = 1; 
 
-    if (totalPages <= totalNumbers) return [...Array(totalPages)].map((_, i) => i + 1);
+    if (totalPages <= totalNumbers) return [...Array(totalPages)]?.map((_, i) => i + 1);
 
     const leftSiblingIndex = Math.max(currentPage - siblingCount, 2);
     const rightSiblingIndex = Math.min(currentPage + siblingCount, totalPages - 1);
@@ -75,7 +75,7 @@ const Pagination = ({ totalRecords, recordsPerPage, onPageChange }) => {
           &laquo; Previous
         </button>
 
-        {getPaginationRange().map((page, index) => (
+        {getPaginationRange()?.map((page, index) => (
           <button
             key={index}
             className={`px-3 py-1 border rounded-lg ${

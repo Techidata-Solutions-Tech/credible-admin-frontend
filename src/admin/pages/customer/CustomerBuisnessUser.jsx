@@ -5,9 +5,31 @@ import { FaEye } from "react-icons/fa";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import FilterSearchSort from "./FilterSearchSort";
+import PillTabs from "./PillTabs";
 
 
 const UserTable = () => {
+  const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState('');
+  const [sort, setSort] = useState('');
+
+  const filterOptions = [
+    { label: 'All', value: 'all' },
+    { label: 'City', value: 'city' },
+    { label: 'State', value: 'State' },
+    { label: 'Zipcode', value: 'Zipcode' },
+  ];
+
+  const sortOptions = [
+    { label: 'Ascending', value: 'asc' },
+    { label: 'Descending', value: 'desc' },
+  ];
+
+  const handleFilterChange = (value) => setFilter(value);
+  const handleSearchChange = (value) => setSearch(value);
+  const handleSortChange = (value) => setSort(value);
+
   const token = localStorage.getItem('token')
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
@@ -32,7 +54,7 @@ const UserTable = () => {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
-      setUsers(data.data);
+      setUsers(data?.data?.filter(user=>user.kind !== "customer"));
       setTotalPages(data.pagination.totalPages);
     } catch (error) {
       toast.error("Failed to fetch users");
@@ -54,7 +76,7 @@ const UserTable = () => {
       if (!response.ok) {
         throw new Error("Error updating user status");
       }
-      toast.success(`User ${!isBlocked ? "Blocked" : "Unblocked"} Successfully`);
+      toast.success(`User ${!isBlocked ? "Blocked" : "Active"} Successfully`);
       fetchUsers();
     } catch (error) {
       toast.error("Error updating user status");
@@ -67,56 +89,101 @@ const UserTable = () => {
   };
   const breadcrumbItems = [
     { label: 'Home', href: '/admin' },
-    { label: 'Manage Users', href: '/admin/user/personal' }
+    { label: 'Business Users', href: '/admin/user/personal' }
+  ];
+  const tabs_status = [
+    { id: 1, label: `All (${users?.length})` },
+    { id: 2, label: `Active (${users.filter(user=>!user.isAccountBlockedByAdmin)?.length})` },
+    { id: 3, label: `Inactive (${users.filter(user=>user.isAccountBlockedByAdmin)?.length})` },
+    { id: 4, label:  `Blocked (${users.filter(user=>user.isAccountBlockedByAdmin)?.length})` },
+    { id: 5, label:  `Trash (${users.filter(user=>user.trash)?.length})` },
   ];
   return (
     <div className="min-h-screen">
       <Navbar />
       <div className="flex flex-col md:flex-row bg-gray-100">
         <Sidebar />
-        <div className="p-6 bg-gray-100 min-h-screen flex-1">
+        <div className="p-6 bg-gray-100 min-h-screen flex-1 overflow-x-auto">
           <ToastContainer position="top-right" autoClose={3000} />
           <Breadcrumbs
-              pageTitle="Manage Users"
+              pageTitle="Business Users"
               items={breadcrumbItems}
             />
+              <div className="w-full my-3">
+              <div className="max-w-full px-4">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+                  <div className="w-full overflow-x-auto py-2">
+                    <div className="flex justify-center min-w-full">
+                      <PillTabs tabs={tabs_status} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <FilterSearchSort
+        filterOptions={filterOptions}
+        sortOptions={sortOptions}
+        onFilterChange={handleFilterChange}
+        onSearchChange={handleSearchChange}
+        onSortChange={handleSortChange}
+      />
           <div className="overflow-x-auto">
-            <table className="w-full bg-white shadow-md rounded-lg">
-              <thead>
-                <tr className="bg-gray-500 text-white uppercase">
-                  <th className="p-3">ID</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Email</th>
-                  <th className="p-3">Phone</th>
-                  <th className="p-3">Type</th>
-                  <th className="p-3">Account</th>
-                  <th className="p-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.id} className="border-b text-center">
-                    <td className="p-3">{user.id}</td>
-                    <td className="p-3">{user.firstName || "N/A"} {user.lastName || ""}</td>
-                    <td className="p-3">{user.email}</td>
-                    <td className="p-3">{user.phone || "N/A"}</td>
-                    <td className="p-3">{user.kind === "customer" ? "Customer" : "Supplier"}</td>
-                    <td className="p-3">{user.isAccountCompleted ? "Completed" : "Incomplete"}</td>
-                    <td className="p-3 flex justify-center items-center space-x-4">
-                      <button
-                        onClick={() => toggleBlockStatus(user.id, user.isAccountBlockedByAdmin)}
-                        className={`px-3 py-1 text-white rounded ${user.isAccountBlockedByAdmin ? "bg-red-500" : "bg-green-500"}`}
-                      >
-                        {user.isAccountBlockedByAdmin ? "Blocked" : "Unblocked"}
-                      </button>
-                      <button onClick={() => openModal(user)} className="text-blue-600 text-lg">
-                        <FaEye />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+  <thead className="bg-gray-100">
+    <tr className="text-gray-500 uppercase text-xs font-medium">
+      <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>
+      <th className="px-4 py-3 text-left">ID</th>
+      <th className="px-4 py-3 text-left">Image</th>
+      <th className="px-4 py-3 text-left">Business Name</th>
+      <th className="px-4 py-3 text-left">Nature</th>
+      <th className="px-4 py-3 text-left">Registration</th>
+      <th className="px-4 py-3 text-left">Contact Person</th>
+      <th className="px-4 py-3 text-left">Phone Number</th>
+      <th className="px-4 py-3 text-left">Email Id</th>
+      <th className="px-4 py-3 text-left">City</th>
+      <th className="px-4 py-3 text-left">Zipcode</th>
+      <th className="px-4 py-3 text-left">State</th>
+      <th className="px-4 py-3 text-left">Created Date</th>
+      <th className="px-6 py-3 text-left">Status</th>
+      <th className="px-6 py-3 text-left">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {users.map((user) => (
+      <tr key={user.id} className="border-b text-center hover:bg-gray-50">
+        <td className="p-3 border-r"><input type="checkbox" className="w-4 h-4" /></td>
+        <td className="p-3 border-r">{user.id}</td>
+        <td className="p-3 border-r">{user.image}</td>
+        <td className="p-3 border-r">{user.firstName || "N/A"} {user.lastName || ""}</td>
+        <td className="p-3 border-r">{user.nature}</td>
+        <td className="p-3 border-r">{user.registration}</td>
+        <td className="p-3 border-r">{user.contact}</td>
+        <td className="p-3 border-r">{user.phone || "N/A"}</td>
+        <td className="p-3 border-r">{user.email}</td>
+        <td className="p-3 border-r">{user.city}</td>
+        <td className="p-3 border-r">{user.zipcode}</td>
+        <td className="p-3 border-r">{user.state}</td>
+        <td className="p-3 border-r">{new Date(user.createdAt).toLocaleString()}</td>
+        {/* <td className="p-3 border-r">{user.kind === "customer" ? "Customer" : "Supplier"}</td> */}
+        {/* <td className="p-3 border-r">{user.isAccountCompleted ? "Completed" : "Incomplete"}</td> */}
+        <td className="p-3 border-r flex justify-center items-center space-x-4">
+          <button
+            onClick={() => toggleBlockStatus(user.id, user.isAccountBlockedByAdmin)}
+            className={`px-3 py-1 text-white rounded-full ${user.isAccountBlockedByAdmin ? "bg-red-500" : "bg-green-500"}`}
+          >
+            {user.isAccountBlockedByAdmin ? "Blocked" : "Active"}
+          </button>
+          </td>
+          <td className="p-3 border-r">
+          <button onClick={() => openModal(user)} className="text-blue-600 hover:text-blue-800 text-lg">
+            Profile
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
           </div>
           <div className="flex justify-center mt-4 space-x-4">
             <button
@@ -144,7 +211,7 @@ const UserTable = () => {
                 <p><strong>Email:</strong> {selectedUser.email}</p>
                 <p><strong>Phone:</strong> {selectedUser.phone || "N/A"}</p>
                 <p ><strong>Account:</strong> {selectedUser.isAccountCompleted ? "Completed" : "Incomplete"}</p>
-                <p><strong>Status:</strong> {selectedUser.isAccountBlockedByAdmin ? "Blocked" : "Unblocked"}</p>
+                <p><strong>Status:</strong> {selectedUser.isAccountBlockedByAdmin ? "Blocked" : "Active"}</p>
                 <button onClick={() => setIsModalOpen(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
                   Close
                 </button>

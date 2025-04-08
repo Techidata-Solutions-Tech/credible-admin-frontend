@@ -1305,7 +1305,7 @@ console.log(payload.taxDetails);
       className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
     >
       <option value="">Select tax rate...</option>
-      {taxData.map((tax, index) => (
+      {taxData?.map((tax, index) => (
         <option key={index} value={tax.taxRate}>{tax.taxRate}</option>
       ))}
     </select>
