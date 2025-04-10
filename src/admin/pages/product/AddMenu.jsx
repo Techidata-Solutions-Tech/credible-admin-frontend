@@ -76,15 +76,15 @@ const AddMenu = () => {
     }
   };
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Manage Menu', href: '/admin/product/menu' },
+    { label: 'Product Management', href: '#' },
+    { label: 'Menu', href: '/admin/product/menu' },
     { label: 'Add Menu', href: '/admin/product/attributes' },
   ];
   return (
     <div className=''>
-      <Navbar />
+      
       <div className='flex bg-gray-100'>
-        <Sidebar />
+        
         <div className=' rounded shadow-lg p-4 w-screen m-2 bg-white'>
         <Breadcrumbs
               pageTitle="Add Menu"

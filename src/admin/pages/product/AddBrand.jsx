@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import PillTabs from '../../components/PillTabs'
 import { BsThreeDots } from 'react-icons/bs'
 import { useForm, useFieldArray } from "react-hook-form";
+import Breadcrumbs from '../../components/Breadcrumbs'
 const AddBrand = () => {
     const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
@@ -35,17 +36,27 @@ const AddBrand = () => {
         }
       };
 
-  return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar activeTab={1} />
+      const breadcrumbItems = [
+        { label: 'Product Management', href: '#' },
+        { label: 'Brands', href: '#' },
+        { label: 'Add Brand', href: '/admin/product/attributes' },
+      ];
+      return (
+          
+            
+            <div className=' rounded shadow-lg p-4  m-2 bg-white'>
+            <Breadcrumbs
+                  pageTitle="Add Brand"
+                  items={breadcrumbItems}
+                />
+          
       
-      {/* Main Content */}
+      
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
-        <Navbar />
         
-        {/* Content Area */}
+        
+        
+       
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
           <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
            

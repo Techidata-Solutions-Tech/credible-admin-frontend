@@ -21,7 +21,7 @@ const AttributeForm = () => {
   const handleChange = (index, field, value) => {
     const updatedAttributes = [...attributes];
     if (field === "value") {
-      updatedAttributes[index].value = value.split(",");
+      updatedAttributes[index].value = value.split("|").map(item => item.trim());
     } else {
       updatedAttributes[index][field] = value;
     }
@@ -86,15 +86,14 @@ const AttributeForm = () => {
     }
   };
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Manage Attributes', href: '/admin/product/attributes' },
+    { label: 'Product Management', href: '#' },
+    { label: 'Attributes', href: '/admin/product/attributes' },
     { label: 'Add Attributes', href: '/admin/product/attributes' },
   ];
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeTab={1} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
+        
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
         <Breadcrumbs
               pageTitle="Add Attributes"
@@ -142,14 +141,15 @@ const AttributeForm = () => {
                   </div>
 
                   <div>
-                    <label className="block mb-2">Values (comma separated)</label>
+                    <label className="block font-bold">Values (separate with | )</label>
                     <input
                       type="text"
                       name="value"
-                      value={attr.value.join(",")}
+                      value={attr.value.join(" | ")}
                       onChange={(e) =>
                         handleChange(index, "value", e.target.value)
                       }
+                      placeholder="Value 1 | Value 2 | Value 3"
                       className="w-full p-2 border rounded"
                       required
                     />

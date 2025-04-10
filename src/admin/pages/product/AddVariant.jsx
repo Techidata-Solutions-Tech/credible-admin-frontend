@@ -9,16 +9,16 @@ import Breadcrumbs from '../../components/Breadcrumbs'
 const AddVariant = () => {
     const {id} = useParams()
     const breadcrumbItems = [
-      { label: 'Home', href: '/admin' },
-      { label: 'Products', href: '/admin/product' },
+      { label: 'Product Management', href: '#' },
+   { label: 'Products', href: '/admin/product' },
       { label: 'Manage Variants', href: `/admin/product/variant/${id}` },
       { label: 'Add Variant', href: '/admin/product' },
     ];
   return (
     <div className=''>
-    <Navbar/>
+    
     <div className='flex bg-gray-100'>
-    <Sidebar/>
+    
     <div className='flex-1 rounded shadow-lg p-4 w-screen m-2 bg-white'>
     <Breadcrumbs
               pageTitle="Add Variant"

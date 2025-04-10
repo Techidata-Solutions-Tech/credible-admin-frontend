@@ -101,8 +101,11 @@ const BannerTable = ({setToggle, banners }) => {
   return (
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[900px]">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              No
+            </th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               ID
             </th>
@@ -125,11 +128,12 @@ const BannerTable = ({setToggle, banners }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {banners?.map((banner) => (
+          {banners?.map((banner,i) => (
             <tr
               key={banner.id}
               className="hover:bg-gray-50 border-b border-gray-300"
             >
+              <td className="px-4 py-4 text-sm text-gray-900">{i+1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{banner.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">
                 <img
@@ -154,7 +158,7 @@ const BannerTable = ({setToggle, banners }) => {
               <td className="px-4 py-4 text-sm text-gray-900">
                 {banner.index}
               </td>
-              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
+              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex  gap-1">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button
                     tabIndex={0}
@@ -235,6 +239,26 @@ const BannerTable = ({setToggle, banners }) => {
                       </p>
                     )}
                   </div>
+                  <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="index"
+                    className="block text-sm font-semibold"
+                  >
+                    Index
+                  </label>
+                  <input
+                    id="index"
+                    type="number"
+                    min={0}
+                    className="w-full p-2 border rounded-md bg-transparent"
+                    {...register("index", { required: "Index is required" })}
+                  />
+                  {errors.index && (
+                    <p className="text-red-500 text-xs">
+                      {errors.index.message}
+                    </p>
+                  )}
+                </div>
                 </div>
 
                 <div className="flex justify-evenly gap-[50px]">
@@ -300,26 +324,7 @@ const BannerTable = ({setToggle, banners }) => {
                   </div>
                 </div>
 
-                <div className="mb-4 w-1/2">
-                  <label
-                    htmlFor="index"
-                    className="block text-sm font-semibold"
-                  >
-                    Index
-                  </label>
-                  <input
-                    id="index"
-                    type="number"
-                    min={0}
-                    className="w-full p-2 border rounded-md bg-transparent"
-                    {...register("index", { required: "Index is required" })}
-                  />
-                  {errors.index && (
-                    <p className="text-red-500 text-xs">
-                      {errors.index.message}
-                    </p>
-                  )}
-                </div>
+           
                 <button
                   type="submit"
                   className=" p-2 bg-blue-600 text-white rounded-md"

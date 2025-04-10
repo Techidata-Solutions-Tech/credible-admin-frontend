@@ -8,8 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Breadcrumbs from '../../components/Breadcrumbs';
 const AddBanner = () => {
   const breadcrumbItems = [
-    { label: 'Home', href: '/admin' },
-    { label: 'Banner Table', href: '/admin/dashboard/banner/table' },
+    { label: 'Website Setting', href: '/admin' },
+    { label: 'Banner', href: '/admin/dashboard/banner/table' },
     { label: 'Add Banner', href: '/admin/dashboard/banner/add-banner' }
   ];
   const token = localStorage.getItem('token');
@@ -49,11 +49,9 @@ const AddBanner = () => {
   };
 
   return (
-    <div className='min-h-screen'>
-      <Navbar />
-      <div className='flex flex-col md:flex-row bg-gray-100'>
-        <Sidebar />
-        <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
+    <>
+      <div className=' bg-gray-100'>
+        <div className=' rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
         <Breadcrumbs
               pageTitle="Add Banner"
               items={breadcrumbItems}
@@ -73,6 +71,17 @@ const AddBanner = () => {
                 />
                 {errors.redirectUrl && <p className="text-red-500 text-xs">{errors.redirectUrl.message}</p>}
               </div>
+              <div className="mb-4 w-1/2">
+              <label htmlFor="index" className="block text-sm font-semibold">Index</label>
+              <input
+                id="index"
+                type="number"
+                min={0}
+                className="w-full p-2 border border-gray-400 rounded-md bg-transparent"
+                {...register('index', { required: 'Index is required' })}
+              />
+              {errors.index && <p className="text-red-500 text-xs">{errors.index.message}</p>}
+            </div>
             </div>
 
             <div className='flex justify-evenly gap-[50px]'>
@@ -104,17 +113,7 @@ const AddBanner = () => {
 
             </div>
 
-            <div className="mb-4 w-1/2">
-              <label htmlFor="index" className="block text-sm font-semibold">Index</label>
-              <input
-                id="index"
-                type="number"
-                min={0}
-                className="w-full p-2 border border-gray-400 rounded-md bg-transparent"
-                {...register('index', { required: 'Index is required' })}
-              />
-              {errors.index && <p className="text-red-500 text-xs">{errors.index.message}</p>}
-            </div>
+           
             <button type="submit" className=" p-2 bg-blue-600 text-white rounded-md">
               Submit
             </button>
@@ -124,7 +123,7 @@ const AddBanner = () => {
         </div>
       </div>
       <ToastContainer />
-    </div>
+    </>
   )
 }
 

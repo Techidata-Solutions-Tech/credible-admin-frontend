@@ -38,9 +38,9 @@ const ShippingOutwardTable = () => {
   ];
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden pb-[100px]">
+    <div className="w-full bg-white rounded-lg shadow-sm  pb-[100px]">
       <table className="w-full table-auto mb-10">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Shipping Date</th>

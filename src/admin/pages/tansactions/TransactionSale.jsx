@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import TransactionSaleTable from '../../components/transaction/TransactionSaleTable'
 import PillTabs from '../../components/PillTabs'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const TransactionSale = () => {
     const tabs_mode_type = [
@@ -23,22 +24,25 @@ const TransactionSale = () => {
         { id: 2, label: 'Post paid(70)' },
     ];
 
-    return (
-        
-        <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <Navbar />
+    const breadcrumbItems = [
+        { label: 'Transaction Management', href: '#' },
+        { label: 'Transactions', href: '#' },
+        { label: 'Sale Transactions', href: '/admin/marketing/create-coupon' }
+      ];
+     
+        return (
+          <div className=" p-4">
+             <Breadcrumbs
+                  pageTitle="Sale Transactions"
+                  items={breadcrumbItems}
+                />  
                 
-                <div className="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-8">
-                <div className="w-full mb-6">
-                        
-                    </div>
+                
+                <div className="flex-1 overflow-y-auto bg-gray-100 p-4 space-y-2">
+            
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white space-y-8">
                         {/* Header */}
                         <div className="mb-6">
-                            <h1 className="text-[28px] font-semibold text-blue-900 uppercase">Transactions</h1>
                             <p className="text-blue-600">Manage and monitor your payment transactions</p>
                         </div>
                         <div className="max-w-full px-2 md:px-4">
@@ -117,17 +121,10 @@ const TransactionSale = () => {
                             <TransactionSaleTable />
                         </div>
 
-                        {/* Pagination */}
-                        <div className="flex justify-center mt-6">
-                            <div className="join shadow-lg">
-                                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                                <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
-            </div>
+           
         </div>
     )
 }

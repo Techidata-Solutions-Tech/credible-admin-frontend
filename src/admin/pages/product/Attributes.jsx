@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import Pagination from "../../components/Pagination";
 
 const AttributeTable = () => {
   const [attributes, setAttributes] = useState([]);
@@ -23,7 +24,14 @@ const AttributeTable = () => {
     metaDescription: ""
   });
   const token = localStorage.getItem('token');
+  const [currentItems, setCurrentItems] = useState([]);
 
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    const indexOfLast = page * perPage;
+    const indexOfFirst = indexOfLast - perPage;
+    setCurrentItems(filteredData.slice(indexOfFirst, indexOfLast));
+  };
   useEffect(() => {
     fetchAttributes();
   }, []);
@@ -34,11 +42,14 @@ const AttributeTable = () => {
         attr.name.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredData(filtered);
-      setCurrentPage(1); 
+      setCurrentPage(1);
+      const indexOfLast = 1 * perPage;
+      const indexOfFirst = indexOfLast - perPage;
+      setCurrentItems(filtered.slice(indexOfFirst, indexOfLast));
     }, 300);
-
+  
     return () => clearTimeout(debounceSearch); 
-  }, [search, attributes]); 
+  }, [search, attributes,perPage]); 
 
   const fetchAttributes = async () => {
     try {
@@ -80,7 +91,8 @@ const AttributeTable = () => {
     setCurrentAttribute(attribute);
     setEditForm({
       name: attribute.name,
-      value: attribute.value.join(", "),
+      // Convert comma-separated values from backend to pipe-separated for display
+      value: attribute.value.join(" | "),
       type: attribute.type,
       order: attribute.order,
       metaTitle: attribute.metaTitle || "",
@@ -93,6 +105,9 @@ const AttributeTable = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Convert pipe-separated input to comma-separated for backend
+      const valuesForBackend = editForm.value.split("|").map(item => item.trim());
+      
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/attribute/${currentAttribute.id}`, {
         method: 'PUT',
         headers: {
@@ -101,7 +116,7 @@ const AttributeTable = () => {
         },
         body: JSON.stringify({
           ...editForm,
-          value: editForm.value.split(",").map(item => item.trim())
+          value: valuesForBackend
         }),
       });
 
@@ -125,40 +140,35 @@ const AttributeTable = () => {
     }));
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const indexOfLast = currentPage * perPage;
-  const indexOfFirst = indexOfLast - perPage;
-  const currentItems = filteredData.slice(indexOfFirst, indexOfLast);
-  const breadcrumbItems = [
-    { label: 'Home', href: '/' },
+const breadcrumbItems = [
+  { label: 'Product Management', href: '#' },
+  { label: 'Attributes', href: '#' },
+   
     { label: 'Manage Attributes', href: '/admin/product/attributes' },
   ];
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeTab={1} />
 
       <div className="flex-1 flex flex-col overflow-hidden px-4">
-        <Navbar />
+        
         <ToastContainer />
         <Breadcrumbs
           pageTitle="Manage Attributes"
           items={breadcrumbItems}
         />
 
-<div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
-                       
-                       <div className="dropdown">
-                                   <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                                       Filter
-                                   </div>
-                                   <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                                       <li><label><input type="checkbox" /></label></li>
-                                       <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                       <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                   </ul>
-                               </div>
+        <div className="flex flex-col sm:flex-row justify-between mb-4 container items-center gap-4 w-full bg-blue-50 p-4 rounded-lg">
+          <div className="dropdown">
+            <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+              Filter
+            </div>
+            <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
+              <li><label><input type="checkbox" /></label></li>
+              <li><label><input type="checkbox" /> Checkbox Label</label></li>
+              <li><label><input type="checkbox" /> Checkbox Label</label></li>
+            </ul>
+          </div>
           <input
             type="text"
             placeholder="Search by name..."
@@ -167,26 +177,22 @@ const AttributeTable = () => {
             className="border border-gray-400 p-2 rounded w-1/3"
           />
 
-                           <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-                               
-                               <select className="select bg-white border-blue-200 hover:border-blue-300 text-blue-700 w-full sm:w-auto font-semibold">
-                                   <option disabled selected>Sort</option>
-                                   <option>Homer</option>
-                                   <option>Marge</option>
-                                   <option>Bart</option>
-                                   <option>Lisa</option>
-                                   <option>Maggie</option>
-                               </select>
-                           </div>
-
-                          
-                       </div>
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+            <select className="select bg-white border-blue-200 hover:border-blue-300 text-blue-700 w-full sm:w-auto font-semibold">
+              <option disabled selected>Sort</option>
+              <option>Homer</option>
+              <option>Marge</option>
+              <option>Bart</option>
+              <option>Lisa</option>
+              <option>Maggie</option>
+            </select>
+          </div>
+        </div>
      
-
         {/* Table */}
         <table className="w-full table-auto bg-white shadow-md rounded-lg">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-gray-200 uppercase">
               <th className="p-4">No</th>
               <th className="p-4">Attribute Name</th>
               <th className="p-4">Values</th>
@@ -222,22 +228,11 @@ const AttributeTable = () => {
 
         {/* Pagination */}
         <div className="flex justify-center mt-4">
-          {Array.from(
-            { length: Math.ceil(filteredData.length / perPage) },
-            (_, index) => (
-              <button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={`px-4 py-2 mx-1 rounded ${
-                  currentPage === index + 1
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300"
-                }`}
-              >
-                {index + 1}
-              </button>
-            )
-          )}
+        <Pagination
+  totalRecords={filteredData.length}
+  recordsPerPage={perPage}
+  onPageChange={handlePageChange}
+/>
         </div>
 
         {/* Edit Modal */}
@@ -259,13 +254,14 @@ const AttributeTable = () => {
                     />
                   </div>
                   <div>
-                    <label className="block mb-2">Values (comma separated)</label>
+                    <label className="block mb-2">Values (separate with | )</label>
                     <input
                       type="text"
                       name="value"
                       value={editForm.value}
                       onChange={handleEditChange}
                       className="w-full p-2 border rounded"
+                      placeholder="Value 1 | Value 2 | Value 3"
                       required
                     />
                   </div>

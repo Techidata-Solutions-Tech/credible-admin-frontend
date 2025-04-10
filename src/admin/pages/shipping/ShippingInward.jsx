@@ -3,18 +3,25 @@ import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import { RiFilterLine, RiSearchLine, RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
 import ShippingOutwardTable from '../../components/shipping/ShippingOutwardTable';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const ShippingInward = () => {
-    return (
-        <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-hidden">
-                <Navbar />
+    const breadcrumbItems = [
+        { label: 'Shipping Management', href: '#' },
+        { label: 'Shipments', href: '#' },
+        { label: 'Shipping Inward', href: '/admin/marketing/create-coupon' }
+      ];
+     
+        return (
+          <div className=" p-4">
+             <Breadcrumbs
+                  pageTitle="Shipping Inward"
+                  items={breadcrumbItems}
+                />            
 
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
                     <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
-                        <h2 className="text-2xl font-semibold text-blue-800 mb-6 uppercase">Shipping Inward Management</h2>
-
+              
                         <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
                             {/* Filter Dropdown */}
                             <div className="dropdown">
@@ -68,22 +75,9 @@ const ShippingInward = () => {
 
                         <ShippingOutwardTable />
 
-                        {/* Pagination */}
-                        <div className="flex justify-center mt-6">
-                            <div className="join shadow-sm">
-                                <button className="join-item btn btn-sm bg-blue-500 hover:bg-blue-600 text-white border-none">
-                                    <RiArrowLeftSLine className="text-lg" />
-                                </button>
-                                <button className="join-item btn btn-sm bg-blue-100 hover:bg-blue-200 text-blue-800 border-none">
-                                    Page 22 of 48
-                                </button>
-                                <button className="join-item btn btn-sm bg-blue-500 hover:bg-blue-600 text-white border-none">
-                                    <RiArrowRightSLine className="text-lg" />
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                 
+            
+            </div>
             </div>
         </div>
     );

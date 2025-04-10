@@ -17,9 +17,9 @@ const FilterSearchSort = ({
 
   return (
     <div className="w-full flex justify-between items-center p-4 border-b">
-      {/* Filter Dropdown */}
+ 
       <select
-        className="border p-2 rounded"
+        className="border p-2 rounded min-w-[150px] text-center text-blue-500 border-blue-500 rounded-md"
         onChange={(e) => onFilterChange(e.target.value)}
       >
         {filterOptions.map((option, index) => (
@@ -29,18 +29,16 @@ const FilterSearchSort = ({
         ))}
       </select>
 
-      {/* Search Bar */}
       <input
         type="text"
         value={searchQuery}
         onChange={handleSearchChange}
         placeholder="Search..."
-        className="w-1/3 border border-gray-400 p-2 rounded"
+        className="w-1/3 border border-gray-400 p-2 rounded placeholder:text-center"
       />
 
-      {/* Sort Dropdown */}
       <select
-        className="border p-2 rounded"
+        className="border p-2 rounded min-w-[150px] text-center text-blue-500 border-blue-500 rounded-md"
         onChange={(e) => onSortChange(e.target.value)}
       >
         {sortOptions.map((option, index) => (

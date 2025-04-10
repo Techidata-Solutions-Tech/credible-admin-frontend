@@ -61,9 +61,9 @@ const ProductHome = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <Sidebar />
+        
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
           <h2 className="text-2xl font-bold text-center mb-4 uppercase">Home Products</h2>
           {loading ? (
@@ -86,7 +86,7 @@ const ProductHome = () => {
                     products.map((item) => (
                       <tr key={item.id} className="text-center">
                         <td className="border p-2">
-                          <img src={item.product.main_image} alt={item.product.product_name} className="h-16 w-16 object-cover mx-auto" />
+                          <img src={item.product.images[0]} alt={item.id} className="h-16 w-16 object-cover mx-auto" />
                         </td>
                         <td className="border p-2">{item.product.product_name}</td>
                         <td className="border p-2">{item.product.brand_name}</td>

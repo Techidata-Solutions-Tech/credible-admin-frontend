@@ -250,9 +250,9 @@ setFeatureImage(parentCategory.featureimage || "");
   if (isLoading) {
     return (
       <div>
-        <Navbar />
+        
         <div className="flex bg-gray-100">
-          <Sidebar />
+          
           <div className="rounded shadow-lg p-4 w-screen m-2 bg-white flex justify-center items-center">
             <p>Loading...</p>
           </div>
@@ -267,9 +267,9 @@ setFeatureImage(parentCategory.featureimage || "");
   ];
   return (
     <div>
-      <Navbar />
+      
       <div className="flex bg-gray-100">
-        <Sidebar />
+        
         <div className="rounded shadow-lg p-4 w-screen m-2 bg-white">
         <Breadcrumbs
               pageTitle="Edit Product Category"

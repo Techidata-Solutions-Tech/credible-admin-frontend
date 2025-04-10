@@ -59,9 +59,9 @@ const UserTable = () => {
 
   return (
     <div className="min-h-screen">
-    <Navbar />
+    
     <div className="flex flex-col md:flex-row bg-gray-100">
-      <Sidebar />
+      
     <div className="p-6 bg-gray-100 min-h-screen flex-1">
       <ToastContainer position="top-right" autoClose={3000} />
       <h1 className="text-2xl mb-2 font-semibold uppercase">Manage Users</h1>

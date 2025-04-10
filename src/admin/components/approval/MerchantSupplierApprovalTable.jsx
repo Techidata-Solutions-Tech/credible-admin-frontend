@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { BsThreeDots } from "react-icons/bs";
+import Pagination from '../Pagination';
 
 const MerchantSupplierApprovalTable = () => {
   const [selectedSellerId, setSelectedSellerId] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(5);
 
   const supplierData = [
     {
@@ -38,7 +42,88 @@ const MerchantSupplierApprovalTable = () => {
       location: 'Chicago, IL',
       status: 3,  // Blocked
     },
+    {
+      id: 'M004',
+      sellerId: 'SELL101',
+      entityType: 'Wholesaler',
+      companyName: 'Global Merchants',
+      contactPerson: 'Robert Brown',
+      phone: '1112223333',
+      email: 'sales@globalmerchants.com',
+      location: 'Houston, TX',
+      status: 1,  // Active
+    },
+    {
+      id: 'M005',
+      sellerId: 'SELL202',
+      entityType: 'Manufacturer',
+      companyName: 'Tech Solutions',
+      contactPerson: 'Michael Green',
+      phone: '4445556666',
+      email: 'info@techsolutions.com',
+      location: 'San Francisco, CA',
+      status: 2,  // Pending Approval
+    },
+    {
+      id: 'M006',
+      sellerId: 'SELL303',
+      entityType: 'Distributor',
+      companyName: 'Quality Products',
+      contactPerson: 'Sarah Wilson',
+      phone: '7778889999',
+      email: 'contact@qualityproducts.com',
+      location: 'Miami, FL',
+      status: 1,  // Active
+    },
+    {
+      id: 'M007',
+      sellerId: 'SELL404',
+      entityType: 'Retailer',
+      companyName: 'Best Deals',
+      contactPerson: 'David Taylor',
+      phone: '2223334444',
+      email: 'support@bestdeals.com',
+      location: 'Seattle, WA',
+      status: 1,  // Active
+    },
+    {
+      id: 'M008',
+      sellerId: 'SELL505',
+      entityType: 'Manufacturer',
+      companyName: 'Premium Brands',
+      contactPerson: 'Emily Clark',
+      phone: '6667778888',
+      email: 'info@premiumbrands.com',
+      location: 'Boston, MA',
+      status: 0,  // Inactive
+    },
+    {
+      id: 'M009',
+      sellerId: 'SELL606',
+      entityType: 'Wholesaler',
+      companyName: 'Bulk Suppliers',
+      contactPerson: 'James White',
+      phone: '9990001111',
+      email: 'sales@bulksuppliers.com',
+      location: 'Denver, CO',
+      status: 1,  // Active
+    },
+    {
+      id: 'M010',
+      sellerId: 'SELL707',
+      entityType: 'Distributor',
+      companyName: 'Fast Delivery',
+      contactPerson: 'Lisa Harris',
+      phone: '3334445555',
+      email: 'contact@fastdelivery.com',
+      location: 'Atlanta, GA',
+      status: 2,  // Pending Approval
+    },
   ];
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = supplierData.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const statusLabels = {
     1: 'Active',
@@ -69,11 +154,17 @@ const MerchantSupplierApprovalTable = () => {
     document.getElementById('my_modal_status').showModal();
   };
 
-  return (
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
+  return (<>
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-      <table className="w-full table-auto mb-10 min-w-[900px]">
-        <thead className="bg-gray-50">
+      <table className="w-full table-auto mb-4 min-w-[900px]">
+        <thead className="bg-gray-200">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entity Type</th>
@@ -87,8 +178,9 @@ const MerchantSupplierApprovalTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {supplierData?.map((supplier) => (
+          {currentRecords?.map((supplier, i) => (
             <tr key={supplier.id} className="hover:bg-gray-50 border-b border-gray-300">
+              <td className="px-4 py-4 text-sm text-gray-900">{(currentPage - 1) * recordsPerPage + i + 1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{supplier.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{supplier.sellerId}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{supplier.entityType}</td>
@@ -117,6 +209,11 @@ const MerchantSupplierApprovalTable = () => {
         </tbody>
       </table>
     </div>
+         <Pagination 
+         totalRecords={supplierData.length} 
+         recordsPerPage={recordsPerPage} 
+         onPageChange={handlePageChange}
+       /></>
   );
 };
 

@@ -7,3 +7,20 @@
       @apply border-l-2 border-black font-medium bg-gray-100 hover:bg-gray-200;
     }
   }
+  table {
+    table-layout: auto;
+    max-width: 100%;
+    overflow-x: scroll;} 
+  th {
+    white-space: nowrap; 
+    padding: 8px;
+    text-align: left;
+  }
+  td {
+    padding: 8px;
+    text-align: left;
+    max-width: 280px;
+    white-space: normal;          
+    overflow-wrap: break-word;     
+  }
+  

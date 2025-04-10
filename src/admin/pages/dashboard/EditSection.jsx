@@ -119,12 +119,16 @@ const SectionDetail = () => {
         console.error("Error updating section:", error);
       });
   };
-
+  const handleIndexChange = (e) => {
+    setSection({ ...section, index: parseInt(e.target.value) });
+  };
+  console.log(section);
+  
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <Sidebar />
+        
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
           <form onSubmit={handleSubmit}>
           <Breadcrumbs
@@ -141,7 +145,8 @@ const SectionDetail = () => {
               </button>
             </div>
 
-            <div className="mb-4">
+           <div className="grid grid-cols-2 gap-4">
+           <div className="mb-4">
               <label className="block text-lg font-semibold mb-2">Title:</label>
               <input
                 type="text"
@@ -150,7 +155,16 @@ const SectionDetail = () => {
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
-
+            <div className="mb-4">
+              <label className="block text-lg font-semibold mb-2">Order:</label>
+              <input
+                type="number"
+                value={section.index}
+                onChange={handleIndexChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+           </div>
             <div className="mb-4">
               <label className="block text-lg font-semibold mb-2">
                 Products:
@@ -166,7 +180,7 @@ const SectionDetail = () => {
                 classNamePrefix="select"
               />
             </div>
-
+          
             <h3 className="text-lg font-semibold mt-4">Selected Products</h3>
             <table className="w-full border-collapse border border-gray-300 mt-2">
               <thead>

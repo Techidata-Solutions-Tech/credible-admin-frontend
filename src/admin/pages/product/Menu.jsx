@@ -49,15 +49,16 @@ const Menu = () => {
         document.getElementById('my_modal_1').showModal();
     };
     const breadcrumbItems = [
-        { label: 'Home', href: '/' },
+        { label: 'Product Management', href: '#' },
+        { label: 'Menu', href: '#' },
         { label: 'Manage Menu', href: '/admin/product/attributes' },
       ];
     return (
         <div className="flex h-screen overflow-hidden">
-            <Sidebar />
+            
 
             <div className="flex-1 flex flex-col overflow-hidden">
-                <Navbar />
+                
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
                 <Breadcrumbs
               pageTitle="Manage Menu"

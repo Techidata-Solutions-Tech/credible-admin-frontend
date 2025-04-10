@@ -45,9 +45,9 @@ const ProductVariant = () => {
        }, [toggle]);
   return (
         <div className=''>
-            <Navbar/>
+            
             <div className='flex bg-gray-100'>
-            <Sidebar/>
+            
             <div className=' rounded shadow-lg p-4 w-screen m-2 bg-white'>
             <Breadcrumbs
               pageTitle="Product Variants"

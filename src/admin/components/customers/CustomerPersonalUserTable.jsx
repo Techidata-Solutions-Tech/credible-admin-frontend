@@ -11,7 +11,7 @@ const CustomerPersonalUserTable = () => {
       phone: '1234567890',
       email: 'john.doe@example.com',
       city: 'New York',
-      zipcode: '10001',
+      pincode: '10001',
       state: 'NY',
       created_at: '2023-01-01',
       status: 1,  // Active
@@ -22,7 +22,7 @@ const CustomerPersonalUserTable = () => {
       phone: '9876543210',
       email: 'jane.smith@example.com',
       city: 'Los Angeles',
-      zipcode: '90001',
+      pincode: '90001',
       state: 'CA',
       created_at: '2023-02-01',
       status: 0,  // Inactive
@@ -33,7 +33,7 @@ const CustomerPersonalUserTable = () => {
       phone: '5556667777',
       email: 'alice.johnson@example.com',
       city: 'Chicago',
-      zipcode: '60601',
+      pincode: '60601',
       state: 'IL',
       created_at: '2023-03-01',
       status: 3,  // Blocked
@@ -72,14 +72,15 @@ const CustomerPersonalUserTable = () => {
   return (
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[800px]">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zipcode</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pincode</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">State</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created At</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -87,14 +88,15 @@ const CustomerPersonalUserTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {userData?.map((user) => (
+          {userData?.map((user,i) => (
             <tr key={user.id} className="hover:bg-gray-50 border-b border-gray-300">
+              <td className="px-4 py-4 text-sm text-gray-900">{i+1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.name}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.phone}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.email}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.city}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{user.zipcode}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{user.pincode}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.state}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{user.created_at}</td>
               <td className={`px-4 py-4 text-sm font-semibold ${statusColors[user.status]}`}>
