@@ -68,9 +68,9 @@ const ReferralCodeTable = () => {
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-      <table className="w-full table-auto mb-10 min-w-[800px]">
-        <thead className="bg-gray-50">
+    <div className="max-w-full bg-white rounded-lg shadow-sm overflow-x-auto">
+      <table className="max-w-full table-auto mb-10 ">
+        <thead className="bg-gray-200">
           <tr>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referral ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>

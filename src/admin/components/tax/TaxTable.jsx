@@ -4,7 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "../Pagination";
-import TopTabs from "../../pages/customer/TopTabs";
+import PillTabs from "../PillTabs";
 const TaxTable = ({ token }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
@@ -145,13 +145,13 @@ const TaxTable = ({ token }) => {
   const currentRecords = taxes.slice(indexOfFirstRecord, indexOfLastRecord);
 
   return (
-    <div className="w-full shadow-lg rounded-lg border overflow-hidden py-8">
+    <div className="w-full shadow-lg rounded-lg border  py-8">
        <div className="w-full my-2">
               <div className="max-w-full px-4">
                 <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
                   <div className="w-full overflow-x-auto py-2">
                     <div className="flex flex-col justify-center min-w-full">
-                      <TopTabs tabs={calculateTaxRateCounts(taxes)} />
+                      {/* <PillTabs tabs={calculateTaxRateCounts(taxes)} /> */}
                     </div>
                   </div>
                 </div>
@@ -193,8 +193,8 @@ const TaxTable = ({ token }) => {
         </div>
       </div>
 
-      <div className="px-4">
-        <table className="w-full border-collapse">
+      <div className="px-4 max-w-full max-h-[600px] overflow-y-auto overflow-x-auto">
+        <table className="w-full border-collapse overflow-auto">
           <thead>
             <tr className="uppercase bg-gray-100">
               <th className="px-4 py-2 text-left">Tax Rate(%)</th>
@@ -245,7 +245,9 @@ const TaxTable = ({ token }) => {
             ))}
           </tbody>
         </table>
-        <Pagination
+       
+      </div>
+      <Pagination
           totalRecords={taxes.length}
           recordsPerPage={recordsPerPage}
           onPageChange={(page, perPage) => {
@@ -253,8 +255,6 @@ const TaxTable = ({ token }) => {
             setRecordsPerPage(perPage);
           }}
         />
-      </div>
-
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl">
@@ -349,6 +349,7 @@ const TaxForm = ({ tax, categories, onSave, onClose }) => {
         taxRate: value,
         cgst: halfValue,
         sgst: halfValue,
+        igst:value,
         [name]: value,
       });
     } else {
@@ -370,7 +371,7 @@ const TaxForm = ({ tax, categories, onSave, onClose }) => {
         <div>
           <label className="block mb-2">Tax Rate (%)</label>
           <input
-            type="text"
+            type="number"
             name="taxRate"
             value={formData.taxRate}
             onChange={handleChange}
@@ -382,7 +383,7 @@ const TaxForm = ({ tax, categories, onSave, onClose }) => {
         <div>
           <label className="block mb-2">CGST (%)</label>
           <input
-            type="text"
+            type="number"
             name="cgst"
             value={formData.cgst}
             readOnly
@@ -394,7 +395,7 @@ const TaxForm = ({ tax, categories, onSave, onClose }) => {
         <div>
           <label className="block mb-2">SGST/UTGST (%)</label>
           <input
-            type="text"
+            type="number"
             name="sgst"
             value={formData.sgst}
             readOnly
@@ -406,11 +407,11 @@ const TaxForm = ({ tax, categories, onSave, onClose }) => {
         <div>
           <label className="block mb-2">IGST (%)</label>
           <input
-            type="text"
+            type="number"
             name="igst"
             value={formData.igst}
-            onChange={handleChange}
-            className="input input-bordered w-full"
+            readOnly
+            className="input input-bordered w-full bg-gray-100"
             required
           />
         </div>

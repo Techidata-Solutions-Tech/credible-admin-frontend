@@ -110,6 +110,7 @@ const token = localStorage.getItem('token')
           <tr className=' uppercase'>
           <th className="px-6 py-3 text-left text-md font-medium"> <input type="checkbox" className='border border-black'/></th>
          
+            <th className="px-6 py-3 text-left text-md font-medium">No</th>
             <th className="px-6 py-3 text-left text-md font-medium">Name</th>
             <th className="px-6 py-3 text-left text-md font-medium">Image</th>
             <th className="px-6 py-3 text-left text-md font-medium">Parent Category</th>
@@ -130,6 +131,7 @@ const token = localStorage.getItem('token')
           {categories?.map((category, index) => (
             <tr key={category.id} className="hover:bg-gray-100 border-b border-gray-300">
               <td className="px-6 py-4 text-sm text-gray-900"> <input type="checkbox" className='border border-black'/></td>
+              <td className="px-6 py-4 text-sm text-gray-900">{index+1}</td>
               <td className="px-6 py-4 text-sm text-gray-900">{"— ".repeat(category.depth)} {category.name}</td>
               <td className="px-6 py-4 text-sm">
                 <img src={category.featureimage} alt="Category" className="w-14 h-14 rounded-md object-cover" />

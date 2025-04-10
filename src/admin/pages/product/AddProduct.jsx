@@ -6,21 +6,21 @@ import Breadcrumbs from '../../components/Breadcrumbs'
 
 const AddProduct = () => {
   const breadcrumbItems = [
-    { label: 'Home', href: '/admin' },
-    { label: 'Products', href: '/admin/product' },
-    { label: 'Add Product', href: '/admin/add-product' },
+    { label: 'Product Management', href: '#' },
+    { label: 'Products', href: '#' },
+   { label: 'Add Product', href: '/admin/add-product' },
   ];
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar />
       
-      {/* Main Content */}
+      
+      
+      
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
-        <Navbar />
         
-        {/* Content Area */}
+        
+        
+       
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
         <Breadcrumbs
               pageTitle="Add Product"

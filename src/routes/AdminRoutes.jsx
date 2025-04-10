@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from '../admin/pages/Home'
 import Login from '../admin/pages/Login'
-// import AdminProtectWrapper from '../wrappers/AdminProtectWrapper'
+import AdminProtectWrapper from '../wrappers/AdminProtectWrapper'
 import Logout from '../admin/pages/Logout'
 import Product from '../admin/pages/product/Product'
 import Taxes from '../admin/pages/tax/Taxes'
@@ -72,102 +72,103 @@ import ManageUsers from '../admin/pages/users/ManageUsers'
 import EditAttribute from '../admin/pages/product/EditAttribute'
 import AddVariant from '../admin/pages/product/AddVariant'
 import EditMenu from '../admin/pages/product/EditMenu'
-const AdminRoutes = () => {
-  return (
-  <>
-        <Routes>
-          <Route path='/' element={<Home/>}/>
-          <Route path='/media-setting' element={<MediaSetting/>}/>
-          {/* dashboard */}
-          <Route path='/dashboard/section/manage' element={<SectionManager/>}/>
-          <Route path='/dashboard/section/:id' element={<SectionDetail/>}/>
-          <Route path='/dashboard/section/create' element={<CreateSection/>}/>
-          <Route path='/dashboard/banner/add-banner' element={<AddBanner/>}/>
-          <Route path='/dashboard/banner/table' element={<Banner/>}/>
-          <Route path='/dashboard/slider/add-slider' element={<AddSlider/>}/>
-          <Route path='/dashboard/slider/table' element={<Slider/>}/>
-          <Route path='/dashboard/product/add-product' element={<AddProductHome/>}/>
-          <Route path='/dashboard/product/manage-product' element={<ProductHome/>}/>
-          <Route path='/dashboard/image/upload' element={<UploadImage />}/>
-          <Route path='/dashboard/category/popular' element={<AddPopularCategory/>}/>
-          <Route path='/dashboard/category/popular-table' element={<PopularCategory/>}/>
+import AdminLayout from '../admin/pages/AdminLayout'
+// const AdminRoutes = () => {
+//   return (
+//   <AdminLayout>
+//         <Routes>
+//           <Route path='/' element={<Home/>}/>
+//           <Route path='/media-setting' element={<MediaSetting/>}/>
+//           {/* dashboard */}
+//           <Route path='/dashboard/section/manage' element={<SectionManager/>}/>
+//           <Route path='/dashboard/section/:id' element={<SectionDetail/>}/>
+//           <Route path='/dashboard/section/create' element={<CreateSection/>}/>
+//           <Route path='/dashboard/banner/add-banner' element={<AddBanner/>}/>
+//           <Route path='/dashboard/banner/table' element={<Banner/>}/>
+//           <Route path='/dashboard/slider/add-slider' element={<AddSlider/>}/>
+//           <Route path='/dashboard/slider/table' element={<Slider/>}/>
+//           <Route path='/dashboard/product/add-product' element={<AddProductHome/>}/>
+//           <Route path='/dashboard/product/manage-product' element={<ProductHome/>}/>
+//           <Route path='/dashboard/image/upload' element={<UploadImage />}/>
+//           <Route path='/dashboard/category/popular' element={<AddPopularCategory/>}/>
+//           <Route path='/dashboard/category/popular-table' element={<PopularCategory/>}/>
           
-          {/* user  */}
-          <Route path='/user/personal' element={<CustomerPersonalUser/>}/>
-          <Route path='/user/business' element={<CustomerBuisnessUser/>}/>
-          {/* approval  */}
-          <Route path='/approval/merchent/seller' element={<MerchantSellerApproval/>}/>
-          <Route path='/approval/merchent/supplier' element={<MerchantSupplierApproval/>}/>
-          <Route path='/approval/product/seller' element={<ProductSellerApproval/>}/>
-          <Route path='/approval/product/supplier' element={<ProductSupplierApproval/>}/>
-          {/* merchent */}
-          <Route path='/merchent/seller' element={<MerchantSeller/>}/>
-          <Route path='/merchent/supplier' element={<MerchantSupplier/>}/>
-          {/* orders */}
-          <Route path='/orders' element={<Orders/>}/>
-          <Route path='/orders/branch' element={<OrdersBranch/>}/>
-          <Route path='/orders/seller' element={<OrdersSeller/>}/>
-          {/* Warehouse */}
-          <Route path='/warehouse/create' element={<CreateWarehouse/>}/>
-          <Route path='/warehouse/table' element={<WarehouseTable/>}/>
-          {/* return  */}
-          <Route path='/returns/' element={<Returns/>}/>
-          <Route path='/returns/sale-verify' element={<SaleVerifyReturns/>}/>
-          {/* products */}
-          <Route path='/product' element={<Product/>}/>
-          <Route path='/product/add-product' element={<AddProduct/>}/>
-          <Route path='/product/edit-product/:id' element={<EditProduct/>}/>
-          <Route path='/product/category' element={<Category/>}/>
-          <Route path='/product/category/add-category' element={<AddCategory/>}/>
-          <Route path='/product/category/edit-category/:id' element={<EditCategory/>}/>
-          <Route path='/product/menu' element={<Menu/>}/>
-          <Route path='/product/menu/add-menu' element={<AddMenu/>}/>
-          <Route path='/product/menu/edit-menu/:id' element={<EditMenu/>}/>
-          <Route path='/product/attributes/' element={<Attributes/>}/>
-          <Route path='/product/attributes/:id' element={<EditAttribute/>}/>
-          <Route path='/product/attributes/add-attributes' element={<AddAttributes/>}/>
-          <Route path='/product/brand' element={<Brand/>}/>
-          <Route path='/product/brand/add-brand' element={<AddBrand/>}/>
-          <Route path='/product/variant/:id' element={<ProductVariant/>}/>
-          <Route path='/product/add-variant/:id' element={<AddVariant/>}/>
+//           {/* user  */}
+//           <Route path='/user/personal' element={<CustomerPersonalUser/>}/>
+//           <Route path='/user/business' element={<CustomerBuisnessUser/>}/>
+//           {/* approval  */}
+//           <Route path='/approval/merchent/seller' element={<MerchantSellerApproval/>}/>
+//           <Route path='/approval/merchent/supplier' element={<MerchantSupplierApproval/>}/>
+//           <Route path='/approval/product/seller' element={<ProductSellerApproval/>}/>
+//           <Route path='/approval/product/supplier' element={<ProductSupplierApproval/>}/>
+//           {/* merchent */}
+//           <Route path='/merchent/seller' element={<MerchantSeller/>}/>
+//           <Route path='/merchent/supplier' element={<MerchantSupplier/>}/>
+//           {/* orders */}
+//           <Route path='/orders' element={<Orders/>}/>
+//           <Route path='/orders/branch' element={<OrdersBranch/>}/>
+//           <Route path='/orders/seller' element={<OrdersSeller/>}/>
+//           {/* Warehouse */}
+//           <Route path='/warehouse/create' element={<CreateWarehouse/>}/>
+//           <Route path='/warehouse/table' element={<WarehouseTable/>}/>
+//           {/* return  */}
+//           <Route path='/returns/' element={<Returns/>}/>
+//           <Route path='/returns/sale-verify' element={<SaleVerifyReturns/>}/>
+//           {/* products */}
+//           <Route path='/product' element={<Product/>}/>
+//           <Route path='/product/add-product' element={<AddProduct/>}/>
+//           <Route path='/product/edit-product/:id' element={<EditProduct/>}/>
+//           <Route path='/product/category' element={<Category/>}/>
+//           <Route path='/product/category/add-category' element={<AddCategory/>}/>
+//           <Route path='/product/category/edit-category/:id' element={<EditCategory/>}/>
+//           <Route path='/product/menu' element={<Menu/>}/>
+//           <Route path='/product/menu/add-menu' element={<AddMenu/>}/>
+//           <Route path='/product/menu/edit-menu/:id' element={<EditMenu/>}/>
+//           <Route path='/product/attributes/' element={<Attributes/>}/>
+//           <Route path='/product/attributes/:id' element={<EditAttribute/>}/>
+//           <Route path='/product/attributes/add-attributes' element={<AddAttributes/>}/>
+//           <Route path='/product/brand' element={<Brand/>}/>
+//           <Route path='/product/brand/add-brand' element={<AddBrand/>}/>
+//           <Route path='/product/variant/:id' element={<ProductVariant/>}/>
+//           <Route path='/product/add-variant/:id' element={<AddVariant/>}/>
 
-          {/* taxes */}
-          <Route path='/taxes/hsn-sac' element={<TaxHSNSAC/>}/>
-          <Route path='/taxes/gst-tax' element={<Taxes/>}/>
-          {/* Users */}
-          <Route path='/users/manage' element={<ManageUsers/>}/>
-          {/* Marketing */}
-          <Route path='/marketing/admin-coupon' element={<AdminCoupon/>}/>
-          <Route path='/marketing/create-coupon' element={<CreateCoupon/>}/>
-          <Route path='/marketing/seller-coupon' element={<SellerCoupon/>}/>
-          <Route path='/marketing/referral-coupon' element={<ReferralCode/>}/>
-          {/* shipping  */}
-          <Route path='/shipping/inward' element={<ShippingInward/>}/>
-          <Route path='/shipping/outward' element={<ShippingOutward/>}/>
-          {/* tansaction */}
-          <Route path='/tansaction/sale' element={<TransactionSale/>}/>
-          <Route path='/tansaction/purchase' element={<TransactionPurchase/>}/>
-          <Route path='/tansaction/supplier' element={<SellerPayment/>}/>
-          <Route path='/tansaction/seller' element={<SupplierPayment/>}/>
-          {/* inventory */}
-          <Route path='/inventory/branch' element={<InventoryManagementBranch/>}/>
-          <Route path='/inventory/dead-stock' element={<InventoryManagementDeadStock/>}/>
-          <Route path='/inventory/seller' element={<InventoryManagementSeller/>}/>
-          {/* ticket  */}
-          <Route path='/ticket/customer' element={<CutomerTicket/>}/>
-          <Route path='/ticket/supplier' element={<SupplierTicket/>}/>
-          <Route path='/ticket/seller' element={<SellerTicket/>}/>
-          <Route path='/ticket/reply-ticket' element={<ReplyTicket/>}/>
+//           {/* taxes */}
+//           <Route path='/taxes/hsn-sac' element={<TaxHSNSAC/>}/>
+//           <Route path='/taxes/gst-tax' element={<Taxes/>}/>
+//           {/* Users */}
+//           <Route path='/users/manage' element={<ManageUsers/>}/>
+//           {/* Marketing */}
+//           <Route path='/marketing/admin-coupon' element={<AdminCoupon/>}/>
+//           <Route path='/marketing/create-coupon' element={<CreateCoupon/>}/>
+//           <Route path='/marketing/seller-coupon' element={<SellerCoupon/>}/>
+//           <Route path='/marketing/referral-coupon' element={<ReferralCode/>}/>
+//           {/* shipping  */}
+//           <Route path='/shipping/inward' element={<ShippingInward/>}/>
+//           <Route path='/shipping/outward' element={<ShippingOutward/>}/>
+//           {/* tansaction */}
+//           <Route path='/tansaction/sale' element={<TransactionSale/>}/>
+//           <Route path='/tansaction/purchase' element={<TransactionPurchase/>}/>
+//           <Route path='/tansaction/supplier' element={<SellerPayment/>}/>
+//           <Route path='/tansaction/seller' element={<SupplierPayment/>}/>
+//           {/* inventory */}
+//           <Route path='/inventory/branch' element={<InventoryManagementBranch/>}/>
+//           <Route path='/inventory/dead-stock' element={<InventoryManagementDeadStock/>}/>
+//           <Route path='/inventory/seller' element={<InventoryManagementSeller/>}/>
+//           {/* ticket  */}
+//           <Route path='/ticket/customer' element={<CutomerTicket/>}/>
+//           <Route path='/ticket/supplier' element={<SupplierTicket/>}/>
+//           <Route path='/ticket/seller' element={<SellerTicket/>}/>
+//           <Route path='/ticket/reply-ticket' element={<ReplyTicket/>}/>
         
-          <Route path='/reviews' element={<Reviews/>}/>
-          <Route path='/login' element={<Login/>}/>
-          <Route path='/logout' element={<Logout/>}/>
-        </Routes>
-  </>
-  )
-}
+//           <Route path='/reviews' element={<Reviews/>}/>
+//           <Route path='/login' element={<Login/>}/>
+//           <Route path='/logout' element={<Logout/>}/>
+//         </Routes>
+//   </AdminLayout>
+//   )
+// }
 
-export default AdminRoutes;
+// export default AdminRoutes;
 // import React from 'react'
 // import { Route, Routes } from 'react-router-dom'
 // import Home from '../admin/pages/Home'
@@ -239,94 +240,99 @@ export default AdminRoutes;
 // import AddMenu from '../admin/pages/product/AddMenu'
 // import EditMenu from '../admin/pages/product/Editmenu'
 // import MediaSetting from '../admin/pages/mediasetting/MediaSetting'
-// const AdminRoutes = () => {
-//   return (
-//   <>
-//         <Routes>
-//           <Route path='/' element={ <AdminProtectWrapper><Home/></AdminProtectWrapper>}/>
-//           <Route path='/media-setting' element={ <AdminProtectWrapper><MediaSetting/></AdminProtectWrapper>}/>
-//           {/* dashboard */}
-//           <Route path='/dashboard/section/manage' element={ <AdminProtectWrapper><SectionManager/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/section/:id' element={ <AdminProtectWrapper><SectionDetail/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/section/create' element={ <AdminProtectWrapper><CreateSection/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/banner/add-banner' element={ <AdminProtectWrapper><AddBanner/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/banner/table' element={ <AdminProtectWrapper><Banner/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/slider/add-slider' element={ <AdminProtectWrapper><AddSlider/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/slider/table' element={ <AdminProtectWrapper><Slider/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/product/add-product' element={ <AdminProtectWrapper><AddProductHome/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/product/manage-product' element={ <AdminProtectWrapper><ProductHome/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/image/upload' element={ <AdminProtectWrapper><UploadImage /></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/category/popular' element={ <AdminProtectWrapper><AddPopularCategory/></AdminProtectWrapper>}/>
-//           <Route path='/dashboard/category/popular-table' element={ <AdminProtectWrapper><PopularCategory/></AdminProtectWrapper>}/>
+const AdminRoutes = () => {
+  return (
+   <AdminLayout>
+        <Routes>
+          <Route path='/' element={ <AdminProtectWrapper><Home/></AdminProtectWrapper>}/>
+          <Route path='/media-setting' element={ <AdminProtectWrapper><MediaSetting/></AdminProtectWrapper>}/>
+          {/* dashboard */}
+          <Route path='/dashboard/section/manage' element={ <AdminProtectWrapper><SectionManager/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/section/:id' element={ <AdminProtectWrapper><SectionDetail/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/section/create' element={ <AdminProtectWrapper><CreateSection/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/banner/add-banner' element={ <AdminProtectWrapper><AddBanner/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/banner/table' element={ <AdminProtectWrapper><Banner/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/slider/add-slider' element={ <AdminProtectWrapper><AddSlider/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/slider/table' element={ <AdminProtectWrapper><Slider/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/product/add-product' element={ <AdminProtectWrapper><AddProductHome/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/product/manage-product' element={ <AdminProtectWrapper><ProductHome/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/image/upload' element={ <AdminProtectWrapper><UploadImage /></AdminProtectWrapper>}/>
+          <Route path='/dashboard/category/popular' element={ <AdminProtectWrapper><AddPopularCategory/></AdminProtectWrapper>}/>
+          <Route path='/dashboard/category/popular-table' element={ <AdminProtectWrapper><PopularCategory/></AdminProtectWrapper>}/>
           
-//           {/* user  */}
-//           <Route path='/user/personal' element={ <AdminProtectWrapper><CustomerPersonalUser/></AdminProtectWrapper>}/>
-//           <Route path='/user/business' element={ <AdminProtectWrapper><CustomerBuisnessUser/></AdminProtectWrapper>}/>
-//           {/* approval  */}
-//           <Route path='/approval/merchent/seller' element={ <AdminProtectWrapper><MerchantSellerApproval/></AdminProtectWrapper>}/>
-//           <Route path='/approval/merchent/supplier' element={ <AdminProtectWrapper><MerchantSupplierApproval/></AdminProtectWrapper>}/>
-//           <Route path='/approval/product/seller' element={ <AdminProtectWrapper><ProductSellerApproval/></AdminProtectWrapper>}/>
-//           <Route path='/approval/product/supplier' element={ <AdminProtectWrapper><ProductSupplierApproval/></AdminProtectWrapper>}/>
-//           {/* merchent */}
-//           <Route path='/merchent/seller' element={ <AdminProtectWrapper><MerchantSeller/></AdminProtectWrapper>}/>
-//           <Route path='/merchent/supplier' element={ <AdminProtectWrapper><MerchantSupplier/></AdminProtectWrapper>}/>
-//           {/* orders */}
-//           <Route path='/orders' element={ <AdminProtectWrapper><Orders/></AdminProtectWrapper>}/>
-//           <Route path='/orders/branch' element={ <AdminProtectWrapper><OrdersBranch/></AdminProtectWrapper>}/>
-//           <Route path='/orders/seller' element={ <AdminProtectWrapper><OrdersSeller/></AdminProtectWrapper>}/>
-//           {/* Warehouse */}
-//           <Route path='/warehouse/create' element={ <AdminProtectWrapper><CreateWarehouse/></AdminProtectWrapper>}/>
-//           <Route path='/warehouse/table' element={ <AdminProtectWrapper><WarehouseTable/></AdminProtectWrapper>}/>
-//           {/* return  */}
-//           <Route path='/returns/' element={ <AdminProtectWrapper><Returns/></AdminProtectWrapper>}/>
-//           <Route path='/returns/sale-verify' element={ <AdminProtectWrapper><SaleVerifyReturns/></AdminProtectWrapper>}/>
-//           {/* products */}
-//           <Route path='/product' element={ <AdminProtectWrapper><Product/></AdminProtectWrapper>}/>
-//           <Route path='/product/add-product' element={ <AdminProtectWrapper><AddProduct/></AdminProtectWrapper>}/>
-//           <Route path='/product/edit-product' element={ <AdminProtectWrapper><EditProduct/></AdminProtectWrapper>}/>
-//           <Route path='/product/category' element={ <AdminProtectWrapper><Category/></AdminProtectWrapper>}/>
-//           <Route path='/product/category/add-category' element={ <AdminProtectWrapper><AddCategory/></AdminProtectWrapper>}/>
-//           <Route path='/product/category/edit-category/:id' element={ <AdminProtectWrapper><EditCategory/></AdminProtectWrapper>}/>
-//           <Route path='/product/menu' element={ <AdminProtectWrapper><Menu/></AdminProtectWrapper>}/>
-//           <Route path='/product/menu/add-menu' element={ <AdminProtectWrapper><AddMenu/></AdminProtectWrapper>}/>
-//           <Route path='/product/menu/edit-menu/:id' element={ <AdminProtectWrapper><EditMenu/></AdminProtectWrapper>}/>
-//           <Route path='/product/attributes/' element={ <AdminProtectWrapper><Attributes/></AdminProtectWrapper>}/>
-//           <Route path='/product/attributes/add-attributes' element={ <AdminProtectWrapper><AddAttributes/></AdminProtectWrapper>}/>
-//           <Route path='/product/brand' element={ <AdminProtectWrapper><Brand/></AdminProtectWrapper>}/>
-//           <Route path='/product/brand/add-brand' element={ <AdminProtectWrapper><AddBrand/></AdminProtectWrapper>}/>
-//           <Route path='/product/variant/:id' element={ <AdminProtectWrapper><ProductVariant/></AdminProtectWrapper>}/>
-//           {/* taxes */}
-//           <Route path='/taxes/hsn-sac' element={ <AdminProtectWrapper><TaxHSNSAC/></AdminProtectWrapper>}/>
-//           <Route path='/taxes/gst-tax' element={ <AdminProtectWrapper><Taxes/></AdminProtectWrapper>}/>
-//           {/* Marketing */}
-//           <Route path='/marketing/admin-coupon' element={ <AdminProtectWrapper><AdminCoupon/></AdminProtectWrapper>}/>
-//           <Route path='/marketing/create-coupon' element={ <AdminProtectWrapper><CreateCoupon/></AdminProtectWrapper>}/>
-//           <Route path='/marketing/seller-coupon' element={ <AdminProtectWrapper><SellerCoupon/></AdminProtectWrapper>}/>
-//           <Route path='/marketing/referral-coupon' element={ <AdminProtectWrapper><ReferralCode/></AdminProtectWrapper>}/>
-//           {/* shipping  */}
-//           <Route path='/shipping/inward' element={ <AdminProtectWrapper><ShippingInward/></AdminProtectWrapper>}/>
-//           <Route path='/shipping/outward' element={ <AdminProtectWrapper><ShippingOutward/></AdminProtectWrapper>}/>
-//           {/* tansaction */}
-//           <Route path='/tansaction/sale' element={ <AdminProtectWrapper><TransactionSale/></AdminProtectWrapper>}/>
-//           <Route path='/tansaction/purchase' element={ <AdminProtectWrapper><TransactionPurchase/></AdminProtectWrapper>}/>
-//           <Route path='/tansaction/supplier' element={ <AdminProtectWrapper><SellerPayment/></AdminProtectWrapper>}/>
-//           <Route path='/tansaction/seller' element={ <AdminProtectWrapper><SupplierPayment/></AdminProtectWrapper>}/>
-//           {/* inventory */}
-//           <Route path='/inventory/branch' element={ <AdminProtectWrapper><InventoryManagementBranch/></AdminProtectWrapper>}/>
-//           <Route path='/inventory/dead-stock' element={ <AdminProtectWrapper><InventoryManagementDeadStock/></AdminProtectWrapper>}/>
-//           <Route path='/inventory/seller' element={ <AdminProtectWrapper><InventoryManagementSeller/></AdminProtectWrapper>}/>
-//           {/* ticket  */}
-//           <Route path='/ticket/customer' element={ <AdminProtectWrapper><CutomerTicket/></AdminProtectWrapper>}/>
-//           <Route path='/ticket/supplier' element={ <AdminProtectWrapper><SupplierTicket/></AdminProtectWrapper>}/>
-//           <Route path='/ticket/seller' element={ <AdminProtectWrapper><SellerTicket/></AdminProtectWrapper>}/>
-//           <Route path='/ticket/reply-ticket' element={ <AdminProtectWrapper><ReplyTicket/></AdminProtectWrapper>}/>
+          {/* user  */}
+          <Route path='/user/personal' element={ <AdminProtectWrapper><CustomerPersonalUser/></AdminProtectWrapper>}/>
+          <Route path='/user/business' element={ <AdminProtectWrapper><CustomerBuisnessUser/></AdminProtectWrapper>}/>
+          {/* approval  */}
+          <Route path='/approval/merchent/seller' element={ <AdminProtectWrapper><MerchantSellerApproval/></AdminProtectWrapper>}/>
+          <Route path='/approval/merchent/supplier' element={ <AdminProtectWrapper><MerchantSupplierApproval/></AdminProtectWrapper>}/>
+          <Route path='/approval/product/seller' element={ <AdminProtectWrapper><ProductSellerApproval/></AdminProtectWrapper>}/>
+          <Route path='/approval/product/supplier' element={ <AdminProtectWrapper><ProductSupplierApproval/></AdminProtectWrapper>}/>
+          {/* merchent */}
+          <Route path='/merchent/seller' element={ <AdminProtectWrapper><MerchantSeller/></AdminProtectWrapper>}/>
+          <Route path='/merchent/supplier' element={ <AdminProtectWrapper><MerchantSupplier/></AdminProtectWrapper>}/>
+          {/* orders */}
+          <Route path='/orders' element={ <AdminProtectWrapper><Orders/></AdminProtectWrapper>}/>
+          <Route path='/orders/branch' element={ <AdminProtectWrapper><OrdersBranch/></AdminProtectWrapper>}/>
+          <Route path='/orders/seller' element={ <AdminProtectWrapper><OrdersSeller/></AdminProtectWrapper>}/>
+          {/* Warehouse */}
+          <Route path='/warehouse/create' element={ <AdminProtectWrapper><CreateWarehouse/></AdminProtectWrapper>}/>
+          <Route path='/warehouse/table' element={ <AdminProtectWrapper><WarehouseTable/></AdminProtectWrapper>}/>
+          {/* return  */}
+          <Route path='/returns/' element={ <AdminProtectWrapper><Returns/></AdminProtectWrapper>}/>
+          <Route path='/returns/sale-verify' element={ <AdminProtectWrapper><SaleVerifyReturns/></AdminProtectWrapper>}/>
+          {/* products */}
+          <Route path='/product' element={ <AdminProtectWrapper><Product/></AdminProtectWrapper>}/>
+          <Route path='/product/add-product' element={ <AdminProtectWrapper><AddProduct/></AdminProtectWrapper>}/>
+          <Route path='/product/edit-product' element={ <AdminProtectWrapper><EditProduct/></AdminProtectWrapper>}/>
+          <Route path='/product/category' element={ <AdminProtectWrapper><Category/></AdminProtectWrapper>}/>
+          <Route path='/product/category/add-category' element={ <AdminProtectWrapper><AddCategory/></AdminProtectWrapper>}/>
+          <Route path='/product/category/edit-category/:id' element={ <AdminProtectWrapper><EditCategory/></AdminProtectWrapper>}/>
+          <Route path='/product/menu' element={ <AdminProtectWrapper><Menu/></AdminProtectWrapper>}/>
+          <Route path='/product/menu/add-menu' element={ <AdminProtectWrapper><AddMenu/></AdminProtectWrapper>}/>
+          <Route path='/product/menu/edit-menu/:id' element={ <AdminProtectWrapper><EditMenu/></AdminProtectWrapper>}/>
+          <Route path='/product/attributes/' element={ <AdminProtectWrapper><Attributes/></AdminProtectWrapper>}/>
+          <Route path='/product/attributes/add-attributes' element={ <AdminProtectWrapper><AddAttributes/></AdminProtectWrapper>}/>
+          <Route path='/product/brand' element={ <AdminProtectWrapper><Brand/></AdminProtectWrapper>}/>
+          <Route path='/product/brand/add-brand' element={ <AdminProtectWrapper><AddBrand/></AdminProtectWrapper>}/>
+          <Route path='/product/variant/:id' element={ <AdminProtectWrapper><ProductVariant/></AdminProtectWrapper>}/>
+          <Route path='/product/attributes/:id' element={<AdminProtectWrapper><EditAttribute/></AdminProtectWrapper>}/>
+          <Route path='/product/add-variant/:id' element={<AdminProtectWrapper><AddVariant/></AdminProtectWrapper>}/>
+          {/* taxes */}
+          <Route path='/taxes/hsn-sac' element={ <AdminProtectWrapper><TaxHSNSAC/></AdminProtectWrapper>}/>
+          <Route path='/taxes/gst-tax' element={ <AdminProtectWrapper><Taxes/></AdminProtectWrapper>}/>
+          {/* Users */}
+          <Route path='/users/manage' element={<AdminProtectWrapper><ManageUsers/></AdminProtectWrapper>}/>
+          {/* Marketing */}
+          <Route path='/marketing/admin-coupon' element={ <AdminProtectWrapper><AdminCoupon/></AdminProtectWrapper>}/>
+          <Route path='/marketing/create-coupon' element={ <AdminProtectWrapper><CreateCoupon/></AdminProtectWrapper>}/>
+          <Route path='/marketing/seller-coupon' element={ <AdminProtectWrapper><SellerCoupon/></AdminProtectWrapper>}/>
+          <Route path='/marketing/referral-coupon' element={ <AdminProtectWrapper><ReferralCode/></AdminProtectWrapper>}/>
+          {/* shipping  */}
+          <Route path='/shipping/inward' element={ <AdminProtectWrapper><ShippingInward/></AdminProtectWrapper>}/>
+          <Route path='/shipping/outward' element={ <AdminProtectWrapper><ShippingOutward/></AdminProtectWrapper>}/>
+          {/* tansaction */}
+          <Route path='/tansaction/sale' element={ <AdminProtectWrapper><TransactionSale/></AdminProtectWrapper>}/>
+          <Route path='/tansaction/purchase' element={ <AdminProtectWrapper><TransactionPurchase/></AdminProtectWrapper>}/>
+          <Route path='/tansaction/supplier' element={ <AdminProtectWrapper><SellerPayment/></AdminProtectWrapper>}/>
+          <Route path='/tansaction/seller' element={ <AdminProtectWrapper><SupplierPayment/></AdminProtectWrapper>}/>
+          {/* inventory */}
+          <Route path='/inventory/branch' element={ <AdminProtectWrapper><InventoryManagementBranch/></AdminProtectWrapper>}/>
+          <Route path='/inventory/dead-stock' element={ <AdminProtectWrapper><InventoryManagementDeadStock/></AdminProtectWrapper>}/>
+          <Route path='/inventory/seller' element={ <AdminProtectWrapper><InventoryManagementSeller/></AdminProtectWrapper>}/>
+          {/* ticket  */}
+          <Route path='/ticket/customer' element={ <AdminProtectWrapper><CutomerTicket/></AdminProtectWrapper>}/>
+          <Route path='/ticket/supplier' element={ <AdminProtectWrapper><SupplierTicket/></AdminProtectWrapper>}/>
+          <Route path='/ticket/seller' element={ <AdminProtectWrapper><SellerTicket/></AdminProtectWrapper>}/>
+          <Route path='/ticket/reply-ticket' element={ <AdminProtectWrapper><ReplyTicket/></AdminProtectWrapper>}/>
         
-//           <Route path='/reviews' element={ <AdminProtectWrapper><Reviews/></AdminProtectWrapper>}/>
-//           <Route path='/login' element={ <AdminProtectWrapper><Login/></AdminProtectWrapper>}/>
-//           <Route path='/logout' element={ <AdminProtectWrapper><Logout/></AdminProtectWrapper>}/>
-//         </Routes>
-//   </>
-//   )
-// }
+          <Route path='/reviews' element={ <AdminProtectWrapper><Reviews/></AdminProtectWrapper>}/>
+          <Route path='/login' element={ <AdminProtectWrapper><Login/></AdminProtectWrapper>}/>
+          <Route path='/logout' element={ <AdminProtectWrapper><Logout/></AdminProtectWrapper>}/>
+        </Routes>
+        </AdminLayout>
+ 
+  )
+}
 
-// export default AdminRoutes;
+export default AdminRoutes;

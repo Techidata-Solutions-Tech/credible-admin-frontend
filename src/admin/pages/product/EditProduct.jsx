@@ -13,15 +13,15 @@ const EditProduct = () => {
   const {id} = useParams();
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar />
+      
+      
 
-      {/* Main Content */}
+      
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
-        <Navbar />
+        
+        
 
-        {/* Content Area */}
+       
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
         <Breadcrumbs
               pageTitle="Edit Product"

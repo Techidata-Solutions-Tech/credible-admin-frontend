@@ -22,8 +22,8 @@ const AddCategory = () => {
   const [count, setCount] = useState(0);
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Product Categories', href: '/admin/product/category' },
+    { label: 'Product Management', href: '#' },
+    { label: 'Categories', href: '/admin/product/category' },
     { label: 'Create Product Category', href: '/create-product-category' }
   ];
 
@@ -163,9 +163,9 @@ const AddCategory = () => {
 
   return (
     <div>
-      <Navbar />
+      
       <div className="flex bg-gray-100">
-        <Sidebar />
+        
         <div className="rounded shadow-lg p-4 w-screen m-2 bg-white">
           <div className="py-4">
             <Breadcrumbs

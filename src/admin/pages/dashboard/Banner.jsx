@@ -5,7 +5,6 @@ import PillTabs from '../../components/PillTabs'
 import BannerTable from '../../components/dashboard/BannerTable'
 import Loader from '../../../components/Loader'
 import Breadcrumbs from '../../components/Breadcrumbs'
-import TopTabs from '../customer/TopTabs'
 
 const Banner = () => {
     const token = localStorage.getItem('token');
@@ -14,8 +13,9 @@ const Banner = () => {
     const [toggle, setToggle] = useState(Date.now());
    
     const breadcrumbItems = [
-        { label: 'Home', href: '/admin' },
+        { label: 'Website Setting', href: '/admin' },
         { label: 'Banners', href: '/admin/dashboard/banner/table' },
+        { label: 'Manage Banner', href: '/admin/dashboard/banner/table' },
       ];
     useEffect(()=>{
         const fetchBanners = async () => {
@@ -49,9 +49,9 @@ const Banner = () => {
     ];
     return (
         <div className='min-h-screen'>
-            <Navbar />
+            
             <div className='flex flex-col md:flex-row bg-gray-100'>
-                <Sidebar />
+                
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
                 <Breadcrumbs
               pageTitle="Banners"
@@ -62,7 +62,7 @@ const Banner = () => {
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
                                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
                                     <div className="min-w-full flex justify-center">
-                                        <TopTabs tabs={tabs_user} />
+                                        <PillTabs tabs={tabs_user} />
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@ const Banner = () => {
                     </div>
                     <div className='flex gap-2 flex-wrap justify-between w-[100%]'>
                             <div className="dropdown">
-                                <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                <div tabIndex={0} role="button" className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                     Filter
                                 </div>
                                 <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
@@ -82,10 +82,10 @@ const Banner = () => {
                             <div className="">
                             <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
                                 <i className="ri-search-line"></i>
-                                <input type="text" className="grow" placeholder="Banner" />
+                                <input type="text" className="grow placeholder:text-center" placeholder="Banner" />
                             </label>
                         </div>
-                            <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                            <select className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                 <option disabled selected>Sort</option>
                                 <option>Homer</option>
                                 <option>Marge</option>
@@ -103,16 +103,8 @@ const Banner = () => {
                      <BannerTable setToggle={setToggle} banners={banners}/> 
                    }
 
-                    {/* */}
-                       
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
+                   
+                    
                 </div>
             </div>
         </div>

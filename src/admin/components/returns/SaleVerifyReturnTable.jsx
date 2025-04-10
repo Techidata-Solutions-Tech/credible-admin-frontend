@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from '../Pagination';
 
 const SaleVerifyReturnTable = () => {
-  // Sample return data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   const returnData = [
     {
       id: 'R001',
@@ -53,13 +56,23 @@ const SaleVerifyReturnTable = () => {
     },
   ];
 
-  return (
+  const totalRecords = returnData.length;
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = returnData.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
+  return (<>
     <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden pb-[100px]">
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden ring-1 ring-black ring-opacity-5">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-200">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">ID</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Date</th>
@@ -78,7 +91,7 @@ const SaleVerifyReturnTable = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {returnData?.map((item) => (
+                {currentRecords?.map((item) => (
                   <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.date}</td>
@@ -101,7 +114,16 @@ const SaleVerifyReturnTable = () => {
           </div>
         </div>
       </div>
+
     </div>
+    
+    <div className="mt-4 px-4">
+    <Pagination
+      totalRecords={returnData.length}
+      recordsPerPage={recordsPerPage}
+      onPageChange={handlePageChange}
+    />
+  </div></>
   );
 };
 

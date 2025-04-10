@@ -101,8 +101,11 @@ const BannerTable = ({setToggle, banners }) => {
   return (
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[900px]">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              No
+            </th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
               ID
             </th>
@@ -125,11 +128,12 @@ const BannerTable = ({setToggle, banners }) => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {banners?.map((banner) => (
+          {banners?.map((banner,i) => (
             <tr
               key={banner.id}
               className="hover:bg-gray-50 border-b border-gray-300"
             >
+              <td className="px-4 py-4 text-sm text-gray-900">{i+1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{banner.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">
                 <img

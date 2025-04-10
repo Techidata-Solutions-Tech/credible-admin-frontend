@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { BsThreeDots } from "react-icons/bs";
+import Pagination from '../Pagination';
 
 const ProductSellerApprovalTable = () => {
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
 
   const productData = [
     {
@@ -14,7 +17,7 @@ const ProductSellerApprovalTable = () => {
       variant: '128GB, Black',
       sku: 'SMG-S21-128-BLK',
       uom: 'Piece',
-      cop: 500, // Cost Price
+      cop: 500,
       qty: 100,
       hsnSacGst: '8517 12 00 - 18%',
       batchNo: 'BCH202401',
@@ -45,7 +48,14 @@ const ProductSellerApprovalTable = () => {
       supplierName: 'Cooling Experts Ltd.',
       supplierId: 'SUP456',
     },
+    // Add more sample data as needed to test pagination
   ];
+
+  // Pagination logic
+  const totalRecords = productData.length;
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = productData.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const handleEdit = (id) => {
     setSelectedProductId(id);
@@ -62,11 +72,17 @@ const ProductSellerApprovalTable = () => {
     document.getElementById('my_modal_approval').showModal();
   };
 
-  return (
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
+  return (<>
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[1200px]">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
@@ -88,8 +104,9 @@ const ProductSellerApprovalTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {productData?.map((product) => (
+          {currentRecords.map((product, i) => (
             <tr key={product.id} className="hover:bg-gray-50 border-b border-gray-300">
+              <td className="px-4 py-4 text-sm text-gray-900">{indexOfFirstRecord + i + 1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{product.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{product.category}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{product.productName}</td>
@@ -123,7 +140,13 @@ const ProductSellerApprovalTable = () => {
           ))}
         </tbody>
       </table>
+    
     </div>
+      <Pagination
+      totalRecords={totalRecords}
+      recordsPerPage={recordsPerPage}
+      onPageChange={handlePageChange}
+    /></>
   );
 };
 

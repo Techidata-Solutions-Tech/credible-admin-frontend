@@ -114,9 +114,8 @@ const EditAttribute = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeTab={1} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
+        
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
           <h1 className="text-3xl font-bold mb-6 uppercase">Edit Attribute</h1>
 

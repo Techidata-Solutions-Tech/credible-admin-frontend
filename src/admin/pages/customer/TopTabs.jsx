@@ -13,12 +13,17 @@ const TopTabs = ({tabs}) => {
             key={tab.id}
             onClick={() => setActiveTab(tab.label)}
             className={`
-              px-6 py-2 rounded-full text-sm font-medium transition-all duration-200
+              px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col justify-center items-center
                'text-gray-600 hover:bg-gray-100'
             `}
        
           >
-            {tab.label}
+            <span>
+           {tab.label.split(' ')[0]}
+           </span>
+           <span>
+           {tab.label.split(' ')[1]}
+           </span>
           </button>
         ))}
       </div>

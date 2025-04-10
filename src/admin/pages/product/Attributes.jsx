@@ -141,16 +141,17 @@ const AttributeTable = () => {
   };
 
 const breadcrumbItems = [
-    { label: 'Home', href: '/' },
+  { label: 'Product Management', href: '#' },
+  { label: 'Attributes', href: '#' },
+   
     { label: 'Manage Attributes', href: '/admin/product/attributes' },
   ];
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeTab={1} />
 
       <div className="flex-1 flex flex-col overflow-hidden px-4">
-        <Navbar />
+        
         <ToastContainer />
         <Breadcrumbs
           pageTitle="Manage Attributes"

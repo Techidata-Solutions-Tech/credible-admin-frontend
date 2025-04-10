@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaTrash, FaEye, FaEdit } from "react-icons/fa";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "../../components/Breadcrumbs";
@@ -12,8 +10,9 @@ const SectionManager = () => {
   const navigate = useNavigate();
   const [sections, setSections] = useState([]);
   const breadcrumbItems = [
-    { label: 'Home', href: '/admin' },
-    { label: 'Manage Sections', href: '/create-product-category' }
+    { label: 'Website Setting', href: '/admin' },
+    { label: 'Manage Sections', href: '/create-product-category' },
+    { label: 'Sections', href: '/create-product-category' }
   ];
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const SectionManager = () => {
   }, []);
 
   const toggleStatus = async (id, currentStatus) => {
-    const updatedStatus = !currentStatus; // Toggle the boolean status
+    const updatedStatus = !currentStatus; 
 
     try {
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/productHome/${id}`, {
@@ -97,9 +96,9 @@ const SectionManager = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <Sidebar />
+        
         <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
         <Breadcrumbs
               pageTitle="Manage Sections"
@@ -110,8 +109,8 @@ const SectionManager = () => {
           
        </div>
        <div className='flex gap-2 flex-wrap justify-between w-[100%] my-3'>
-                            <div className="dropdown">
-                                <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                             <div className="dropdown">
+                                <div tabIndex={0} role="button" className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                     Filter
                                 </div>
                                 <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
@@ -123,10 +122,10 @@ const SectionManager = () => {
                             <div className="">
                             <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
                                 <i className="ri-search-line"></i>
-                                <input type="text" className="grow" placeholder="Sections" />
+                                <input type="text" className="grow placeholder:text-center" placeholder="Sections" />
                             </label>
                         </div>
-                            <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                           <select className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
                                 <option disabled selected>Sort</option>
                                 <option>Homer</option>
                                 <option>Marge</option>
@@ -138,6 +137,7 @@ const SectionManager = () => {
        <table className="w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100 uppercase">
+                <th className="border border-gray-300 p-2">No</th>
                 <th className="border border-gray-300 p-2">ID</th>
                 <th className="border border-gray-300 p-2">Name</th>
                 <th className="border border-gray-300 p-2">Status</th>
@@ -146,8 +146,9 @@ const SectionManager = () => {
               </tr>
             </thead>
             <tbody>
-              {sections.map((section) => (
+              {sections.map((section,i) => (
                 <tr key={section.id} className="text-center border border-gray-300">
+                  <td className="border border-gray-300 p-2">{i+1}</td>
                   <td className="border border-gray-300 p-2">{section.id}</td>
                   <td className="border border-gray-300 p-2">{section.name}</td>
                   <td className="border border-gray-300 p-2">

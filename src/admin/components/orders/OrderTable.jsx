@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
 import OrderDetailModal from "./OrderDetailModal";
+import Pagination from "../Pagination";
+
 const OrderTable = () => {
   const [orderId, setOrderId] = useState(null);
   const [modalData, setModalData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(5);
+
   const handleOrder = (id) => {
     setOrderId(id);
     document.getElementById("product_detail").showModal();
   };
+
   const orderData = [
     {
       date: "2024-01-10",
@@ -38,7 +45,74 @@ const OrderTable = () => {
       qty: 20,
       orderValue: 400.75,
     },
+    {
+      date: "2024-04-05",
+      id: "004",
+      customerName: "Bob Williams",
+      branchId: "BR004",
+      items: 2,
+      qty: 4,
+      orderValue: 100.25,
+    },
+    {
+      date: "2024-04-12",
+      id: "005",
+      customerName: "Charlie Brown",
+      branchId: "BR005",
+      items: 6,
+      qty: 12,
+      orderValue: 300.0,
+    },
+    {
+      date: "2024-04-18",
+      id: "006",
+      customerName: "Diana Prince",
+      branchId: "BR006",
+      items: 4,
+      qty: 8,
+      orderValue: 200.5,
+    },
+    {
+      date: "2024-04-22",
+      id: "007",
+      customerName: "Ethan Hunt",
+      branchId: "BR007",
+      items: 7,
+      qty: 14,
+      orderValue: 350.75,
+    },
+    {
+      date: "2024-04-25",
+      id: "008",
+      customerName: "Fiona Green",
+      branchId: "BR008",
+      items: 3,
+      qty: 6,
+      orderValue: 150.0,
+    },
+    {
+      date: "2024-04-28",
+      id: "009",
+      customerName: "George King",
+      branchId: "BR009",
+      items: 9,
+      qty: 18,
+      orderValue: 450.25,
+    },
+    {
+      date: "2024-05-01",
+      id: "010",
+      customerName: "Hannah Baker",
+      branchId: "BR010",
+      items: 5,
+      qty: 10,
+      orderValue: 250.5,
+    },
   ];
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = orderData.slice(indexOfFirstRecord, indexOfLastRecord);
 
   const handleEdit = (id) => {
     setOrderId(id);
@@ -67,16 +141,20 @@ const OrderTable = () => {
     }
   };
 
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
     <>
-      {" "}
       <OrderDetailModal />
-      <div className="w-full bg-white container rounded-lg shadow-sm overflow-hidden pb-[100px]">
+      <div className="w-full bg-white container rounded-lg shadow-sm overflow-auto">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-hidden md:rounded-lg">
+            <div className="overflow-auto md:rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-200">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs md:text-[14px] font-semibold text-gray-700 uppercase">
                       Date
@@ -105,7 +183,7 @@ const OrderTable = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {orderData?.map((order) => (
+                  {currentRecords?.map((order, i) => (
                     <tr
                       key={order.id}
                       className="hover:bg-gray-50 border-b border-gray-300"
@@ -174,6 +252,8 @@ const OrderTable = () => {
             </div>
           </div>
         </div>
+        
+      
       </div>
       <dialog id="my_modal_edit" className="modal">
         <form method="dialog" className="modal-box">
@@ -255,6 +335,13 @@ const OrderTable = () => {
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </form>
       </dialog>
+      <div className="mt-4">
+          <Pagination 
+            totalRecords={orderData.length} 
+            recordsPerPage={recordsPerPage} 
+            onPageChange={handlePageChange}
+          />
+        </div>
     </>
   );
 };

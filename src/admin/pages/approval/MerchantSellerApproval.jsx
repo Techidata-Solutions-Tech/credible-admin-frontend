@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar'
 import Sidebar from '../../components/Sidebar'
 import MerchantSellerApprovalTable from '../../components/approval/MerchantSellerApprovalTable'
 import PillTabs from '../../components/PillTabs'
+import Breadcrumbs from '../../components/Breadcrumbs'
 
 const MerchantSellerApproval = () => {
     const tabs_user = [
@@ -12,12 +13,19 @@ const MerchantSellerApproval = () => {
         { id: 4, label: 'Blocked (100)' },
         { id: 5, label: 'Tash (10)' },
     ];
-
+    const breadcrumbItems = [
+        { label: 'Approval Management', href: '#' },
+        { label: 'Merchant', href: '#' },
+        { label: 'Seller Approval', href: '/admin/approval/merchent/Seller' }
+      ];
+  
     return (
         <div className='min-h-screen'>
-            <Navbar />
-            <div className='flex flex-col md:flex-row bg-gray-100'>
-                <Sidebar />
+                <Breadcrumbs
+                  pageTitle="Seller Approval"
+                  items={breadcrumbItems}
+                />
+    
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
                     <div className="w-full mb-6">
                         <div className="max-w-full px-2 md:px-4">
@@ -42,14 +50,14 @@ const MerchantSellerApproval = () => {
                                     </ul>
                                 </div>
                             </div>
-                            {/* Search Input */}
-                            <div className="flex-1 max-w-md">
+                            {/* Search Input */}     <div className="flex-1 max-w-md">
                                 <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                                    <input type="text" className="grow text-blue-900 placeholder-blue-400" placeholder="Search customer..." />
-                                </label>
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search customer..." />
+                               
+                             </label>
                             </div>
                             <div className='w-full md:w-auto'>
                                 <select className="select w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
@@ -65,16 +73,7 @@ const MerchantSellerApproval = () => {
 
                     <MerchantSellerApprovalTable/>
 
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
                 </div>
-            </div>
         </div>
     )
 }

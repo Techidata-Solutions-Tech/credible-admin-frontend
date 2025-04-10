@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import Loader from '../../../components/Loader'
 import Breadcrumbs from '../../components/Breadcrumbs'
 import Pagination from '../../components/Pagination'
-import TopTabs from '../customer/TopTabs'
+import PillTabs from '../../components/PillTabs'
 
 const Product = () => {
   const token = localStorage.getItem('token')
@@ -50,9 +50,11 @@ const Product = () => {
   };
 
   const breadcrumbItems = [
-    { label: 'Home', href: '/admin' },
-    { label: 'Products', href: '/admin/product' }
+    { label: 'Product Management', href: '#' },
+    { label: 'Products', href: '#' },
+    { label: 'Manage Product', href: '/admin/approval/product/supplier' }
   ];
+
   const tabs_status1 = [
     { id: 1, label: `Categories (${[...new Set(products.map(product => product.category.id))].length})` },
     { id: 2, label: `Products (${products.length})` },
@@ -67,15 +69,13 @@ const Product = () => {
   
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar activeTab={1} />
       
-      {/* Main Content */}
+      
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Navbar */}
-        <Navbar />
         
-        {/* Content Area */}
+        
+        
+       
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
           <Breadcrumbs
             pageTitle="ManageProducts"
@@ -101,8 +101,8 @@ const Product = () => {
                 <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
                   <div className="w-full overflow-x-auto py-2">
                     <div className="flex flex-col justify-center min-w-full">
-                      <TopTabs tabs={tabs_status1} />
-                      <TopTabs tabs={tabs_status2} />
+                      <PillTabs tabs={tabs_status1} />
+                      <PillTabs tabs={tabs_status2} />
                     </div>
                   </div>
                 </div>

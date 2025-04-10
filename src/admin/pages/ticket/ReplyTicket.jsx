@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const ReplyTicket = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -10,11 +11,20 @@ const ReplyTicket = () => {
     console.log('Reply Data:', data);
   };
 
-  return (
-    <div>
-      <Navbar />
+  const breadcrumbItems = [
+    { label: 'Ticket Management', href: '#' },
+    { label: 'Tickets', href: '#' },
+    { label: 'Reply Ticket', href: '/admin/marketing/create-coupon' }
+  ];
+ 
+    return (
+      <div className=" p-4">
+         <Breadcrumbs
+              pageTitle="Reply Ticket"
+              items={breadcrumbItems}
+            />  
       <div className='flex bg-gray-100'>
-        <Sidebar />
+        
         <div className='rounded shadow-lg p-4 w-screen m-2 bg-white'>
 
           <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md">

@@ -5,8 +5,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import Select from 'react-select';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 const CreateCoupon = () => {
+  const token = localStorage.getItem("token");
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm();
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
@@ -20,7 +22,11 @@ const CreateCoupon = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy`);
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/all-category-hierarchy`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -33,7 +39,11 @@ const CreateCoupon = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/getAllProducts`);
+        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         const data = await response.json();
         
         const prodData = data?.data;
@@ -80,7 +90,7 @@ const CreateCoupon = () => {
     try {
       const payload = {
         ...data,
-        products: selectedProducts.map(product => ({
+        products: selectedProducts?.map(product => ({
           id: product.value,
           name: product.label,
           sku: product.sku,
@@ -92,6 +102,7 @@ const CreateCoupon = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization:`Bearer ${token}`
         },
         body: JSON.stringify(payload),
       });
@@ -106,12 +117,21 @@ const CreateCoupon = () => {
     }
   };
 
-  return (
-    <div>
-      <Navbar />
+  const breadcrumbItems = [
+    { label: 'Marketing Management', href: '#' },
+    { label: 'Coupons', href: '#' },
+    { label: 'Create Coupon', href: '/admin/marketing/create-coupon' }
+  ];
+ 
+    return (
+      <div className="overflow-x-auto p-4">
+         <Breadcrumbs
+              pageTitle="Create Coupon"
+              items={breadcrumbItems}
+            /> 
       <ToastContainer />
       <div className='flex bg-gray-100 '>
-        <Sidebar />
+        
         <div className='rounded shadow-lg p-4 w-screen m-2 bg-white '>
           <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md py-[50px]">
             <div className='flex justify-evenly'>
@@ -122,7 +142,7 @@ const CreateCoupon = () => {
                   onChange={handleParentChange}
                 >
                   <option value="">Select Parent Category</option>
-                  {categories.map(cat => (
+                  {categories?.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
@@ -138,7 +158,7 @@ const CreateCoupon = () => {
                   disabled={!selectedParent}
                 >
                   <option value="">Select Sub Category</option>
-                  {subCategories.map(cat => (
+                  {subCategories?.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
@@ -154,14 +174,14 @@ const CreateCoupon = () => {
                   disabled={!selectedSub}
                 >
                   <option value="">Select Child Category</option>
-                  {childCategories.map(cat => (
+                  {childCategories?.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
                 {errors.childCategory && <p className="text-red-500 text-xs">{errors.childCategory.message}</p>}
               </div>
             </div>
-            <div className='flex justify-evenly gap-2'>
+            <div className='xl:mx-[10rem]'>
               {/* Checkbox for "ALL Products" */}
               <div className="mb-4">
                 <label className="block text-sm font-semibold">
@@ -205,7 +225,7 @@ const CreateCoupon = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedProducts.map(product => (
+                      {selectedProducts?.map(product => (
                         <tr key={product.value}>
                           <td className="px-4 py-2 border-b">{product.label}</td>
                           <td className="px-4 py-2 border-b border-l border-r">{product.sku}</td>

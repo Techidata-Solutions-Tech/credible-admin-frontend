@@ -167,9 +167,9 @@ const EditSlider = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <Sidebar />
+        
         <div className="flex-1 p-4 m-2 bg-white rounded shadow-lg">
           <table className="mt-6 w-full border-collapse border border-gray-300">
             <thead>

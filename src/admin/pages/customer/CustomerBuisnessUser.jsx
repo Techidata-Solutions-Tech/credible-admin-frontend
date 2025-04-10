@@ -6,7 +6,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import FilterSearchSort from "./FilterSearchSort";
-import PillTabs from "./TopTabs";
+import PillTabs from "../../components/PillTabs";
 import Pagination from "../../components/Pagination";
 
 const UserTable = () => {
@@ -15,13 +15,14 @@ const UserTable = () => {
   const [sort, setSort] = useState('');
 
   const filterOptions = [
-    { label: 'All', value: 'all' },
+    { label: 'Filter', value: 'all' },
     { label: 'City', value: 'city' },
     { label: 'State', value: 'State' },
-    { label: 'Zipcode', value: 'Zipcode' },
+    { label: 'Pincode', value: 'Pincode' },
   ];
 
   const sortOptions = [
+    { label: 'Sort', value: 'asc' },
     { label: 'Ascending', value: 'asc' },
     { label: 'Descending', value: 'desc' },
   ];
@@ -109,7 +110,8 @@ const UserTable = () => {
   };
   
   const breadcrumbItems = [
-    { label: 'Home', href: '/admin' },
+    { label: 'Customer Management', href: '#' },
+    { label: 'Customers', href: '#' },
     { label: 'Business Users', href: '/admin/user/personal' }
   ];
   
@@ -123,9 +125,9 @@ const UserTable = () => {
   
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <Sidebar />
+        
         <div className="p-6 bg-gray-100 min-h-screen flex-1 overflow-x-auto">
           <ToastContainer position="top-right" autoClose={3000} />
           <Breadcrumbs
@@ -155,8 +157,8 @@ const UserTable = () => {
               <thead className="bg-gray-100">
                 <tr className="text-gray-500 uppercase text-xs font-medium">
                   <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>
+                  <th className="px-4 py-3 text-left">No</th>
                   <th className="px-4 py-3 text-left">ID</th>
-                  <th className="px-4 py-3 text-left">Image</th>
                   <th className="px-4 py-3 text-left">Business Name</th>
                   <th className="px-4 py-3 text-left">Nature</th>
                   <th className="px-4 py-3 text-left">Registration</th>
@@ -164,7 +166,7 @@ const UserTable = () => {
                   <th className="px-4 py-3 text-left">Phone Number</th>
                   <th className="px-4 py-3 text-left">Email Id</th>
                   <th className="px-4 py-3 text-left">City</th>
-                  <th className="px-4 py-3 text-left">Zipcode</th>
+                  <th className="px-4 py-3 text-left">Pincode</th>
                   <th className="px-4 py-3 text-left">State</th>
                   <th className="px-4 py-3 text-left">Created Date</th>
                   <th className="px-6 py-3 text-left">Status</th>
@@ -172,11 +174,12 @@ const UserTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {displayUsers.map((user) => (
+                {displayUsers.map((user,i) => (
                   <tr key={user.id} className="border-b text-center hover:bg-gray-50">
                     <td className="p-3 border-r"><input type="checkbox" className="w-4 h-4" /></td>
+                    <td className="p-3 border-r">{i+1}</td>
+
                     <td className="p-3 border-r">{user.id}</td>
-                    <td className="p-3 border-r">{user.image}</td>
                     <td className="p-3 border-r">{user.firstName || "N/A"} {user.lastName || ""}</td>
                     <td className="p-3 border-r">{user.nature}</td>
                     <td className="p-3 border-r">{user.registration}</td>
@@ -184,7 +187,7 @@ const UserTable = () => {
                     <td className="p-3 border-r">{user.phone || "N/A"}</td>
                     <td className="p-3 border-r">{user.email}</td>
                     <td className="p-3 border-r">{user.city}</td>
-                    <td className="p-3 border-r">{user.zipcode}</td>
+                    <td className="p-3 border-r">{user.pincode}</td>
                     <td className="p-3 border-r">{user.state}</td>
                     <td className="p-3 border-r">{new Date(user.createdAt).toLocaleString()}</td>
                     <td className="p-3 border-r flex justify-center items-center space-x-4">

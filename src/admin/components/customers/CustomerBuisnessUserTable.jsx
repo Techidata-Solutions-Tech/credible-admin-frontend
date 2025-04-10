@@ -14,7 +14,7 @@ const CustomerBusinessUserTable = () => {
       phone: '1234567890',
       email: 'contact@techsolutions.com',
       city: 'New York',
-      zipcode: '10001',
+      pincode: '10001',
       state: 'NY',
       created_at: '2023-01-01',
       status: 1,  // Active
@@ -28,7 +28,7 @@ const CustomerBusinessUserTable = () => {
       phone: '9876543210',
       email: 'support@greenenergy.com',
       city: 'Los Angeles',
-      zipcode: '90001',
+      pincode: '90001',
       state: 'CA',
       created_at: '2023-02-01',
       status: 0,  // Inactive
@@ -42,7 +42,7 @@ const CustomerBusinessUserTable = () => {
       phone: '5556667777',
       email: 'info@freshfarm.com',
       city: 'Chicago',
-      zipcode: '60601',
+      pincode: '60601',
       state: 'IL',
       created_at: '2023-03-01',
       status: 3,  // Blocked
@@ -81,11 +81,11 @@ const CustomerBusinessUserTable = () => {
   return (
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[1000px]">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-200">
           <tr>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><input type="check" /></th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Business Name</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nature</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Registration</th>
@@ -93,7 +93,7 @@ const CustomerBusinessUserTable = () => {
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone Number</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email Id</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">City</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Zipcode</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pincode</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">State</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created Date</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -101,10 +101,10 @@ const CustomerBusinessUserTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {businessData?.map((business) => (
+          {businessData?.map((business,i) => (
             <tr key={business.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900"><input type="check" /></td>
-              <td className="px-4 py-4 text-sm text-gray-900">{business.image}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{i+1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.businessName}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.businessNature}</td>
@@ -113,7 +113,7 @@ const CustomerBusinessUserTable = () => {
               <td className="px-4 py-4 text-sm text-gray-900">{business.phone}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.email}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.city}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{business.zipcode}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{business.pincode}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.state}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{business.created_at}</td>
               <td className={`px-4 py-4 text-sm font-semibold ${statusColors[business.status]}`}>

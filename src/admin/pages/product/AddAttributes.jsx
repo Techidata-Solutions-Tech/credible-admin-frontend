@@ -86,15 +86,14 @@ const AttributeForm = () => {
     }
   };
   const breadcrumbItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Manage Attributes', href: '/admin/product/attributes' },
+    { label: 'Product Management', href: '#' },
+    { label: 'Attributes', href: '/admin/product/attributes' },
     { label: 'Add Attributes', href: '/admin/product/attributes' },
   ];
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar activeTab={1} />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
+        
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
         <Breadcrumbs
               pageTitle="Add Attributes"
