@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from '../Pagination';
 
 const SellerPaymentTable = () => {
-  // Sample seller payment data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   const sellerPayments = [
     {
       id: 'SEL001',
@@ -56,59 +59,76 @@ const SellerPaymentTable = () => {
     },
   ];
 
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = sellerPayments.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto mb-10">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Ended Date</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. of Orders</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. of Items</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Items</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Qty</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Shipping Gateway</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment Gateway</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payable</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pay/Ref No</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {sellerPayments.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnEndedDate}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.sellerName}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.sellerId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.numberOfOrders}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.numberOfItems}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.quantity}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.orderValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnItems}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnQty}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.returnedValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.shippingGateway}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentGateway}</td>
-                <td className="px-4 py-4 text-sm font-semibold text-gray-900 whitespace-nowrap">${item.payable}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.payRefNo}</td>
-                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                  <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    View
-                  </button>
-                </td>
+    <>
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto mb-10">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Ended Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. of Orders</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No. of Items</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Quantity</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Items</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Qty</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Shipping Gateway</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment Gateway</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payable</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pay/Ref No</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentRecords.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnEndedDate}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.sellerName}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.sellerId}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.numberOfOrders}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.numberOfItems}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.quantity}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.orderValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnItems}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnQty}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.returnedValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.shippingGateway}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentGateway}</td>
+                  <td className="px-4 py-4 text-sm font-semibold text-gray-900 whitespace-nowrap">${item.payable}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.payRefNo}</td>
+                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                    <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <Pagination
+        totalRecords={sellerPayments.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 };
 

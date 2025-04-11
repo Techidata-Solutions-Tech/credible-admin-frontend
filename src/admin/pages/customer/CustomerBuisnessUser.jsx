@@ -153,7 +153,7 @@ const UserTable = () => {
             onSortChange={handleSortChange}
           />
           <div className="overflow-x-auto">
-            <table className="w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <table className="w-full bg-white shadow-md rounded-lg overflow-auto">
               <thead className="bg-gray-100">
                 <tr className="text-gray-500 uppercase text-xs font-medium">
                   <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>

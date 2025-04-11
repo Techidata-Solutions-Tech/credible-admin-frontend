@@ -1,43 +1,16 @@
 import React, { useState } from 'react';
 import { BsThreeDots } from "react-icons/bs";
+import Pagination from '../Pagination'; 
 
 const SellerTicketTable = () => {
   const [ticketId, setTicketId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);  
 
   const ticketData = [
-    {
-      id: 'SL001',
-      ticketNo: 'SEL-1001',
-      sellerId: 'SEL-01',
-      subject: 'Payment delay',
-      replies: 3,
-      agent: 'David Miller',
-      created_at: '2024-01-05',
-      updated_at: '2024-01-06',
-      status: 1,  // Open
-    },
-    {
-      id: 'SL002',
-      ticketNo: 'SEL-1002',
-      sellerId: 'SEL-02',
-      subject: 'Product listing issue',
-      replies: 5,
-      agent: 'Emma Watson',
-      created_at: '2024-02-01',
-      updated_at: '2024-02-02',
-      status: 2,  // In Progress
-    },
-    {
-      id: 'SL003',
-      ticketNo: 'SEL-1003',
-      sellerId: 'SEL-03',
-      subject: 'Account suspension',
-      replies: 2,
-      agent: 'Michael Scott',
-      created_at: '2024-02-10',
-      updated_at: '2024-02-11',
-      status: 3,  // Resolved
-    },
+    { id: 'SL001', ticketNo: 'SEL-1001', sellerId: 'SEL-01', subject: 'Payment delay', replies: 3, agent: 'David Miller', created_at: '2024-01-05', updated_at: '2024-01-06', status: 1 },
+    { id: 'SL002', ticketNo: 'SEL-1002', sellerId: 'SEL-02', subject: 'Product listing issue', replies: 5, agent: 'Emma Watson', created_at: '2024-02-01', updated_at: '2024-02-02', status: 2 },
+    { id: 'SL003', ticketNo: 'SEL-1003', sellerId: 'SEL-03', subject: 'Account suspension', replies: 2, agent: 'Michael Scott', created_at: '2024-02-10', updated_at: '2024-02-11', status: 3 },
   ];
 
   const statusLabels = {
@@ -52,6 +25,15 @@ const SellerTicketTable = () => {
     2: 'text-yellow-500',
     3: 'text-green-500',
     4: 'text-gray-500',
+  };
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentTickets = ticketData.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (pageNumber, recordsPerPage) => {
+    setCurrentPage(pageNumber);
+    setRecordsPerPage(recordsPerPage);
   };
 
   const handleEdit = (id) => {
@@ -87,7 +69,7 @@ const SellerTicketTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {ticketData?.map((ticket) => (
+          {currentTickets.map((ticket) => (
             <tr key={ticket.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.ticketNo}</td>
@@ -116,6 +98,12 @@ const SellerTicketTable = () => {
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        totalRecords={ticketData.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import Navbar from '../../components/Navbar';
 import Sidebar from '../../components/Sidebar';
 import { RiFilterLine, RiSearchLine, RiArrowLeftSLine, RiArrowRightSLine } from 'react-icons/ri';
-import ShippingOutwardTable from '../../components/shipping/ShippingOutwardTable';
+import ShippingInwardTable from '../../components/shipping/ShippingInwardTable';
 import Breadcrumbs from '../../components/Breadcrumbs';
 
 const ShippingInward = () => {
@@ -73,7 +73,7 @@ const ShippingInward = () => {
                             </select>
                         </div>
 
-                        <ShippingOutwardTable />
+                        <ShippingInwardTable />
 
                  
             

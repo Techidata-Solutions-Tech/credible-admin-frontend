@@ -42,7 +42,7 @@ const VariantTable = ({ variants, setToggle,token }) => {
 
   return (
     <>
-      <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden pt-[20px] pb-[40px]">
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto pt-[20px] pb-[40px]">
         <table className="w-full table-auto mb-10">
           <thead className="bg-gray-200">
             <tr>

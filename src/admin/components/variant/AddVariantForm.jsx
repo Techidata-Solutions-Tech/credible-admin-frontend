@@ -902,7 +902,7 @@ const VariantManager = () => {
             </div>
 
             <div className="mb-4 max-h-[70vh] overflow-y-auto">
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-auto">
                 <table className="w-full">
                   <thead className="sticky top-0 bg-white z-10">
                     <tr className="bg-gray-100 border-b">

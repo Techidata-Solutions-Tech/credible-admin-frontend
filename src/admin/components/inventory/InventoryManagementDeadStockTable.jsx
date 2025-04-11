@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from '../Pagination';
 
 const InventoryManagementDeadStockTable = () => {
-  // Sample dead stock data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   const deadStockData = [
     {
       id: 'DS001',
@@ -57,63 +60,82 @@ const InventoryManagementDeadStockTable = () => {
       stockistId: 'STK003',
       updateDate: '2025-02-08',
     },
+    // Add more data here for testing pagination with more records
   ];
 
+  // Pagination logic
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = deadStockData.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto mb-10">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company / Brand</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Model</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Variant</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">UOM</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Stock</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ready to Ship</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Stock</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sold Qty</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stocks on Hand</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stockist ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Update Date</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {deadStockData?.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.category}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.productName}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.companyBrand}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.model}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.variant}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.UOM}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.SKU}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.currentStock}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.readyToShip}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnedStock}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.soldQty}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stocksOnHand}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.stockValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stockistId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.updateDate}</td>
-                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                  <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    Update
-                  </button>
-                </td>
+    <>
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto mb-10">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company / Brand</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Model</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Variant</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">UOM</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Current Stock</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ready to Ship</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Stock</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sold Qty</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stocks on Hand</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stockist ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Update Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentRecords.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.category}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.productName}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.companyBrand}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.model}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.variant}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.UOM}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.SKU}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.currentStock}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.readyToShip}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnedStock}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.soldQty}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stocksOnHand}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.stockValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stockistId}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.updateDate}</td>
+                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                    <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <Pagination
+        totalRecords={deadStockData.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 };
 

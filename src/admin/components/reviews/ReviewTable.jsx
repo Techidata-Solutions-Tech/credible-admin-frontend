@@ -51,7 +51,7 @@ const ReviewTable = () => {
   return (
     <>
       <ActionReviewModal />
-      <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden pb-[100px]">
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto pb-[100px]">
         <table className="w-full table-auto mb-10">
           <thead className="bg-gray-200">
             <tr>

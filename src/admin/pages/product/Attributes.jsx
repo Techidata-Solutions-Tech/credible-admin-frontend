@@ -148,9 +148,9 @@ const breadcrumbItems = [
   ];
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-auto">
 
-      <div className="flex-1 flex flex-col overflow-hidden px-4">
+      <div className="flex-1 flex flex-col overflow-auto px-4">
         
         <ToastContainer />
         <Breadcrumbs

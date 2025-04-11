@@ -1,43 +1,17 @@
 import React, { useState } from 'react';
 import { BsThreeDots } from "react-icons/bs";
+import Pagination from '../Pagination'; 
 
 const SupplierTicketTable = () => {
   const [ticketId, setTicketId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10); 
 
   const ticketData = [
-    {
-      id: 'S001',
-      ticketNo: 'SUP-1001',
-      supplierId: 'SUP-01',
-      subject: 'Delayed shipment',
-      replies: 3,
-      agent: 'Michael Lee',
-      created_at: '2024-01-10',
-      updated_at: '2024-01-12',
-      status: 1,  // Open
-    },
-    {
-      id: 'S002',
-      ticketNo: 'SUP-1002',
-      supplierId: 'SUP-02',
-      subject: 'Invoice discrepancy',
-      replies: 4,
-      agent: 'Sarah Connor',
-      created_at: '2024-02-05',
-      updated_at: '2024-02-07',
-      status: 2,  // In Progress
-    },
-    {
-      id: 'S003',
-      ticketNo: 'SUP-1003',
-      supplierId: 'SUP-03',
-      subject: 'Product quality issue',
-      replies: 2,
-      agent: 'John Smith',
-      created_at: '2024-02-15',
-      updated_at: '2024-02-16',
-      status: 3,  // Resolved
-    },
+    { id: 'S001', ticketNo: 'SUP-1001', supplierId: 'SUP-01', subject: 'Delayed shipment', replies: 3, agent: 'Michael Lee', created_at: '2024-01-10', updated_at: '2024-01-12', status: 1 },
+    { id: 'S002', ticketNo: 'SUP-1002', supplierId: 'SUP-02', subject: 'Invoice discrepancy', replies: 4, agent: 'Sarah Connor', created_at: '2024-02-05', updated_at: '2024-02-07', status: 2 },
+    { id: 'S003', ticketNo: 'SUP-1003', supplierId: 'SUP-03', subject: 'Product quality issue', replies: 2, agent: 'John Smith', created_at: '2024-02-15', updated_at: '2024-02-16', status: 3 },
+   
   ];
 
   const statusLabels = {
@@ -52,6 +26,15 @@ const SupplierTicketTable = () => {
     2: 'text-yellow-500',
     3: 'text-green-500',
     4: 'text-gray-500',
+  };
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentTickets = ticketData.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
   };
 
   const handleEdit = (id) => {
@@ -87,7 +70,7 @@ const SupplierTicketTable = () => {
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {ticketData?.map((ticket) => (
+          {currentTickets.map((ticket) => (
             <tr key={ticket.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.id}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{ticket.ticketNo}</td>
@@ -116,6 +99,12 @@ const SupplierTicketTable = () => {
           ))}
         </tbody>
       </table>
+
+      <Pagination
+        totalRecords={ticketData.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
