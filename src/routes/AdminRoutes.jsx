@@ -73,6 +73,7 @@ import EditAttribute from '../admin/pages/product/EditAttribute'
 import AddVariant from '../admin/pages/product/AddVariant'
 import EditMenu from '../admin/pages/product/EditMenu'
 import AdminLayout from '../admin/pages/AdminLayout'
+import BranchWiseInventory from '../admin/pages/branch/BranchwiseInventory'
 // const AdminRoutes = () => {
 //   return (
 //   <AdminLayout>
@@ -278,6 +279,7 @@ const AdminRoutes = () => {
           {/* Warehouse */}
           <Route path='/warehouse/create' element={ <AdminProtectWrapper><CreateWarehouse/></AdminProtectWrapper>}/>
           <Route path='/warehouse/table' element={ <AdminProtectWrapper><WarehouseTable/></AdminProtectWrapper>}/>
+          <Route path='/warehouse/branchwise-inventory' element={ <AdminProtectWrapper><BranchWiseInventory/></AdminProtectWrapper>}/>
           {/* return  */}
           <Route path='/returns/' element={ <AdminProtectWrapper><Returns/></AdminProtectWrapper>}/>
           <Route path='/returns/sale-verify' element={ <AdminProtectWrapper><SaleVerifyReturns/></AdminProtectWrapper>}/>

@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
 import SellerCouponTable from '../../components/marketing/SellerCouponTable'
 import PillTabs from '../../components/PillTabs'
 import Breadcrumbs from '../../components/Breadcrumbs'
@@ -23,7 +21,6 @@ const SellerCoupon = () => {
                   pageTitle="Seller Coupon"
                   items={breadcrumbItems}
                 />   
-            <div className='flex flex-col md:flex-row bg-gray-100'>
                 
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
                     <div className="w-full mb-6">
@@ -72,17 +69,7 @@ const SellerCoupon = () => {
                         </div>
 
                     <SellerCouponTable />
-
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
                 </div>
-            </div>
         </div>
     )
 }

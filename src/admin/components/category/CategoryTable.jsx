@@ -103,7 +103,7 @@ const token = localStorage.getItem('token')
         </dialog>
       </div>
 
-      <div className="w-full bg-white rounded-lg shadow-lg overflow-hidden ">
+      <div className="w-full bg-white rounded-lg shadow-lg overflow-auto ">
        <div className="overflow-x-auto pb-[100px]">
       <table className="w-full table-auto mb-15">
         <thead className="bg-gray-50 text-black">

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from '../Pagination';
 
 const SupplierPaymentTable = () => {
-  // Sample supplier payment data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   const supplierPayments = [
     {
       id: 'PAY001',
@@ -47,53 +50,70 @@ const SupplierPaymentTable = () => {
     },
   ];
 
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = supplierPayments.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto mb-10">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order Date & Time</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice Number</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Items</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Qty</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Value</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deduction</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payable</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pay/Ref No</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {supplierPayments.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.orderDateTime}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.purchaseOrderId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.purchaseOrderValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.invoiceNumber}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.invoiceValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnItems}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnedQty}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.returnValue}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.deduction}</td>
-                <td className="px-4 py-4 text-sm font-semibold text-gray-900 whitespace-nowrap">${item.payable}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.payRefNo}</td>
-                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                  <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    View
-                  </button>
-                </td>
+    <>
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto mb-10">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order Date & Time</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">PO Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice Number</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Items</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Qty</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Return Value</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deduction</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payable</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pay/Ref No</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentRecords.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.orderDateTime}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.purchaseOrderId}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.purchaseOrderValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.invoiceNumber}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.invoiceValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnItems}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnedQty}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.returnValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.deduction}</td>
+                  <td className="px-4 py-4 text-sm font-semibold text-gray-900 whitespace-nowrap">${item.payable}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.payRefNo}</td>
+                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                    <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <Pagination
+        totalRecords={supplierPayments.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 };
 

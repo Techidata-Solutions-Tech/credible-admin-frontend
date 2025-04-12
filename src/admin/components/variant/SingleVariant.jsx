@@ -134,7 +134,7 @@ const SingleVariantPopup = ({
             
             <div className="space-y-3">
               {attributes.map(attribute => (
-                <div key={attribute.id} className="border border-gray-200 rounded-lg overflow-hidden">
+                <div key={attribute.id} className="border border-gray-200 rounded-lg overflow-auto">
                   <div 
                     className="flex items-center justify-between p-3 cursor-pointer bg-gray-50"
                     onClick={() => toggleAttributeExpansion(attribute.id)}

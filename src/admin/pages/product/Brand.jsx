@@ -84,7 +84,7 @@ const Brand = () => {
     <div className="rounded shadow-lg p-4 m-2 bg-white">
       <Breadcrumbs pageTitle="Manage Brands" items={breadcrumbItems} />
 
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-auto">
         <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
           <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
             <div className="flex items-center justify-between gap-2 sm:gap-4 mb-3 flex-wrap ml-auto">

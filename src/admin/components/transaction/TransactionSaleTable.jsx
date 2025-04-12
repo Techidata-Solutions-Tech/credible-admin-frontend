@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
+import Pagination from '../Pagination';
 
 const TransactionSaleTable = () => {
-  // Sample transaction data
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+
   const transactionData = [
     {
       id: 'TXN001',
@@ -51,51 +54,69 @@ const TransactionSaleTable = () => {
     }
   };
 
+  // Pagination logic
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = transactionData.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full table-auto mb-10">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">ID</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Date & Time</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Customer ID</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Transaction ID</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Sale Price</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">SKU</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Type</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Mode</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Status</th>
-              <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {transactionData?.map((item) => (
-              <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.dateTime}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.customerId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.transactionId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.salePrice}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.SKU}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentType}</td>
-                <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentMode}</td>
-                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.paymentStatus)}`}>
-                    {item.paymentStatus}
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-sm whitespace-nowrap">
-                  <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
-                    View
-                  </button>
-                </td>
+    <>
+      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-auto mb-10">
+            <thead className="bg-gray-200">
+              <tr>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Date & Time</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Customer ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Transaction ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Sale Price</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">SKU</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Type</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Mode</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Status</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {currentRecords.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.dateTime}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.customerId}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.transactionId}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.salePrice}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.SKU}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentType}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.paymentMode}</td>
+                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(item.paymentStatus)}`}>
+                      {item.paymentStatus}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                    <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+      <Pagination
+        totalRecords={transactionData.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 };
 

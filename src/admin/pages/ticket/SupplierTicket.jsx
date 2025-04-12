@@ -75,14 +75,7 @@ const SupplierTicket = () => {
 
                     <SupplierTicketTable/>
 
-                    {/* Pagination */}
-                    <div className="flex justify-center mt-6">
-                        <div className="join shadow-lg">
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">«</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200 px-6">Page 22</button>
-                            <button className="join-item btn bg-white hover:bg-blue-50 text-blue-700 border-blue-200">»</button>
-                        </div>
-                    </div>
+                   
                 </div>
           
         </div>

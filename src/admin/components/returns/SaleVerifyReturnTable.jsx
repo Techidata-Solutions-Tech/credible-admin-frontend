@@ -67,10 +67,10 @@ const SaleVerifyReturnTable = () => {
   };
 
   return (<>
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden pb-[100px]">
+    <div className="w-full bg-white rounded-lg shadow-sm overflow-auto pb-[100px]">
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
-          <div className="overflow-hidden ring-1 ring-black ring-opacity-5">
+          <div className="overflow-auto ring-1 ring-black ring-opacity-5">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-200">
                 <tr>

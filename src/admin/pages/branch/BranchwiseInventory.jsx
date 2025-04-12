@@ -1,0 +1,273 @@
+import PillTabs from '../../components/PillTabs';
+import React, { useState, useEffect } from 'react';
+import Breadcrumbs from '../../components/Breadcrumbs';
+
+const BranchWiseInventory = () => {
+  // State for filters and data
+  const [states, setStates] = useState([]);
+  const [places, setPlaces] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [mainCategories, setMainCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [childCategories, setChildCategories] = useState([]);
+  const [inventoryData, setInventoryData] = useState([]);
+  
+  // Selected filter states
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedPlace, setSelectedPlace] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedMainCategory, setSelectedMainCategory] = useState('');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('');
+  const [selectedChildCategory, setSelectedChildCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Load initial data
+  useEffect(() => {
+    setInventoryData([
+      {
+        id: '01',
+        category: 'Clothing',
+        productName: 'Benarasi Sari',
+        companyBrand: 'CES - 123',
+        model: '550',
+        variant: '550',
+        sku: '-',
+        rackNo: '-',
+        currentStock: '150',
+        readyToShip: '30',
+        returnedStock: '5',
+        soldQty: '20',
+        stocksOnHand: '105',
+        unitPrice: '105',
+        warehouseLocation: 'Bangalore',
+        warehouseId: 'ABC',
+        productUpdated: '28/02/2021'
+      }
+    ]);
+  }, []);
+
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+  };
+
+  const handlePlaceChange = (e) => {
+    setSelectedPlace(e.target.value);
+  };
+
+  const handleLocationChange = (e) => {
+    setSelectedLocation(e.target.value);
+  };
+
+  const handleMainCategoryChange = (e) => {
+    setSelectedMainCategory(e.target.value);
+  };
+
+  const handleSubCategoryChange = (e) => {
+    setSelectedSubCategory(e.target.value);
+  };
+
+  const handleChildCategoryChange = (e) => {
+    setSelectedChildCategory(e.target.value);
+  };
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleFilter = () => {
+    console.log("Filtering with:", {
+      state: selectedState,
+      place: selectedPlace,
+      location: selectedLocation,
+      mainCategory: selectedMainCategory,
+      subCategory: selectedSubCategory,
+      childCategory: selectedChildCategory,
+      search: searchQuery
+    });
+  };
+
+  const handleSort = () => {
+    console.log("Sorting inventory data");
+  };
+  const tabs_user = [
+    { id: 1, label: 'States (1000)' },
+    { id: 2, label: 'Place (800)' },
+    { id: 3, label: 'Location (100)' },
+];
+  const breadcrumbItems = [
+    { label: 'Warehouse Management', href: '#' },
+    { label: 'Branch', href: '#' },
+    { label: 'Stockistwise Inventory', href: '/admin/warehouse/table' },
+  ];
+  return (
+    <div className="container mx-auto bg-white p-4">
+          <Breadcrumbs
+            pageTitle="Stockistwise Inventory"
+            items={breadcrumbItems}
+          />
+      <div className="mb-6">
+        
+        <div className="w-full mb-6">
+                        <div className="max-w-full px-2 md:px-4">
+                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
+                                <div className="w-full overflow-x-auto scrollbar-hide py-2">
+                                    <div className="min-w-full flex justify-center">
+                                        <PillTabs tabs={tabs_user} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+        
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedState}
+              onChange={handleStateChange}
+            >
+              <option value="">State</option>
+            </select>
+          </div>
+          
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedPlace}
+              onChange={handlePlaceChange}
+            >
+              <option value="">Place</option>
+              {/* Places would be populated from API */}
+            </select>
+          </div>
+          
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedLocation}
+              onChange={handleLocationChange}
+            >
+              <option value="">Location</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedMainCategory}
+              onChange={handleMainCategoryChange}
+            >
+              <option value="">Main Category</option>
+            </select>
+          </div>
+          
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedSubCategory}
+              onChange={handleSubCategoryChange}
+            >
+              <option value="">Sub Category</option>
+            </select>
+          </div>
+          
+          <div className="border border-gray-300 flex">
+            <select 
+              className="w-full p-2"
+              value={selectedChildCategory}
+              onChange={handleChildCategoryChange}
+            >
+              <option value="">Child Category</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div className="flex justify-between mb-4">
+        <button 
+          onClick={handleFilter}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Filter
+        </button>
+        
+        <div className="w-1/2">
+          <input 
+            type="text" 
+            placeholder="Search"
+            className="w-full p-2 border border-gray-300 rounded"
+            value={searchQuery}
+            onChange={handleSearch}
+          />
+        </div>
+        
+        <button 
+          onClick={handleSort}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Sort
+        </button>
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr className="bg-gray-700 text-white">
+              <th className="py-2 px-3 border">
+                <input type="checkbox" />
+              </th>
+              <th className="py-2 px-3 border">No</th>
+              <th className="py-2 px-3 border">Category</th>
+              <th className="py-2 px-3 border">Product Name</th>
+              <th className="py-2 px-3 border">Company/Brand</th>
+              <th className="py-2 px-3 border">Model</th>
+              <th className="py-2 px-3 border">Variant</th>
+              <th className="py-2 px-3 border">SKU</th>
+              <th className="py-2 px-3 border">Rack No</th>
+              <th className="py-2 px-3 border">Current Stock</th>
+              <th className="py-2 px-3 border">Ready to Ship</th>
+              <th className="py-2 px-3 border">Returned Stock</th>
+              <th className="py-2 px-3 border">Sold Qty</th>
+              <th className="py-2 px-3 border">Stocks On Hand</th>
+              <th className="py-2 px-3 border">Unit Price</th>
+              <th className="py-2 px-3 border">Warehouse Location</th>
+              <th className="py-2 px-3 border">Warehouse Id/Name</th>
+              <th className="py-2 px-3 border">Product Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {inventoryData.map((item) => (
+              <tr key={item.id} className="border-b hover:bg-gray-100">
+                <td className="py-2 px-3 border text-center">
+                  <input type="checkbox" />
+                </td>
+                <td className="py-2 px-3 border">{item.id}</td>
+                <td className="py-2 px-3 border">{item.category}</td>
+                <td className="py-2 px-3 border">{item.productName}</td>
+                <td className="py-2 px-3 border">{item.companyBrand}</td>
+                <td className="py-2 px-3 border">{item.model}</td>
+                <td className="py-2 px-3 border">{item.variant}</td>
+                <td className="py-2 px-3 border">{item.sku}</td>
+                <td className="py-2 px-3 border">{item.rackNo}</td>
+                <td className="py-2 px-3 border">{item.currentStock}</td>
+                <td className="py-2 px-3 border">{item.readyToShip}</td>
+                <td className="py-2 px-3 border">{item.returnedStock}</td>
+                <td className="py-2 px-3 border">{item.soldQty}</td>
+                <td className="py-2 px-3 border">{item.stocksOnHand}</td>
+                <td className="py-2 px-3 border">{item.unitPrice}</td>
+                <td className="py-2 px-3 border">{item.warehouseLocation}</td>
+                <td className="py-2 px-3 border">{item.warehouseId}</td>
+                <td className="py-2 px-3 border">{item.productUpdated}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default BranchWiseInventory;

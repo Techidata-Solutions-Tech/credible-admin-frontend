@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaSortDown, FaSortUp } from "react-icons/fa";
-import Sidebar from "../../components/Sidebar";
-import Navbar from "../../components/Navbar";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Breadcrumbs";
+import Pagination from "../../components/Pagination";
 
 const WarehouseTable = () => {
   const token = localStorage.getItem('token');
@@ -14,6 +13,9 @@ const WarehouseTable = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(0);
 
   useEffect(() => {
     const fetchWarehouses = async () => {
@@ -32,6 +34,7 @@ const WarehouseTable = () => {
         const result = await response.json();
         if (result.success) {
           setFilteredWarehouses(result.data);
+          setTotalRecords(result.data.length);
         } else {
           throw new Error(result.message || "Failed to fetch warehouses");
         }
@@ -69,14 +72,20 @@ const WarehouseTable = () => {
     handleSort(key);
   };
 
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = filteredWarehouses.slice(indexOfFirstRecord, indexOfLastRecord);
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        
         <div className="flex flex-1">
-          
-          <div className="flex-1 p-4 overflow-hidden">
-        
+          <div className="flex-1 p-4 overflow-auto">
             <div className="bg-white rounded shadow-lg p-4 h-full flex items-center justify-center">
               <p>Loading warehouses...</p>
             </div>
@@ -88,10 +97,8 @@ const WarehouseTable = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        
         <div className="flex flex-1">
-          
-          <div className="flex-1 p-4 overflow-hidden">
+          <div className="flex-1 p-4 overflow-auto">
             <div className="bg-white rounded shadow-lg p-4 h-full flex items-center justify-center">
               <p className="text-red-600">Error: {error}</p>
             </div>
@@ -107,51 +114,47 @@ const WarehouseTable = () => {
   ];
   return (
     <div className="min-h-screen flex flex-col">
-      
       <div className="flex flex-1">
-        
-        <div className="flex-1 p-4 overflow-hidden">
-        <Breadcrumbs
-              pageTitle="Manage Warehouses"
-              items={breadcrumbItems}
-            />
-            
-            <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
-                            <div className='w-full md:w-auto'>
-                                <div className="dropdown">
-                                    <div tabIndex={0} role="button" className="w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
-                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-transparent">
-                                        <li><label><input type="checkbox" /></label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            {/* Search Input */}
-                            <div className="flex-1 max-w-md">
-                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
-                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                    </svg>
-                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search customer..." />
-                               
-                             </label>
-                            </div>
-                            <button
-                className="bg-gray-200 text-black px-4 py-2 flex items-center rounded"
-                onClick={handleSortButtonClick}
-              >
-                Sort{" "}
-                {sortConfig.direction === "ascending" ? (
-                  <FaSortUp className="ml-1" />
-                ) : (
-                  <FaSortDown className="ml-1" />
-                )}
-              </button>
-                        </div>
+        <div className="flex-1 p-4 overflow-auto">
+          <Breadcrumbs
+            pageTitle="Manage Warehouses"
+            items={breadcrumbItems}
+          />
+          
+          <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
+            <div className='w-full md:w-auto'>
+              <div className="dropdown">
+                <div tabIndex={0} role="button" className="w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
+                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-transparent">
+                  <li><label><input type="checkbox" /></label></li>
+                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                </ul>
+              </div>
+            </div>
+            {/* Search Input */}
+            <div className="flex-1 max-w-md">
+              <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search customer..." />
+              </label>
+            </div>
+            <button
+              className="bg-gray-200 text-black px-4 py-2 flex items-center rounded"
+              onClick={handleSortButtonClick}
+            >
+              Sort{" "}
+              {sortConfig.direction === "ascending" ? (
+                <FaSortUp className="ml-1" />
+              ) : (
+                <FaSortDown className="ml-1" />
+              )}
+            </button>
+          </div>
 
           <div className="bg-white rounded shadow-lg px-4 pb-4 h-full flex flex-col">
-            
             <div className="flex justify-between items-center mb-2">
               <Link
                 to={"/admin/warehouse/create"}
@@ -159,7 +162,6 @@ const WarehouseTable = () => {
               >
                 Create Warehouse ID
               </Link>
-            
             </div>
             <div className="overflow-auto max-h-[30rem] flex-1">
               <table className="min-w-full border-collapse border border-gray-300 text-sm">
@@ -202,10 +204,10 @@ const WarehouseTable = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredWarehouses?.map((warehouse, index) => (
+                  {currentRecords?.map((warehouse, index) => (
                     <tr key={warehouse.id} className="text-center border">
                       <td className="px-4 py-4 text-[14px] text-gray-600">
-                        {index + 1}
+                        {indexOfFirstRecord + index + 1}
                       </td>
                       <td className="px-4 py-4 text-[14px] text-gray-600">
                         {warehouse.warehouseId}
@@ -251,9 +253,16 @@ const WarehouseTable = () => {
                 </tbody>
               </table>
             </div>
+            
+            
           </div>
         </div>
       </div>
+      <Pagination
+              totalRecords={totalRecords}
+              recordsPerPage={recordsPerPage}
+              onPageChange={handlePageChange}
+            />
     </div>
   );
 };

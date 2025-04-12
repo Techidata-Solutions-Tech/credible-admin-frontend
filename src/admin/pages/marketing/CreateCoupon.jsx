@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
 import Select from 'react-select';
 import Breadcrumbs from '../../components/Breadcrumbs';
 
@@ -336,9 +334,11 @@ const CreateCoupon = () => {
               </div>
             </div>
             {/* Submit Button */}
-            <button type="submit" className=" p-2 bg-blue-600 text-white rounded-md my-10">
+         <div className='flex justify-end'>
+         <button type="submit" className=" p-2 bg-blue-600 text-white rounded-md my-10">
               Submit
             </button>
+         </div>
           </form>
         </div>
       </div>

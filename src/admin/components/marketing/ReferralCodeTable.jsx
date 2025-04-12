@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { BsThreeDots } from "react-icons/bs";
+import Pagination from "../Pagination";
 
 const ReferralCodeTable = () => {
   const [referralId, setReferralId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
 
   const referralData = [
     {
@@ -12,7 +15,7 @@ const ReferralCodeTable = () => {
       userGroup: "New Users",
       userName: "John Doe",
       discountedAmount: "$5000",
-      status: 1, // Active
+      status: 1,
       shareDate: "2024-02-01",
       usedDate: "2024-02-01",
     },
@@ -23,7 +26,7 @@ const ReferralCodeTable = () => {
       userGroup: "VIP Members",
       userName: "Jane Smith",
       discountedAmount: "$2500",
-      status: 2, // Expired
+      status: 2,
       shareDate: "2024-02-01",
       usedDate: "2023-12-15",
     },
@@ -34,7 +37,7 @@ const ReferralCodeTable = () => {
       userGroup: "All Users",
       userName: "Alice Johnson",
       discountedAmount: "$800",
-      status: 0, // Inactive
+      status: 0,
       shareDate: "2024-02-01",
       usedDate: "2024-01-10",
     },
@@ -67,54 +70,138 @@ const ReferralCodeTable = () => {
     document.getElementById("referral_modal_status").showModal();
   };
 
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = referralData.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
+
+  const handlePageChange = (page, perPage) => {
+    setCurrentPage(page);
+    setRecordsPerPage(perPage);
+  };
+
   return (
-    <div className="max-w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-      <table className="max-w-full table-auto mb-10 ">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referral ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Value</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User Group</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">User Name</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Discounted</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Share Date</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Used Date</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {referralData?.map((referral) => (
-            <tr key={referral.id} className="hover:bg-gray-50 border-b border-gray-300">
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.name}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.value}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.userGroup}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.userName}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.discountedAmount}</td>
-              <td className={`px-4 py-4 text-sm font-semibold ${statusColors[referral.status]}`}>
-                {statusLabels[referral.status]}
-              </td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.shareDate}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{referral.usedDate}</td>
-              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
-                <div className="dropdown dropdown-bottom dropdown-end">
-                  <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                    <BsThreeDots className="mt-2 text-blue-500" size={28} />
-                  </button>
-                  <ul tabIndex={0} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                    <li><a href="#" onClick={() => handleEdit(referral.id)}>Edit</a></li>
-                    <li><a href="#" onClick={() => handleDelete(referral.id)}>Delete</a></li>
-                    <li><a href="#" onClick={() => handleStatusChange(referral.id)}>Change Status</a></li>
-                  </ul>
-                </div>
-              </td>
+    <>
+      <div className="max-w-full bg-white rounded-lg shadow-sm overflow-x-auto">
+        <table className="max-w-full table-auto mb-10 min-w-[1000px]">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Referral ID
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Name
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Value
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                User Group
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                User Name
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Discounted
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Status
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Share Date
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Used Date
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                Action
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {currentRecords.map((referral) => (
+              <tr
+                key={referral.id}
+                className="hover:bg-gray-50 border-b border-gray-300"
+              >
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.id}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.name}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.value}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.userGroup}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.userName}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.discountedAmount}
+                </td>
+                <td
+                  className={`px-4 py-4 text-sm font-semibold ${
+                    statusColors[referral.status]
+                  }`}
+                >
+                  {statusLabels[referral.status]}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.shareDate}
+                </td>
+                <td className="px-4 py-4 text-sm text-gray-900">
+                  {referral.usedDate}
+                </td>
+                <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
+                  <div className="dropdown dropdown-bottom dropdown-end">
+                    <button
+                      tabIndex={0}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      <BsThreeDots className="mt-2 text-blue-500" size={28} />
+                    </button>
+                    <ul
+                      tabIndex={0}
+                      className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow"
+                    >
+                      <li>
+                        <a href="#" onClick={() => handleEdit(referral.id)}>
+                          Edit
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#" onClick={() => handleDelete(referral.id)}>
+                          Delete
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          onClick={() => handleStatusChange(referral.id)}
+                        >
+                          Change Status
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <Pagination
+        totalRecords={referralData.length}
+        recordsPerPage={recordsPerPage}
+        onPageChange={handlePageChange}
+      />
+    </>
   );
 };
 
