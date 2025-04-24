@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
 import ProductTable from '../../components/product/ProductTable'
 import { Link } from 'react-router-dom'
 import Loader from '../../../components/Loader'
@@ -23,7 +21,7 @@ const Product = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/api/admin/product?page=${currentPage}&limit=${recordsPerPage}`,
+          `${import.meta.env.VITE_BASE_URL}/api/admin/product?page=${currentPage}&limit=${recordsPerPage}&added_by=${localStorage.getItem("userRole")}&added_by_id=${parseInt(localStorage.getItem("userId"))}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

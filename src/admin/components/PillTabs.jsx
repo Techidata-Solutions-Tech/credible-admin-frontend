@@ -20,12 +20,13 @@ const PillTabs = ({tabs}) => {
             `}
        
           >
-           <span>
-           {tab.label.split(' ')[0]}
-           </span>
-           <span>
-           {tab.label.split(' ')[1]}
-           </span>
+          <span>
+            {tab.label.split('(')[0]}
+          </span>
+          <span>
+            {tab.label.split('(')[1]?.replace(/\)$/, '')}
+          </span>
+
 
           </button>
         ))}

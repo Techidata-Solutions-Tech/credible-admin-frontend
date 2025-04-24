@@ -1,6 +1,4 @@
 import React from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
 import OrderTableSeller from '../../components/orders/OrderTableSeller'
 import PillTabs from '../../components/PillTabs'
 import Breadcrumbs from '../../components/Breadcrumbs'

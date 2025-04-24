@@ -319,6 +319,7 @@ const Sidebar = (props) => {
                     </div>
                     {openMenus['saleOrder'] && (
                       <ul className="ml-4">
+                        <li><Link to="/admin/create-order" className="block p-2 hover:bg-gray-100">Create Order</Link></li>
                         <li><Link to="/admin/orders" className="block p-2 hover:bg-gray-100">My Orders</Link></li>
                         <li><Link to="/admin/orders/branch" className="block p-2 hover:bg-gray-100">Branch Order</Link></li>
                         <li><Link to="/admin/orders/seller" className="block p-2 hover:bg-gray-100">Seller Order</Link></li>
@@ -919,6 +920,9 @@ const Sidebar = (props) => {
                       <ul className="ml-4">
                         <li><Link to="/admin/warehouse/table" className="block p-2 hover:bg-gray-100">Manage Branch</Link></li>
                         <li><Link to="/admin/warehouse/create" className="block p-2 hover:bg-gray-100">Create Branch</Link></li>
+                        <li><Link to="/admin/warehouse/manage-sale-returns" className="block p-2 hover:bg-gray-100">Manage Sale Returns</Link></li>
+                        <li><Link to="/admin/warehouse/verification" className="block p-2 hover:bg-gray-100">Verification</Link></li>
+                        <li><Link to="/admin/warehouse/sales-orders" className="block p-2 hover:bg-gray-100">Sales Orders</Link></li>
                       </ul>
                     )}
                   </li>

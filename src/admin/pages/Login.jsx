@@ -13,13 +13,14 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const { admin, setAdmin } = React.useContext(AdminDataContext);
+  const { admin, setAdmin } = React.useContext(AdminDataContext) || {};
 
   useEffect(() => {
-    if (token) {
+    if (localStorage.getItem('token') && localStorage.getItem('userRole') === 'admin') {
       navigate('/admin');
     }
-  }, [token]);
+  }, []);
+  
 
   const onSubmit = async (data) => {
     const payLoad = {
@@ -40,6 +41,8 @@ const Login = () => {
         });
 
         localStorage.setItem('token', result.token);
+        localStorage.setItem('userRole', "admin");
+        localStorage.setItem('userId', result.id || 0);
         navigate('/admin');
       }
     } catch (error) {

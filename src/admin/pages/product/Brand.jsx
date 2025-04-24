@@ -1,49 +1,118 @@
-import React, { useState } from 'react';
-import Navbar from '../../components/Navbar';
-import Sidebar from '../../components/Sidebar';
-import { Link } from 'react-router-dom';
-import PillTabs from '../../components/PillTabs';
-import { BsThreeDots } from 'react-icons/bs';
-import Breadcrumbs from '../../components/Breadcrumbs';
-import Pagination from '../../components/Pagination';
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import PillTabs from "../../components/PillTabs";
+import { BsThreeDots } from "react-icons/bs";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import Pagination from "../../components/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Brand = () => {
-  const [selectedBrandId, setSelectedBrandId] = useState(null);
+  const location = useLocation();
+const isSupplierRoute = location.pathname.includes("supplier");
+const userRole = isSupplierRoute ? "supplier" : "admin";
+
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const [brandData, setBrandData] = useState([]);
+  const token = localStorage.getItem("token");
+  const handleCheckboxChange = (id) => {
+    if (selectedBrands.includes(id)) {
+      setSelectedBrands(selectedBrands.filter((brandId) => brandId !== id));
+    } else {
+      setSelectedBrands([...selectedBrands, id]);
+    }
+  };
 
-  const brandData = [
-    {
-      id: 'B001',
-      category: 'Electronics',
-      companyName: 'Apple Inc.',
-      brandName: 'Apple',
-      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-      products: ['iPhone', 'MacBook', 'iPad'],
-      country: 'USA',
-      status: 1,
-    },
-    {
-      id: 'B002',
-      category: 'Automobiles',
-      companyName: 'Tesla Motors',
-      brandName: 'Tesla',
-      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/e/e8/Tesla_logo.png',
-      products: ['Model S', 'Model 3', 'Model X'],
-      country: 'USA',
-      status: 0,
-    },
-    {
-      id: 'B003',
-      category: 'Fashion',
-      companyName: 'Nike Inc.',
-      brandName: 'Nike',
-      brandLogo: 'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-      products: ['Shoes', 'Sportswear', 'Accessories'],
-      country: 'USA',
-      status: 1,
-    },
-  ];
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedBrands([]);
+    } else {
+      const allIds = currentRecords.map((brand) => brand.id);
+      setSelectedBrands(allIds);
+    }
+    setSelectAll(!selectAll);
+  };
+const supplierId = 0
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch(
+          `https://credible-api.techidata.com/v2${isSupplierRoute? `/api/supplierSeller/all-brand-list-by-supplier/${supplierId}`:`/api/supplierSeller/all-brand-list`}`,
+          {
+            headers: {
+              Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`,
+            },
+          }
+        );
+
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await response.text();
+          throw new Error(
+            `Expected JSON but got: ${text.substring(0, 100)}...`
+          );
+        }
+
+        const result = await response.json();
+        if (response.status === 200) {
+          setBrandData(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching Brand list:", error);
+      }
+    };
+
+    fetchBrands();
+  }, [currentPage, recordsPerPage]);
+
+  const handleDelete = async (brandId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No token found in localStorage");
+      }
+
+      const deleteData = {
+        ids: [brandId], 
+        added_by: userRole,
+        supplier_id: null,
+      };
+      
+
+      const response = await fetch(
+        `https://credible-api.techidata.com/v2/api/supplierSeller/delete-brand`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`,
+          },
+          body: JSON.stringify(deleteData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete brand");
+      }
+
+      const data = await response.json();
+      toast.success("Brand deleted successfully!");
+
+      const updatedBrands = brandData.filter((brand) => brand.id !== brandId);
+      setBrandData(updatedBrands);
+
+      return data;
+    } catch (error) {
+      toast.error(`Error deleting brand: ${error.message}`);
+      console.error("Error deleting brand:", error);
+    }
+  };
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -55,33 +124,71 @@ const Brand = () => {
   };
 
   const statusLabels = {
-    1: 'Active',
-    0: 'Inactive',
+    1: "Active",
+    0: "Inactive",
   };
 
   const statusColors = {
-    1: 'text-green-500',
-    0: 'text-red-500',
-  };
-
-  const handleEdit = (id) => {
-    setSelectedBrandId(id);
-    alert(`Editing Brand ID: ${id}`);
-  };
-
-  const handleDelete = (id) => {
-    setSelectedBrandId(id);
-    alert(`Deleting Brand ID: ${id}`);
+    1: "text-green-500",
+    0: "text-red-500",
   };
 
   const breadcrumbItems = [
-    { label: 'Product Management', href: '#' },
-    { label: 'Brands', href: '#' },
-    { label: 'Manage Brands', href: '/admin/product/attributes' },
+    { label: "Product Management", href: "#" },
+    { label: "Brands", href: "#" },
+    { label: "Manage Brands", href: `/${userRole}/product/attributes` },
   ];
+  
+  const handleBulkDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete the selected brands?"))
+      return;
+
+    try {
+      const deleteData = {
+        ids: selectedBrands,
+        added_by: "admin",
+        supplier_id: null,
+      };
+
+      const response = await fetch(
+        `https://credible-api.techidata.com/v2/api/supplierSeller/delete-brand`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(deleteData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete selected brands");
+      }
+
+      toast.success("Selected brands deleted successfully!");
+      setBrandData(brandData.filter((b) => !selectedBrands.includes(b.id)));
+      setSelectedBrands([]);
+      setSelectAll(false);
+    } catch (err) {
+      toast.error("Error deleting selected brands");
+      console.error(err);
+    }
+  };
 
   return (
     <div className="rounded shadow-lg p-4 m-2 bg-white">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Breadcrumbs pageTitle="Manage Brands" items={breadcrumbItems} />
 
       <div className="flex-1 flex flex-col overflow-auto">
@@ -96,20 +203,41 @@ const Brand = () => {
                 >
                   Filter
                 </div>
-                <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                  <li><label><input type="checkbox" /></label></li>
-                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow"
+                >
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" /> Checkbox Label
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" /> Checkbox Label
+                    </label>
+                  </li>
                 </ul>
               </div>
               <div className="w-full sm:w-auto">
                 <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
                   <i className="ri-search-line text-gray-800"></i>
-                  <input type="text" className="grow placeholder:text-center" placeholder="Brand" />
+                  <input
+                    type="text"
+                    className="grow placeholder:text-center"
+                    placeholder="Brand"
+                  />
                 </label>
               </div>
               <select className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                <option disabled selected>Sort</option>
+                <option disabled selected>
+                  Sort
+                </option>
                 <option>Homer</option>
                 <option>Marge</option>
                 <option>Bart</option>
@@ -117,46 +245,132 @@ const Brand = () => {
                 <option>Maggie</option>
               </select>
             </div>
+            {selectedBrands.length > 0 && (
+              <div className="flex justify-end mb-2 px-4">
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+                  onClick={handleBulkDelete}
+                >
+                  Delete Selected
+                </button>
+              </div>
+            )}
 
             {/* Brand Table */}
             <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
               <table className="w-full table-auto mb-10 min-w-[900px]">
                 <thead className="bg-gray-200">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company Name</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand Name</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand Logo</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Products</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Country</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                    <th className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selectAll}
+                        onChange={handleSelectAll}
+                      />
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      ID
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Category
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Company Name
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Brand Name
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Brand Logo
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Products
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Country
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Status
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentRecords?.map((brand) => (
-                    <tr key={brand.id} className="hover:bg-gray-50 border-b border-gray-300">
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.id}</td>
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.category}</td>
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.companyName}</td>
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.brandName}</td>
-                      <td className="px-4 py-4 text-sm text-gray-900">
-                        <img src={brand.brandLogo} alt={brand.brandName} className="w-12 h-12 object-contain" />
+                    <tr
+                      key={brand.id}
+                      className="hover:bg-gray-50 border-b border-gray-300"
+                    >
+                      <td className="px-4 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedBrands.includes(brand.id)}
+                          onChange={() => handleCheckboxChange(brand.id)}
+                        />
                       </td>
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.products.join(' | ')}</td>
-                      <td className="px-4 py-4 text-sm text-gray-900">{brand.country}</td>
-                      <td className={`px-4 py-4 text-sm font-semibold ${statusColors[brand.status]}`}>
-                        {statusLabels[brand.status]}
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.id}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.category_id}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.company_name}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.brand_name}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        <img
+                          src={brand.brand_logo}
+                          alt={brand.brand_name}
+                          className="w-12 h-12 object-contain"
+                        />
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.product_id}
+                      </td>
+                      <td className="px-4 py-4 text-sm text-gray-900">
+                        {brand.country}
+                      </td>
+                      <td
+                        className={`px-4 py-4 text-sm font-semibold ${
+                          statusColors[brand.status]
+                        }`}
+                      >
+                        {statusLabels[brand.status] || brand.status}
                       </td>
                       <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
                         <div className="dropdown dropdown-bottom dropdown-end">
-                          <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                            <BsThreeDots className="mt-2 text-blue-500" size={28} />
+                          <button
+                            tabIndex={0}
+                            className="text-gray-600 hover:text-gray-800"
+                          >
+                            <BsThreeDots
+                              className="mt-2 text-blue-500"
+                              size={28}
+                            />
                           </button>
-                          <ul tabIndex={0} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                            <li><a href="#" onClick={() => handleEdit(brand.id)}>Edit</a></li>
-                            <li><a href="#" onClick={() => handleDelete(brand.id)}>Delete</a></li>
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content menu bg-white z-10 rounded-box w-30 shadow"
+                          >
+                            <li>
+                            <Link to={`/${userRole}/product/brand/${brand.id}`}>
+
+                                Edit
+                              </Link>
+                            </li>
+                            <li>
+                              <span
+                                href="#"
+                                onClick={() => handleDelete(brand.id)}
+                              >
+                                Delete
+                              </span>
+                            </li>
                           </ul>
                         </div>
                       </td>
@@ -164,19 +378,17 @@ const Brand = () => {
                   ))}
                 </tbody>
               </table>
-
-            
             </div>
           </div>
         </div>
       </div>
       <div className="mt-4 px-4">
-                <Pagination
-                  totalRecords={brandData.length}
-                  recordsPerPage={recordsPerPage}
-                  onPageChange={handlePageChange}
-                />
-              </div>
+        <Pagination
+          totalRecords={brandData.length}
+          recordsPerPage={recordsPerPage}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </div>
   );
 };
