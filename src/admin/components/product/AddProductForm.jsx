@@ -309,13 +309,15 @@ const AddProductForm = () => {
     }
 
     const payload = {
+    "added_by":localStorage.getItem("userRole"), 
+    "added_by_id":parseInt(localStorage.getItem("userId")),
       category: {
         category: Number(formData.category.category),
       },
       productDetails: {
         product_name: formData.productDetails.product_name,
         brand_name: formData.productDetails.brand_name,
-        brand_auth_letter: formData.productDetails.brand_auth_letter, // URL string
+        brand_auth_letter: formData.productDetails.brand_auth_letter, 
         model_name: formData.productDetails.model_name,
         model_number: formData.productDetails.model_number,
         modelSeries: formData.productDetails.modelSeries,

@@ -1,40 +1,33 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-const SupplierProtectWrapper = ({children}) => {
-    const [isLoading, setIsLoading] = useState(true)
-    const token = localStorage.getItem('token')
-    const navigate = useNavigate();
-    if (!token) {
-        navigate('/supplier/login')
-    }
-   useEffect(()=>{
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/supplier`, {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then(response => {
-        if (response.status === 200) {
-            setIsLoading(false)
-        }
-    })
-        .catch(err => {
-            localStorage.removeItem('token')
-            navigate('/supplier/logout')
-        })
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-       
-   },[token])
+const SupplierProtectWrapper = ({ children }) => {
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
 
-   if (isLoading) {
-        return (
-            <div className='flex justify-center items-center h-screen'><span className="loading loading-dots w-16 h-16"></span></div>
-        )
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
+
+    if (!token || userRole !== 'supplier') {
+      navigate('/supplier-login');
+    } else {
+      setIsAuthorized(true);
     }
 
-  return (
-   <>{children}</>
-  )
-}
+    setCheckingAuth(false);
+  }, [navigate]);
 
-export default SupplierProtectWrapper
+  if (checkingAuth) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-dots w-16 h-16"></span>
+      </div>
+    );
+  }
+
+  return isAuthorized ? <>{children}</> : null;
+};
+
+export default SupplierProtectWrapper;
