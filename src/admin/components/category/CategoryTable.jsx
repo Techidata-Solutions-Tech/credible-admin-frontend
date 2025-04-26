@@ -106,46 +106,46 @@ const token = localStorage.getItem('token')
       <div className="w-full bg-white rounded-lg shadow-lg overflow-auto ">
        <div className="overflow-x-auto pb-[100px]">
       <table className="w-full table-auto mb-15">
-        <thead className="bg-gray-50 text-black">
-          <tr className=' uppercase'>
-          <th className="px-6 py-3 text-left text-md font-medium"> <input type="checkbox" className='border border-black'/></th>
+        <thead className="bg-gray-500 text-black">
+          <tr className='text-white uppercase'>
+          <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium"> <input type="checkbox" className='border border-black'/></th>
          
-            <th className="px-6 py-3 text-left text-md font-medium">No</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Name</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Image</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Parent Category</th>
-            <th className="px-6 py-3 text-left text-md font-medium">No's</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Sub Category</th>
-            <th className="px-6 py-3 text-left text-md font-medium">No's</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Child Category</th> 
-            <th className="px-6 py-3 text-left text-md font-medium">No's</th> 
-            <th className="px-6 py-3 text-left text-md font-medium">Products</th> 
-            <th className="px-6 py-3 text-left text-md font-medium">Order</th> 
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">No</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Name</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Image</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Parent Category</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">No's</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Sub Category</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">No's</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Child Category</th> 
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">No's</th> 
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Products</th> 
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Order</th> 
 
-            <th className="px-6 py-3 text-left text-md font-medium">Status</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Created / Updated</th>
-            <th className="px-6 py-3 text-left text-md font-medium">Actions</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Status</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Created / Updated</th>
+            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Actions</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {categories?.map((category, index) => (
             <tr key={category.id} className="hover:bg-gray-100 border-b border-gray-300">
-              <td className="px-6 py-4 text-sm text-gray-900"> <input type="checkbox" className='border border-black'/></td>
-              <td className="px-6 py-4 text-sm text-gray-900">{index+1}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{"— ".repeat(category.depth)} {category.name}</td>
-              <td className="px-6 py-4 text-sm">
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900"> <input type="checkbox" className='border border-black'/></td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{index+1}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{"— ".repeat(category.depth)} {category.name}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm">
                 <img src={category.featureimage} alt="Category" className="w-14 h-14 rounded-md object-cover" />
               </td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.parentCategory}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.parentCategoryId}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.subCategory}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.subCategoryId}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.childCategory}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.childCategoryId}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.products}</td>
-              <td className="px-6 py-4 text-sm text-gray-900">{category.order}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.parentCategory || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.parentCategoryId || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.subCategory || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.subCategoryId || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.childCategory || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.childCategoryId || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.products || "N/A"}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.order || "N/A" }</td>
 
-              <td className="px-4 py-2">
+              <td className="px-4 py-2  border border-gray-400">
                 <button
                   onClick={() => handleStatusChange(category.id)}
                   className={`w-full px-4 py-2 text-sm text-white font-semibold rounded-lg cursor-pointer transition duration-300 ${
@@ -157,7 +157,7 @@ const token = localStorage.getItem('token')
               </td>
 
 
-              <td className="px-6 py-4 text-sm text-gray-900">{category.createdAt}</td>
+              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{category.createdAt ||"N/A"}</td>
               <td className="px-6 py-4 text-sm text-gray-900 flex justify-center gap-1">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button tabIndex={0} className="text-gray-600 hover:text-gray-800">

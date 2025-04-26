@@ -523,7 +523,7 @@ const Sidebar = (props) => {
                     >
                       <div className="flex items-center gap-2">
                         <ShoppingCart className="w-5 h-5" />
-                        <span>Debit Note</span>
+                        <span>Validations</span>
                       </div>
                       {openMenus["debitNote"] ? (
                         <ChevronDown className="w-5 h-5" />
@@ -539,6 +539,22 @@ const Sidebar = (props) => {
                             className="block p-2 hover:bg-gray-100"
                           >
                             Manage Debit Notes
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/supplier/manage-goods-received-note"
+                            className="block p-2 hover:bg-gray-100"
+                          >
+                            Manage Goods Received Note(GRN)
+                          </Link>
+                        </li>
+                        <li>
+                          <Link
+                            to="/supplier/manage-invoice-matching"
+                            className="block p-2 hover:bg-gray-100"
+                          >
+                           Manage Invoice Matching
                           </Link>
                         </li>
                       </ul>

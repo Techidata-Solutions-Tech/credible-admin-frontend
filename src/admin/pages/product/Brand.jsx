@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import PillTabs from "../../components/PillTabs";
 import { BsThreeDots } from "react-icons/bs";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Pagination from "../../components/Pagination";

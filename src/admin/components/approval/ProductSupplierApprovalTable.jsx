@@ -84,6 +84,7 @@ const ProductSupplierApprovalTable = () => {
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Image</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand/Company</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Model</th>
             <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Variant</th>
@@ -103,34 +104,35 @@ const ProductSupplierApprovalTable = () => {
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {currentRecords.map((product, i) => (
-            <tr key={product.id} className="hover:bg-gray-50 border-b border-gray-300">
+            <tr key={product?.id} className="hover:bg-gray-50 border-b border-gray-300">
               <td className="px-4 py-4 text-sm text-gray-900">{indexOfFirstRecord + i + 1}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.category}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.productName}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.brand}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.model}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.variant}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.sku}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.uom}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">${product.cop}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.qty}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.hsnSacGst}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.batchNo}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.mfgDate}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.expDate}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">${product.unitPrice}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">${product.grossPrice}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{product.supplierName} ({product.supplierId})</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.id}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.category}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.productName}</td>
+              <td className="px-4 py-4 text-sm text-gray-900"><img src={product?.images ? product?.images[0]:""} alt={product?.id} /></td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.brand}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.model}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.variant}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.sku}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.uom}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">${product?.cop}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.qty}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.hsnSacGst}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.batchNo}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.mfgDate}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.expDate}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">${product?.unitPrice}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">${product?.grossPrice}</td>
+              <td className="px-4 py-4 text-sm text-gray-900">{product?.supplierName} ({product?.supplierId})</td>
               <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
                     <BsThreeDots className='mt-2 text-blue-500' size={28} />
                   </button>
                   <ul tabIndex={0} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                    <li><a href="#" onClick={() => handleEdit(product.id)}>Edit</a></li>
-                    <li><a href="#" onClick={() => handleDelete(product.id)}>Delete</a></li>
-                    <li><a href="#" onClick={() => handleApproval(product.id)}>Approve/Reject</a></li>
+                    <li><a href="#" onClick={() => handleEdit(product?.id)}>Edit</a></li>
+                    <li><a href="#" onClick={() => handleDelete(product?.id)}>Delete</a></li>
+                    <li><a href="#" onClick={() => handleApproval(product?.id)}>Approve/Reject</a></li>
                   </ul>
                 </div>
               </td>

@@ -25,8 +25,12 @@ const AddBrand = () => {
       brand_name: "",
       product_id: "",
       country: "",
+      meta_title: "",
+      meta_keywords: "",
+      meta_description: "",
     },
   });
+  
 
   useEffect(() => {
     const fetchBrandData = async () => {
@@ -58,6 +62,9 @@ const AddBrand = () => {
             setValue("brand_name", data.brand_name);
             setValue("product_id", data.product_id);
             setValue("country", data.country);
+            setValue("meta_title", data.meta_title || "");
+            setValue("meta_keywords", data.meta_keywords || "");
+            setValue("meta_description", data.meta_description || "");
             setImageUrl(data.brand_logo);
           }
         } catch (error) {
@@ -97,9 +104,9 @@ const AddBrand = () => {
     const payload = {
       ...data,
       brand_logo: imageUrl,
-      added_by: isAdmin ? "admin" : "supplier",
-      admin_id: isAdmin ? 0 : null,
-      supplier_id: isSupplier ? 0 : null,
+      added_by: localStorage.getItem('userRole'),
+      admin_id: localStorage.getItem('userId') || null,
+      supplier_id: localStorage.getItem('userId') || null,
       status: "inactive"
     };
   
@@ -243,6 +250,33 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Country:</label>
                 <input 
                   {...register("country")} 
+                  className="border p-2 w-full" 
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <label className="block mb-1 font-semibold">Meta Title:</label>
+                <input 
+                  {...register("meta_title")} 
+                  className="border p-2 w-full" 
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Meta Keywords:</label>
+                <input 
+                  {...register("meta_keywords")} 
+                  className="border p-2 w-full" 
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="col-span-3">
+                <label className="block mb-1 font-semibold">Meta Description:</label>
+                <textarea 
+                  {...register("meta_description")} 
+                  rows={3}
                   className="border p-2 w-full" 
                   disabled={isLoading}
                 />

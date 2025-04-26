@@ -69,18 +69,18 @@ const TransactionSaleTable = () => {
       <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto mb-10">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">ID</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Date & Time</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Customer ID</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Transaction ID</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Sale Price</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">SKU</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Type</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Mode</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Payment Status</th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50">Actions</th>
+            <thead className="bg-gray-500">
+              <tr className='text-white bg-gray-500'>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Date & Time</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Customer ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Transaction ID</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Sale Price</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">SKU</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Payment Type</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Payment Mode</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Payment Status</th>
+                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium border uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">

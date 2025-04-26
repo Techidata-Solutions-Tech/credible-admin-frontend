@@ -1,8 +1,9 @@
 "use client"
 import React, { useState } from 'react';
-import Pagination from '../Pagination';
+import Pagination from '../Pagination'; 
+import { Link } from 'react-router-dom';
 
-const MerchantSellerTable = () => {
+const MerchantSupplierTable = () => {
   const sellerData = [
     {
       id: 'MS001',
@@ -84,18 +85,32 @@ const MerchantSellerTable = () => {
       place: 'Atlanta',
       state: 'GA',
     },
+    {
+      id: 'MS011',
+      sellerName: 'Auto Parts Direct',
+      categories: ['Automotive', 'Tools'],
+      products: ['Tires', 'Batteries', 'Car Care'],
+      place: 'Detroit',
+      state: 'MI',
+    },
+    {
+      id: 'MS012',
+      sellerName: 'Garden Supplies',
+      categories: ['Outdoor', 'Gardening'],
+      products: ['Plants', 'Tools', 'Fertilizers'],
+      place: 'Phoenix',
+      state: 'AZ',
+    },
   ];
 
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(5);
 
+  // Calculate current records to display
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords = sellerData.slice(indexOfFirstRecord, indexOfLastRecord);
-
-  const handleViewDetails = (id) => {
-    alert(`Viewing details for Seller ID: ${id}`);
-  };
 
   const handlePageChange = (page, perPage) => {
     setCurrentPage(page);
@@ -103,49 +118,53 @@ const MerchantSellerTable = () => {
   };
 
   return (<>
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
+     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-4 min-w-[900px]">
         <thead className="bg-gray-200">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller & Name</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Categories</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Products</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Place</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">State</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">View</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">No</th>
+            <th colSpan={2} className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Seller ID & Name</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Categories</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Products</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Place</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">State</th>
+            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">View</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
-          {currentRecords?.map((seller) => (
+          {currentRecords?.map((seller, index) => (
             <tr key={seller.id} className="hover:bg-gray-50 border-b border-gray-300">
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.sellerName}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.categories.join(', ')}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.products.join(', ')}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.place}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{seller.state}</td>
-              <td className="px-4 py-4 text-sm">
-                <button 
-                  onClick={() => handleViewDetails(seller.id)}
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{(currentPage-1)*recordsPerPage + index + 1}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.id}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.sellerName}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.categories.join(', ')}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.products.join(', ')}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.place}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.state}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm">
+                <Link 
+                  to={`/admin/merchent/seller/${seller.id}`}
                   className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-700"
                 >
                   View
-                </button>
+                </Link>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
       
-      
+      {/* Pagination Component */}
+     
     </div>
     <Pagination 
-    totalRecords={sellerData.length} 
-    recordsPerPage={recordsPerPage} 
-    onPageChange={handlePageChange}
-  /></>
+        totalRecords={sellerData.length} 
+        recordsPerPage={recordsPerPage} 
+        onPageChange={handlePageChange}
+      />
+  </>
+ 
   );
 };
 
-export default MerchantSellerTable;
+export default MerchantSupplierTable;

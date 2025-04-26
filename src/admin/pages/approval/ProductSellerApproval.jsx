@@ -7,11 +7,12 @@ import Breadcrumbs from '../../components/Breadcrumbs'
 
 const ProductSellerApproval = () => {
     const tabs_user = [
-        { id: 1, label: 'All (1000)' },
-        { id: 2, label: 'Active (800)' },
-        { id: 3, label: 'Inactive (100)' },
-        { id: 4, label: 'Blocked (100)' },
-        { id: 5, label: 'Tash (10)' },
+        { id: 1, label: 'Inward (1000)' },
+        { id: 2, label: 'Approved (800)' },
+        { id: 3, label: 'Pending (100)' },
+        { id: 4, label: 'Hold (100)' },
+        { id: 5, label: 'Rejected (10)' },
+        { id: 6, label: 'Total (10)' },
     ];
     const breadcrumbItems = [
         { label: 'Approval Management', href: '#' },

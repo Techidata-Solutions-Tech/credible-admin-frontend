@@ -122,99 +122,93 @@ const CreateCoupon = () => {
   ];
  
     return (
-      <div className="overflow-x-auto p-4">
-         <Breadcrumbs
-              pageTitle="Create Coupon"
-              items={breadcrumbItems}
-            /> 
+     
+      <div className="overflow-x-auto p-4 min-h-screen ">
+      <Breadcrumbs pageTitle="Create Coupon" items={breadcrumbItems} />
       <ToastContainer />
-      <div className='flex bg-gray-100 '>
-        
-        <div className='rounded shadow-lg p-4 w-screen m-2 bg-white '>
-          <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md py-[50px]">
-            <div className='flex justify-evenly'>
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Parent Category</label>
-                <select
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  onChange={handleParentChange}
-                >
-                  <option value="">Select Parent Category</option>
-                  {categories?.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                {errors.parentCategory && <p className="text-red-500 text-xs">{errors.parentCategory.message}</p>}
-              </div>
-
-              {/* Sub-Category Dropdown */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Sub Category</label>
-                <select
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  onChange={handleSubChange}
-                  disabled={!selectedParent}
-                >
-                  <option value="">Select Sub Category</option>
-                  {subCategories?.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                {errors.subCategory && <p className="text-red-500 text-xs">{errors.subCategory.message}</p>}
-              </div>
-
-              {/* Child Category Dropdown */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Child Category</label>
-                <select
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  onChange={handleChildChange}
-                  disabled={!selectedSub}
-                >
-                  <option value="">Select Child Category</option>
-                  {childCategories?.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                {errors.childCategory && <p className="text-red-500 text-xs">{errors.childCategory.message}</p>}
-              </div>
+      <div className="max-w-5xl mx-auto my-8 ">
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className="grid grid-cols-1 gap-y-8"
+        >
+          {/* Category Selectors */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Parent Category</label>
+              <select
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                onChange={handleParentChange}
+              >
+                <option value="">Select Parent Category</option>
+                {categories?.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              {errors.parentCategory && <p className="text-red-500 text-xs">{errors.parentCategory.message}</p>}
             </div>
-            <div className='xl:mx-[10rem]'>
-              {/* Checkbox for "ALL Products" */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">
-                  <input
-                    type="checkbox"
-                    checked={isAllProducts}
-                    onChange={(e) => setIsAllProducts(e.target.checked)}
-                  />
-                  {' '}ALL Products
-                </label>
-              </div>
-
-              {/* Product Name Dropdown */}
-              {!isAllProducts && (
-                <div className="mb-4 flex-1">
-                  <label className="block text-sm font-semibold">Product Name</label>
-                  <Select
-                    isMulti
-                    options={products}
-                    onChange={(selectedOptions) => {
-                      setSelectedProducts(selectedOptions);
-                      setValue('products', selectedOptions);
-                    }}
-                    className="w-full flex-1"
-                  />
-                  {errors.products && <p className="text-red-500 text-xs">{errors.products.message}</p>}
-                </div>
-              )}
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Sub Category</label>
+              <select
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                onChange={handleSubChange}
+                disabled={!selectedParent}
+              >
+                <option value="">Select Sub Category</option>
+                {subCategories?.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              {errors.subCategory && <p className="text-red-500 text-xs">{errors.subCategory.message}</p>}
             </div>
-            {/* Render Selected Products as a Table */}
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Child Category</label>
+              <select
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                onChange={handleChildChange}
+                disabled={!selectedSub}
+              >
+                <option value="">Select Child Category</option>
+                {childCategories?.map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              {errors.childCategory && <p className="text-red-500 text-xs">{errors.childCategory.message}</p>}
+            </div>
+          </div>
+
+          {/* Product Selection */}
+          <div className="grid grid-cols-1 gap-4">
+            <div>
+              <label className="inline-flex items-center text-sm font-bold text-gray-700">
+                <input
+                  type="checkbox"
+                  checked={isAllProducts}
+                  onChange={(e) => setIsAllProducts(e.target.checked)}
+                  className="mr-2 accent-blue-600"
+                />
+                ALL Products
+              </label>
+            </div>
+            {!isAllProducts && (
+              <div>
+                <label className="block text-sm font-bold mb-1 text-gray-700">Product Name</label>
+                <Select
+                  isMulti
+                  options={products}
+                  onChange={(selectedOptions) => {
+                    setSelectedProducts(selectedOptions);
+                    setValue('products', selectedOptions);
+                  }}
+                  className="w-full"
+                />
+                {errors.products && <p className="text-red-500 text-xs">{errors.products.message}</p>}
+              </div>
+            )}
             {!isAllProducts && selectedProducts.length > 0 && (
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Selected Products</label>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full text-left bg-white border border-gray-200">
+              <div>
+                <label className="block text-sm font-bold mb-1 text-gray-700">Selected Products</label>
+                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                  <table className="min-w-full bg-white">
                     <thead>
                       <tr>
                         <th className="px-4 py-2 border-b">Product Name</th>
@@ -235,112 +229,104 @@ const CreateCoupon = () => {
                 </div>
               </div>
             )}
-            <div className='flex justify-evenly'>
-              {/* Discount Type */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Discount Type</label>
-                <select
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('discountType', { required: 'Discount type is required' })}
-                >
-                  <option value="">Select Discount Type</option>
-                  <option value="percentage">Percentage</option>
-                  <option value="fixed">Fixed Amount</option>
-                </select>
-                {errors.discountType && <p className="text-red-500 text-xs">{errors.discountType.message}</p>}
-              </div>
+          </div>
 
-              {/* Discount Value */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Discount Value</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('discountValue')}
-                />
-              </div>
-
-              {/* User Group */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">User Group</label>
-                <input
-                  type="text"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('userGroup', { required: 'User group is required' })}
-                />
-                {errors.userGroup && <p className="text-red-500 text-xs">{errors.userGroup.message}</p>}
-              </div>
+          {/* Discount, User Group */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Discount Type</label>
+              <select
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('discountType', { required: 'Discount type is required' })}
+              >
+                <option value="">Select Discount Type</option>
+                <option value="percentage">Percentage</option>
+                <option value="fixed">Fixed Amount</option>
+              </select>
+              {errors.discountType && <p className="text-red-500 text-xs">{errors.discountType.message}</p>}
             </div>
-            <div className='flex justify-evenly'>
-              {/* Minimum Order Amount */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Min Order Amount</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('minOrderAmount')}
-                />
-              </div>
-
-              {/* Minimum Order Quantity */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Min Order Quantity</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('minOrderQuantity')}
-                />
-              </div>
-
-              {/* Limit Per Coupon */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Limit Per Coupon</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('limitPerCoupon')}
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Discount Value</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('discountValue')}
+              />
             </div>
-            <div className='flex justify-evenly'>
-              {/* Coupon Used */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Coupon Used</label>
-                <input
-                  type="number"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('couponUsed')}
-                />
-              </div>
-
-              {/* Start Date & Time */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">Start Date & Time</label>
-                <input
-                  type="datetime-local"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('startDateTime')}
-                />
-              </div>
-
-              {/* End Date & Time */}
-              <div className="mb-4">
-                <label className="block text-sm font-semibold">End Date & Time</label>
-                <input
-                  type="datetime-local"
-                  className="w-full p-2 border rounded-md bg-transparent"
-                  {...register('endDateTime')}
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">User Group</label>
+              <input
+                type="text"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('userGroup', { required: 'User group is required' })}
+              />
+              {errors.userGroup && <p className="text-red-500 text-xs">{errors.userGroup.message}</p>}
             </div>
-            {/* Submit Button */}
-         <div className='flex justify-end'>
-         <button type="submit" className=" p-2 bg-blue-600 text-white rounded-md my-10">
+          </div>
+
+          {/* Order & Coupon Limits */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Min Order Amount</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('minOrderAmount')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Min Order Quantity</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('minOrderQuantity')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Limit Per Coupon</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('limitPerCoupon')}
+              />
+            </div>
+          </div>
+
+          {/* Usage & Dates */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Coupon Used</label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('couponUsed')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">Start Date & Time</label>
+              <input
+                type="datetime-local"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('startDateTime')}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-bold mb-1 text-gray-700">End Date & Time</label>
+              <input
+                type="datetime-local"
+                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                {...register('endDateTime')}
+              />
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-end">
+            <button type="submit" className="px-8 py-3 bg-green-600 text-white rounded-lg shadow-lg font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200">
               Submit
             </button>
-         </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,108 +1,121 @@
-import React, { useState } from 'react';
-import { BsThreeDots } from "react-icons/bs";
+import React from "react";
 
-const OrderDetailTable = () => {
-  const [selectedProductId, setSelectedProductId] = useState(null);
-
-  const orderDetails = [
+const ProductTable = () => {
+  const products = [
     {
-      productId: 'P001',
-      category: 'Electronics',
-      productName: 'Smartphone',
-      brand: 'Samsung',
-      model: 'Galaxy S22',
-      variant: '128GB',
-      SKU: 'SAM-S22-128',
-      UoM: 'Piece',
-      qty: 5,
-      amount: 2500.00,
-    },
-    {
-      productId: 'P002',
-      category: 'Appliances',
-      productName: 'Air Conditioner',
-      brand: 'LG',
-      model: 'DualCool',
-      variant: '1.5 Ton',
-      SKU: 'LG-AC-15',
-      UoM: 'Unit',
+      id: 1,
+      category: "Fashion",
+      image: "https://img.icons8.com/ios-filled/50/000000/phone.png",
+      productName: "Mens-Shirt",
+      company: "Raymond",
+      model: "Solid",
+      variant: "XXL",
+      sku: "KU1209",
+      uom: "PC",
       qty: 2,
-      amount: 1200.00,
+      amount: 1000,
     },
     {
-      productId: 'P003',
-      category: 'Furniture',
-      productName: 'Office Chair',
-      brand: 'IKEA',
-      model: 'ErgoComfort',
-      variant: 'Black',
-      SKU: 'IKEA-OC-BLK',
-      UoM: 'Piece',
-      qty: 10,
-      amount: 1500.00,
+      id: 2,
+      category: "Fashion",
+      image: "https://img.icons8.com/ios-filled/50/000000/phone.png",
+      productName: "Mens-Trousure",
+      company: "Raymond",
+      model: "Solid",
+      variant: "XL",
+      sku: "KU1210",
+      uom: "PC",
+      qty: 2,
+      amount: 1000,
     },
   ];
 
-  const handleEdit = (productId) => {
-    setSelectedProductId(productId);
-    document.getElementById('my_modal_edit').showModal();
-  };
+  const groupedProducts = [];
+  let lastCategory = "";
+  let rowSpanMap = {};
 
-  const handleDelete = (productId) => {
-    setSelectedProductId(productId);
-    document.getElementById('my_modal_delete').showModal();
-  };
+  products.forEach((product, index) => {
+    if (product.category !== lastCategory) {
+      rowSpanMap[product.category + index] = 1;
+      lastCategory = product.category;
+    } else {
+      const prevIndex = groupedProducts.length - 1;
+      const prevKey = products[prevIndex].category + prevIndex;
+      rowSpanMap[prevKey]++;
+      rowSpanMap[product.category + index] = 0; 
+    }
+    groupedProducts.push(product);
+  });
+
+  const totalQty = products.reduce((sum, p) => sum + p.qty, 0);
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-auto pb-[100px]">
-      <div>
-        <table className="w-full table-auto mb-10">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Brand</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Model</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Variant</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKU</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">UoM</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Qty</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount ($)</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {orderDetails.map((detail) => (
-              <tr key={detail.productId} className="hover:bg-gray-50 border-b border-gray-300">
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.productId}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.category}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.productName}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.brand}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.model}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.variant}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.SKU}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.UoM}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">{detail.qty}</td>
-                <td className="px-4 py-4 text-sm text-gray-900">${detail.amount.toFixed(2)}</td>
-                <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
-                  <div className="dropdown dropdown-bottom dropdown-end">
-                    <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                                      <BsThreeDots className='mt-2 text-blue-500' size={28} />
-                                      </button>
-                    <ul tabIndex={2} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                      <li><a href="#" onClick={() => handleEdit(detail.productId)}>Edit</a></li>
-                      <li><a href="#" onClick={() => handleDelete(detail.productId)}>Delete</a></li>
-                    </ul>
-                  </div>
+    <div className="overflow-x-auto p-4">
+      <table className="min-w-full border-collapse text-center">
+        <thead>
+          <tr className="bg-gray-700 text-white">
+            <th className="border px-2 py-1">No</th>
+            <th className="border px-2 py-1">Category</th>
+            <th className="border px-2 py-1">Image</th>
+            <th className="border px-2 py-1">Product Name</th>
+            <th className="border px-2 py-1">Company/Brand</th>
+            <th className="border px-2 py-1">Model</th>
+            <th className="border px-2 py-1">Variant</th>
+            <th className="border px-2 py-1">SKU</th>
+            <th className="border px-2 py-1">UoM</th>
+            <th className="border px-2 py-1">Qty</th>
+            <th className="border px-2 py-1">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {groupedProducts.map((product, index) => (
+            <tr key={product.id}>
+              <td className="border px-2 py-1">{String(index + 1).padStart(2, '0')}</td>
+
+              {rowSpanMap[product.category + index] > 0 && (
+                <td
+                  className="border px-2 py-1"
+                  rowSpan={rowSpanMap[product.category + index]}
+                >
+                  {product.category}
                 </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              )}
+
+              <td className="border px-2 py-1">
+                <div className="flex justify-center">
+                  <img
+                    src={product.image}
+                    alt="Product"
+                    className="w-6 h-6 bg-blue-200 p-1 rounded"
+                  />
+                </div>
+              </td>
+              <td className="border px-2 py-1">{product.productName}</td>
+              <td className="border px-2 py-1">{product.company}</td>
+              <td className="border px-2 py-1">{product.model}</td>
+              <td className="border px-2 py-1">{product.variant}</td>
+              <td className="border px-2 py-1">{product.sku}</td>
+              <td className="border px-2 py-1">{product.uom}</td>
+              <td className="border px-2 py-1">{String(product.qty).padStart(2, '0')}</td>
+              <td className="border px-2 py-1">{product.amount}</td>
+            </tr>
+          ))}
+
+          <tr className="bg-gray-700 text-white font-bold">
+            <td className="border px-2 py-1">
+              {String(products.length).padStart(2, '0')}
+            </td>
+            <td className="border px-2 py-1" colSpan={8}>
+            </td>
+            <td className="border px-2 py-1">
+              {String(totalQty).padStart(2, '0')}
+            </td>
+            <td className="border px-2 py-1">Submit</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default OrderDetailTable;
+export default ProductTable;

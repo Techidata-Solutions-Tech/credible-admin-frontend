@@ -1,43 +1,43 @@
-import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
-import SellerPaymentTable from '../../components/transaction/SellerPaymentTable'
 import PillTabs from '../../components/PillTabs'
 import Breadcrumbs from '../../components/Breadcrumbs'
+import SupplierPaymentTable from '../../components/transaction/SupplTable'
 
 const SupplierPayment = () => {
-    const tabs_user = [
-        { id: 1, label: 'All (1000)' },
-        { id: 2, label: 'Active (800)' },
-        { id: 3, label: 'Inactive (100)' },
-        { id: 4, label: 'Blocked (100)' },
-        { id: 5, label: 'Tash (10)' },
-    ];
-    const breadcrumbItems = [
-        { label: 'Transaction Management', href: '#' },
-        { label: 'Payments', href: '#' },
-        { label: 'Seller Payment', href: '/admin/marketing/create-coupon' }
+  const breadcrumbItems = [
+    { label: 'Transaction Management', href: '#' },
+    { label: 'Payments', href: '#' },
+    { label: 'Supplier Payment', href: '/admin/marketing/create-coupon' }
+  ];
+  
+      const topOptions = [
+        { id:1 ,label: "Verification Completed (72)" },
+        { id:2 ,label: "Payable Amount (72)" },
+        { id:3,label: "Verification Pending (72)" },
+        { id:4,label: "Payable Amount (72)" },
       ];
-     
+    
+      const bottomOptions = [
+        { id:1 ,label: "No. of Paid (72)" },
+        { id:2 ,label: "Paid Amount (72)" },
+        { id:3 ,label: "No. of Dues (72)" },
+        { id:4 ,label: "Due Amount (72)" },
+      ];
         return (
           <div className=" p-4">
              <Breadcrumbs
-                  pageTitle="Seller Payment"
+                  pageTitle="Supplier Payment"
                   items={breadcrumbItems}
                 />   
                 
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
-                    <div className="w-full mb-6">
-                        <div className="max-w-full px-2 md:px-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
-                                <div className="w-full overflow-x-auto scrollbar-hide py-2">
-                                    <div className="min-w-full flex justify-center">
-                                        <PillTabs tabs={tabs_user} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="space-y-3">
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+    <PillTabs tabs={topOptions} />
+  </div>
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+    <PillTabs tabs={bottomOptions} />
+  </div>
+</div>
 
                    <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
                             <div className='w-full md:w-auto'>
@@ -72,7 +72,7 @@ const SupplierPayment = () => {
                             </div>
                         </div>
 <div className="max-w-full">
-                        <SellerPaymentTable/></div>
+                        <SupplierPaymentTable/></div>
 
                    
                 </div>

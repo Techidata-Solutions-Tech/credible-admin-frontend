@@ -32,6 +32,10 @@ import Inventory from '../supplier/pages/Inventory/ManageInventory'
 import ShippingManagement from '../supplier/pages/shipping/ShippingManagement'
 import ManageReturns from '../supplier/pages/return/ManageReturns'
 import ReturnDetails from '../supplier/pages/return/ReturnDetails'
+import Notification from '../supplier/pages/notification/Notification'
+import InvoiceMatching from '../supplier/pages/Inventory/InvoiceMatching'
+import GoodsRecievedNote from '../supplier/pages/Inventory/GoodsRecievedNote'
+import InvoiceMatchingDetails from '../supplier/pages/Inventory/InvoiceMatchingDetails'
 const SupplierRoutes = () => {
   return (
 <SupplierProtectWrapper>
@@ -63,7 +67,12 @@ const SupplierRoutes = () => {
         <Route path='/transaction' element={ <SupplierTransaction/>}/>
         <Route path='/tax' element={ <SupplierTax/>}/>
         <Route path='/inventory' element={ <Inventory/>}/>
+        <Route path='/manage-invoice-matching' element={ <InvoiceMatching/>}/>
+        <Route path='/manage-invoice-matching/:id' element={ <InvoiceMatchingDetails/>}/>
+        <Route path='/manage-goods-received-note' element={ <GoodsRecievedNote/>}/>
+        <Route path='/manage-goods-received-note/:id' element={ <GoodsRecievedNote/>}/>
         <Route path='/shipping' element={ <ShippingManagement/>}/>
+        <Route path='/notification' element={ <Notification/>}/>
         <Route path='/returns' element={ <ManageReturns/>}/>
         <Route path='/returns/:id' element={ <ReturnDetails/>}/>
       </Routes>
