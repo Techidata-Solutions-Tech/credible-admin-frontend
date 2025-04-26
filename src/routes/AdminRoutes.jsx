@@ -78,6 +78,10 @@ import ManageSaleReturn from '../admin/pages/branch/ManageSaleReturn'
 import Verification from '../admin/pages/branch/Verification'
 import SalesOrders from '../admin/pages/branch/SalesOrders'
 import PurchaseOrderCreation from '../admin/pages/orders/CreateOrder'
+import ManageReturn from '../admin/pages/returns/ManageReturns'
+import ViewMerchantSupplier from '../admin/pages/merchant/ViewMerchantSupplier'
+import ViewMerchantSeller from '../admin/pages/merchant/ViewMerchantSeller'
+import ShippingInwardDetail from '../admin/pages/shipping/InwardDetail'
 const AdminRoutes = () => {
   return (
    <AdminLayout>
@@ -108,7 +112,9 @@ const AdminRoutes = () => {
           <Route path='/approval/product/supplier' element={ <AdminProtectWrapper><ProductSupplierApproval/></AdminProtectWrapper>}/>
           {/* merchent */}
           <Route path='/merchent/seller' element={ <AdminProtectWrapper><MerchantSeller/></AdminProtectWrapper>}/>
+          <Route path='/merchent/seller/:id' element={ <AdminProtectWrapper><ViewMerchantSeller/></AdminProtectWrapper>}/>
           <Route path='/merchent/supplier' element={ <AdminProtectWrapper><MerchantSupplier/></AdminProtectWrapper>}/>
+          <Route path='/merchent/supplier/:id' element={ <AdminProtectWrapper><ViewMerchantSupplier/></AdminProtectWrapper>}/>
           {/* orders */}
           <Route path='/create-order' element={ <AdminProtectWrapper><PurchaseOrderCreation/></AdminProtectWrapper>}/>
           <Route path='/orders' element={ <AdminProtectWrapper><Orders/></AdminProtectWrapper>}/>
@@ -122,7 +128,8 @@ const AdminRoutes = () => {
           <Route path='/warehouse/sales-orders' element={ <AdminProtectWrapper><SalesOrders/></AdminProtectWrapper>}/>
           <Route path='/warehouse/branchwise-inventory' element={ <AdminProtectWrapper><BranchWiseInventory/></AdminProtectWrapper>}/>
           {/* return  */}
-          <Route path='/returns/' element={ <AdminProtectWrapper><Returns/></AdminProtectWrapper>}/>
+          <Route path='/returns' element={ <AdminProtectWrapper><ManageReturn/></AdminProtectWrapper>}/>
+          <Route path='/returns/:id' element={ <AdminProtectWrapper><Returns/></AdminProtectWrapper>}/>
           <Route path='/returns/sale-verify' element={ <AdminProtectWrapper><SaleVerifyReturns/></AdminProtectWrapper>}/>
           {/* products */}
           <Route path='/product' element={ <AdminProtectWrapper><Product/></AdminProtectWrapper>}/>
@@ -154,12 +161,13 @@ const AdminRoutes = () => {
           <Route path='/marketing/referral-coupon' element={ <AdminProtectWrapper><ReferralCode/></AdminProtectWrapper>}/>
           {/* shipping  */}
           <Route path='/shipping/inward' element={ <AdminProtectWrapper><ShippingInward/></AdminProtectWrapper>}/>
+          <Route path='/shipping/inward/:id' element={ <AdminProtectWrapper><ShippingInwardDetail/></AdminProtectWrapper>}/>
           <Route path='/shipping/outward' element={ <AdminProtectWrapper><ShippingOutward/></AdminProtectWrapper>}/>
           {/* tansaction */}
           <Route path='/tansaction/sale' element={ <AdminProtectWrapper><TransactionSale/></AdminProtectWrapper>}/>
           <Route path='/tansaction/purchase' element={ <AdminProtectWrapper><TransactionPurchase/></AdminProtectWrapper>}/>
-          <Route path='/tansaction/supplier' element={ <AdminProtectWrapper><SellerPayment/></AdminProtectWrapper>}/>
-          <Route path='/tansaction/seller' element={ <AdminProtectWrapper><SupplierPayment/></AdminProtectWrapper>}/>
+          <Route path='/tansaction/seller' element={ <AdminProtectWrapper><SellerPayment/></AdminProtectWrapper>}/>
+          <Route path='/tansaction/supplier' element={ <AdminProtectWrapper><SupplierPayment/></AdminProtectWrapper>}/>
           {/* inventory */}
           <Route path='/inventory/branch' element={ <AdminProtectWrapper><InventoryManagementBranch/></AdminProtectWrapper>}/>
           <Route path='/inventory/dead-stock' element={ <AdminProtectWrapper><InventoryManagementDeadStock/></AdminProtectWrapper>}/>

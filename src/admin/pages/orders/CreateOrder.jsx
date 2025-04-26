@@ -74,10 +74,10 @@ const PurchaseOrderCreation = () => {
   const fetchProducts = async (page = 0) => {
     try {
       setLoading(true);
-      const response = await api.get(`https://credible-api.techidata.com/api/admin/product?limit=2&page=0`);
-      // const response = await api.get(`https://credible-api.techidata.com/v2/api/supplierSeller/get-product-list-by-supplier-seller?added_by=supplier&added_by_id=${formData.supplier_id}`);
-      setProducts(response.data.data || []);
-      // setProducts(response.data.products || []);
+      // const response = await api.get(`https://credible-api.techidata.com/api/admin/product?limit=100000&page=0`);
+      const response = await api.get(`https://credible-api.techidata.com/v2/api/supplierSeller/get-product-list-by-supplier-seller?added_by=supplier&added_by_id=${formData.supplier_id}`);
+      // setProducts(response.data.data || []);
+      setProducts(response.data.products || []);
       setPagination({
         page: response.data.pagination.page,
         limit: response.data.pagination.limit,
@@ -178,60 +178,79 @@ const PurchaseOrderCreation = () => {
     }
   };
 
-const submitStep2 = async (e) => {
-  e.preventDefault();
-  if (formData.product_list.length === 0) {
-    toast.error('Please select at least one product');
-    return;
-  }
-
-  try {
-    setLoading(true);
-    const payload = {
-      step: 2,
-      id: orderId,
-      product_list: formData.product_list
-    };
-
-    const response = await api.post('https://credible-api.techidata.com/v2/api/supplierSeller/create-purchase-order', payload);
-    
-    if (response.data && response.data.message === "Step 2 saved successfully") {
-      const receivedOrderDetails = response.data.data.order_detail || [];
-      setOrderDetailsFromStep2(receivedOrderDetails);
-      
-      setFormData(prev => ({
-        ...prev,
-        order_detail: receivedOrderDetails.length > 0 
-          ? receivedOrderDetails.map(item => ({
-              product_id: item.product_id || "",
-              product_name: item.product_name || "",
-              product_variant: item.product_variant || "",
-              product_qty: item.product_qty || 1,
-              product_price: item.product_price || 0,
-              product_image: item.product_image || ""
-            }))
-          : formData.product_list.map(productId => ({
-              product_id: productId,
-              product_name: "",
-              product_variant: "",
-              product_qty: 1,
-              product_price: 0,
-              product_image: ""
-            }))
-      }));
-      
-      toast.success('Products added to order! Please fill in product details.');
-      setStep(3);
-    } else {
-      throw new Error('Invalid response from server');
+  const submitStep2 = async (e) => {
+    e.preventDefault();
+    if (formData.product_list.length === 0) {
+      toast.error('Please select at least one product');
+      return;
     }
-  } catch (error) {
-    toast.error('Failed to add products to order');
-    console.error('Error adding products:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  
+    try {
+      setLoading(true);
+      const payload = {
+        step: 2,
+        id: orderId,
+        product_list: formData.product_list
+      };
+  
+      // First submit the selected products
+      const response = await api.post('https://credible-api.techidata.com/v2/api/supplierSeller/create-purchase-order', payload);
+      
+      if (response.data && response.data.message === "Step 2 saved successfully") {
+        // Then fetch the variants for these products
+        const variantsResponse = await api.post(
+          'https://credible-api.techidata.com/v2/api/supplierSeller/get-products-with-variants-order-list',
+          { productIds: formData.product_list.map(id => parseInt(id)) }
+        );
+  
+        const productsWithVariants = variantsResponse.data.data || [];
+  
+        // Prepare order details with variants
+        const orderDetails = productsWithVariants.flatMap(product => {
+          const baseProduct = {
+            product_id: product.id,
+            product_name: product.product_name,
+            product_image: product.images?.[0] || "",
+            product_price: product.purchase_price || 0
+          };
+  
+          if (product.__productVariants__ && product.__productVariants__.length > 0) {
+            return product.__productVariants__.map(variant => ({
+              ...baseProduct,
+              variant_id: variant.id,
+              product_variant: variant.combinations,
+              product_qty: 1, // Default quantity
+              variant_price: variant.price,
+              variant_mrp: variant.mrp,
+              variant_sku: variant.skuId
+            }));
+          } else {
+            // If no variants, just add the base product
+            return [{
+              ...baseProduct,
+              product_qty: 1,
+              product_variant: ""
+            }];
+          }
+        });
+  
+        setFormData(prev => ({
+          ...prev,
+          order_detail: orderDetails
+        }));
+        
+        toast.success('Products added to order! Please fill in product details.');
+        setStep(3);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      toast.error('Failed to add products to order');
+      console.error('Error adding products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const submitStep3 = async (e) => {
     e.preventDefault();
@@ -299,7 +318,14 @@ const submitStep2 = async (e) => {
   const selectedProducts = productOptions.filter(option => 
     formData.product_list.includes(option.value)
   );
-
+  const supplierOptions = suppliers.map(supplier => ({
+    value: supplier.supplier_id,
+    label: supplier.promotor_name || supplier.company_name || `Supplier ${supplier.supplier_id}`,
+  }));
+  const warehouseOptions = warehouses.map(warehouse => ({
+    value: warehouse.id,
+    label: `${warehouse.name} (${warehouse.city}, ${warehouse.state})`,
+  }));
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <ToastContainer position="top-right" autoClose={5000} />
@@ -348,42 +374,40 @@ const submitStep2 = async (e) => {
                   <label htmlFor="supplier_id" className="block text-sm font-medium text-gray-700">
                     Supplier <span className="text-red-500">*</span>
                   </label>
-                  <select
+                  <Select
                     id="supplier_id"
                     name="supplier_id"
-                    value={formData.supplier_id}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
-                    required
-                  >
-                    <option value="">Select a supplier</option>
-                    {suppliers.map(supplier => (
-                      <option key={supplier.supplier_id} value={supplier.supplier_id}>
-                        {supplier.company_name || supplier.promoter_name || `Supplier ${supplier.supplier_id}`}
-                      </option>
-                    ))}
-                  </select>
+                    value={supplierOptions.find(option => option.value === formData.supplier_id)}
+                    onChange={selectedOption =>
+                      handleInputChange({
+                        target: { name: 'supplier_id', value: selectedOption?.value || '' }
+                      })
+                    }
+                    options={supplierOptions}
+                    placeholder="Select a supplier..."
+                    className="react-select-container"
+                    classNamePrefix="react-select"
+                  />
                 </div>
 
                 <div>
                   <label htmlFor="warehouse_id" className="block text-sm font-medium text-gray-700">
                     Warehouse <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    id="warehouse_id"
-                    name="warehouse_id"
-                    value={formData.warehouse_id}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md border"
-                    required
-                  >
-                    <option value="">Select a warehouse</option>
-                    {warehouses.map(warehouse => (
-                      <option key={warehouse.id} value={warehouse.id}>
-                        {warehouse.name} ({warehouse.city}, {warehouse.state})
-                      </option>
-                    ))}
-                  </select>
+                    <Select
+                      id="warehouse_id"
+                      name="warehouse_id"
+                      value={warehouseOptions.find(option => option.value === formData.warehouse_id)}
+                      onChange={selectedOption =>
+                        handleInputChange({
+                          target: { name: 'warehouse_id', value: selectedOption?.value || '' }
+                        })
+                      }
+                      options={warehouseOptions}
+                      placeholder="Select a warehouse..."
+                      className="react-select-container"
+                      classNamePrefix="react-select"
+                    />
                 </div>
 
                 <div>
@@ -492,128 +516,143 @@ const submitStep2 = async (e) => {
             </form>
           )}
 
-          {step === 3 && (
-            <form onSubmit={submitStep3}>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Enter Product Details</h3>
+{step === 3 && (
+  <form onSubmit={submitStep3}>
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium text-gray-900 mb-4">Enter Product Details</h3>
+        
+        {formData.order_detail.length > 0 ? (
+          <div className="space-y-4">
+            {formData.order_detail.map((item, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-md border border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Product Name
+                    </label>
+                    <p className="text-sm text-gray-900">{item.product_name}</p>
+                  </div>
                   
-                  {formData.order_detail.length > 0 ? (
-                    <div className="space-y-4">
-                      {formData.order_detail.map((item, index) => (
-                        <div key={index} className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Product ID {item.product_id}
-                              </label>
-                                                          
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Product Name {item.product_name}
-                              </label>
-                            
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Variant/Description {item.product_variant}
-                              </label>
-                             
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Quantity <span className="text-red-500">*</span>
-                              </label>
-                              <div className="flex items-center border border-gray-300 rounded-md">
-                                <button
-                                  type="button"
-                                  onClick={() => updateProductQuantity(index, item.product_qty - 1)}
-                                  className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                  aria-label="Decrease quantity"
-                                >
-                                  <FaMinus className="h-3 w-3" />
-                                </button>
-                                <input
-                                  type="number"
-                                  min="1"
-                                  value={item.product_qty}
-                                  onChange={(e) => updateProductQuantity(index, parseInt(e.target.value) || 1)}
-                                  className="w-full py-2 px-2 text-center border-0 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                  required
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => updateProductQuantity(index, item.product_qty + 1)}
-                                  className="px-2 py-1 text-gray-600 hover:bg-gray-100"
-                                  aria-label="Increase quantity"
-                                >
-                                  <FaPlus className="h-3 w-3" />
-                                </button>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Price {item.product_price}
-                              </label>
-                              
-                              
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Image URL
-                              </label>
-                              <img
-                                src={item.product_image}
-                                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex justify-end">
-                            <button
-                              type="button"
-                              onClick={() => removeProduct(index)}
-                              className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
-                            >
-                              <FaTrash className="mr-1 h-3 w-3" /> Remove
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                      
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <p className="text-right font-medium text-gray-700">
-                          Total: ₹{formData.order_detail.reduce((sum, item) => sum + (item.product_price * item.product_qty), 0)}
-                        </p>
-                      </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Variant
+                    </label>
+                    <p className="text-sm text-gray-900">{item.product_variant || "No variant"}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Price
+                    </label>
+                    <p className="text-sm text-gray-900">₹{item.variant_price || item.product_price}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      MRP
+                    </label>
+                    <p className="text-sm text-gray-900">₹{item.variant_mrp || item.product_price}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SKU
+                    </label>
+                    <p className="text-sm text-gray-900">{item.variant_sku || "N/A"}</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Quantity <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex items-center border border-gray-300 rounded-md">
+                      <button
+                        type="button"
+                        onClick={() => updateProductQuantity(index, item.product_qty - 1)}
+                        className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                        aria-label="Decrease quantity"
+                      >
+                        <FaMinus className="h-3 w-3" />
+                      </button>
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.product_qty}
+                        onChange={(e) => updateProductQuantity(index, parseInt(e.target.value) || 1)}
+                        className="w-full py-2 px-2 text-center border-0 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        required
+                      />
+                      <button
+                        type="button"
+                        onClick={() => updateProductQuantity(index, item.product_qty + 1)}
+                        className="px-2 py-1 text-gray-600 hover:bg-gray-100"
+                        aria-label="Increase quantity"
+                      >
+                        <FaPlus className="h-3 w-3" />
+                      </button>
                     </div>
-                  ) : (
-                    <div className="bg-yellow-50 p-4 rounded-md text-yellow-700">
-                      No product details available. Please go back and select products.
+                  </div>
+                  
+                  {item.product_image && (
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Product Image
+                      </label>
+                      <img
+                        src={item.product_image}
+                        alt={item.product_name}
+                        className="h-24 object-contain"
+                      />
                     </div>
                   )}
                 </div>
-
-                <div className="flex justify-between">
+                
+                <div className="flex justify-end">
                   <button
                     type="button"
-                    onClick={() => setStep(2)}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                    disabled={loading}
+                    onClick={() => removeProduct(index)}
+                    className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center"
                   >
-                    <FaArrowLeft className="mr-2 h-4 w-4" /> Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-                    disabled={loading || formData.order_detail.length === 0}
-                  >
-                    Complete Order <FaCheckCircle className="ml-2 h-4 w-4" />
+                    <FaTrash className="mr-1 h-3 w-3" /> Remove
                   </button>
                 </div>
               </div>
-            </form>
-          )}
+            ))}
+            
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="text-right font-medium text-gray-700">
+                Total: ₹{formData.order_detail.reduce((sum, item) => 
+                  sum + ((item.variant_price || item.product_price) * item.product_qty), 0)}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-yellow-50 p-4 rounded-md text-yellow-700">
+            No product details available. Please go back and select products.
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-between">
+        <button
+          type="button"
+          onClick={() => setStep(2)}
+          className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          <FaArrowLeft className="mr-2 h-4 w-4" /> Back
+        </button>
+        <button
+          type="submit"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+          disabled={formData.order_detail.length === 0}
+        >
+          Complete Order <FaCheckCircle className="ml-2 h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  </form>
+)}
         </div>
       </div>
     </div>

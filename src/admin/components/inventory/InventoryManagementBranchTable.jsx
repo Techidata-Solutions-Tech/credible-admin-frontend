@@ -19,7 +19,8 @@ const InventoryManagementBranchTable = () => {
       readyToShip: 120,
       returnedStock: 10,
       soldQty: 20,
-      stockValue: 450000,
+      stocksOnHand:100,
+      stockValue: 450000.00,
       branchId: 'BR001',
       updateDate: '2025-02-12',
     },
@@ -36,7 +37,8 @@ const InventoryManagementBranchTable = () => {
       readyToShip: 70,
       returnedStock: 5,
       soldQty: 5,
-      stockValue: 120000,
+      stocksOnHand:100,
+      stockValue: 120000.00,
       branchId: 'BR002',
       updateDate: '2025-02-10',
     },
@@ -53,7 +55,8 @@ const InventoryManagementBranchTable = () => {
       readyToShip: 180,
       returnedStock: 10,
       soldQty: 20,
-      stockValue: 160000,
+      stocksOnHand:100,
+      stockValue: 160000.00,
       branchId: 'BR003',
       updateDate: '2025-02-08',
     },
@@ -75,7 +78,7 @@ const InventoryManagementBranchTable = () => {
           <table className="min-w-full table-auto mb-10">
             <thead className="bg-gray-200">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Product Name</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company / Brand</th>
@@ -87,6 +90,7 @@ const InventoryManagementBranchTable = () => {
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ready to Ship</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Returned Stock</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sold Qty</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stocks On Hand</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock Value</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Branch ID</th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Update Date</th>
@@ -94,9 +98,9 @@ const InventoryManagementBranchTable = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentRecords.map((item) => (
+              {currentRecords.map((item, index) => (
                 <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{index + 1}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.category}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.productName}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.companyBrand}</td>
@@ -108,7 +112,8 @@ const InventoryManagementBranchTable = () => {
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.readyToShip}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.returnedStock}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.soldQty}</td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">${item.stockValue}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stocksOnHand}</td>
+                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.stockValue}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.branchId}</td>
                   <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.updateDate}</td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">

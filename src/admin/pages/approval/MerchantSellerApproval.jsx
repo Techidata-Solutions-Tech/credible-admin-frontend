@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
 import MerchantSellerApprovalTable from '../../components/approval/MerchantSellerApprovalTable'
 import PillTabs from '../../components/PillTabs'
 import Breadcrumbs from '../../components/Breadcrumbs'
 
 const MerchantSellerApproval = () => {
     const tabs_user = [
-        { id: 1, label: 'All (1000)' },
-        { id: 2, label: 'Active (800)' },
-        { id: 3, label: 'Inactive (100)' },
-        { id: 4, label: 'Blocked (100)' },
-        { id: 5, label: 'Tash (10)' },
-    ];
+        { id: 1, label: "Inward (100)" },
+        { id: 2, label: "Approved (100)" },
+        { id: 3, label: "Pending (100)" },
+        { id: 4, label: "Holding (100)" },
+        { id: 5, label: "Rejected (100)" },
+        // { id: "banned", label: "Banned (100)" },
+        // { id: "active", label: "Active (100)" },
+      ];
     const breadcrumbItems = [
         { label: 'Approval Management', href: '#' },
         { label: 'Merchant', href: '#' },

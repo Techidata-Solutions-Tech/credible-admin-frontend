@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import Navbar from '../../components/Navbar'
-import Sidebar from '../../components/Sidebar'
 import MerchantSellerTable from '../../components/merchant/MerchantSellerTable'
 import PillTabs from '../../components/PillTabs'
 import Breadcrumbs from '../../components/Breadcrumbs'
@@ -25,8 +23,9 @@ const MerchantSeller = () => {
                   pageTitle="Manage Seller"
                   items={breadcrumbItems}
                 /> 
+                
                 <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
-                    <div className="w-full mb-6">
+                    {/* <div className="w-full mb-6">
                         <div className="max-w-full px-2 md:px-4">
                             <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
                                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
@@ -36,7 +35,7 @@ const MerchantSeller = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                    <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
                             <div className='w-full md:w-auto'>
@@ -71,8 +70,9 @@ const MerchantSeller = () => {
                             </div>
                         </div>
 
-                    <MerchantSellerTable />
+                    <MerchantSellerTable/>
 
+                   
                 </div>
         </div>
     )

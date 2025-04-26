@@ -228,20 +228,37 @@ const UserTable = () => {
           />
           
           {/* Status Tabs */}
-          <div className="mb-4">
-            <div className="flex border-b">
-              {tabs.map(tab => (
-                <button
-                  key={tab.id}
-                  className={`px-4 py-2 font-medium text-sm ${activeTab === tab.id ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-500'}`}
-                  onClick={() => handleTabChange(tab.id)}
-                >
-                  {tab.label}
-                </button>
-              ))}
+          <div className="w-full mb-6">
+            <div className="max-w-full px-2 md:px-4">
+              <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
+                <div className="w-full overflow-x-auto scrollbar-hide py-2">
+                  <div className="min-w-full flex justify-center">
+                    <div className=" bg-gray-100 p-4 rounded-full shadow-sm">
+                      <div className="flex items-center justify-center gap-2">
+                        {tabs.map((tab) => (
+                          <button
+                            key={tab.id}
+                            onClick={() => handleTabChange(tab.id)}
+                            className={`flex flex-col items-center justify-center gap-2
+              px-4 py-2 font-medium text-sm border rounded-md transition-colors shadow-sm
+              ${
+                activeTab === tab.id
+                  ? "border-blue-500 text-blue-600 border-b-2 bg-white"
+                  : "border-gray-300 text-gray-600 bg-white hover:bg-gray-50"
+              }
+            `}
+                          >
+                            <span className="text-sm font-medium text-gray-600">{tab.label}</span>
+                            <span className="text-xs font-bold">{100}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-             
+          </div> 
           <FilterSearchSort
             filterOptions={filterOptions}
             sortOptions={sortOptions}

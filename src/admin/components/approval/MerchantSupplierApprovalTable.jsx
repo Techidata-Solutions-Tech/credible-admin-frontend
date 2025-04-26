@@ -1,220 +1,857 @@
-import React, { useState } from 'react';
-import { BsThreeDots } from "react-icons/bs";
-import Pagination from '../Pagination';
+import React, { useState, useEffect } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import Pagination from "../../components/Pagination";
 
-const MerchantSupplierApprovalTable = () => {
-  const [selectedSellerId, setSelectedSellerId] = useState(null);
+const UserTable = () => {
+  const [filter, setFilter] = useState("");
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
+  const [activeTab, setActiveTab] = useState("pending");
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage, setRecordsPerPage] = useState(5);
-
-  const supplierData = [
-    {
-      id: 'M001',
-      sellerId: 'SELL123',
-      entityType: 'Manufacturer',
-      companyName: 'ABC Industries',
-      contactPerson: 'John Doe',
-      phone: '1234567890',
-      email: 'contact@abcindustries.com',
-      location: 'New York, NY',
-      status: 1,  // Active
-    },
-    {
-      id: 'M002',
-      sellerId: 'SELL456',
-      entityType: 'Distributor',
-      companyName: 'XYZ Supplies',
-      contactPerson: 'Jane Smith',
-      phone: '9876543210',
-      email: 'info@xyzsupplies.com',
-      location: 'Los Angeles, CA',
-      status: 0,  // Inactive
-    },
-    {
-      id: 'M003',
-      sellerId: 'SELL789',
-      entityType: 'Retailer',
-      companyName: 'PQR Traders',
-      contactPerson: 'Alice Johnson',
-      phone: '5556667777',
-      email: 'support@pqrtraders.com',
-      location: 'Chicago, IL',
-      status: 3,  // Blocked
-    },
-    {
-      id: 'M004',
-      sellerId: 'SELL101',
-      entityType: 'Wholesaler',
-      companyName: 'Global Merchants',
-      contactPerson: 'Robert Brown',
-      phone: '1112223333',
-      email: 'sales@globalmerchants.com',
-      location: 'Houston, TX',
-      status: 1,  // Active
-    },
-    {
-      id: 'M005',
-      sellerId: 'SELL202',
-      entityType: 'Manufacturer',
-      companyName: 'Tech Solutions',
-      contactPerson: 'Michael Green',
-      phone: '4445556666',
-      email: 'info@techsolutions.com',
-      location: 'San Francisco, CA',
-      status: 2,  // Pending Approval
-    },
-    {
-      id: 'M006',
-      sellerId: 'SELL303',
-      entityType: 'Distributor',
-      companyName: 'Quality Products',
-      contactPerson: 'Sarah Wilson',
-      phone: '7778889999',
-      email: 'contact@qualityproducts.com',
-      location: 'Miami, FL',
-      status: 1,  // Active
-    },
-    {
-      id: 'M007',
-      sellerId: 'SELL404',
-      entityType: 'Retailer',
-      companyName: 'Best Deals',
-      contactPerson: 'David Taylor',
-      phone: '2223334444',
-      email: 'support@bestdeals.com',
-      location: 'Seattle, WA',
-      status: 1,  // Active
-    },
-    {
-      id: 'M008',
-      sellerId: 'SELL505',
-      entityType: 'Manufacturer',
-      companyName: 'Premium Brands',
-      contactPerson: 'Emily Clark',
-      phone: '6667778888',
-      email: 'info@premiumbrands.com',
-      location: 'Boston, MA',
-      status: 0,  // Inactive
-    },
-    {
-      id: 'M009',
-      sellerId: 'SELL606',
-      entityType: 'Wholesaler',
-      companyName: 'Bulk Suppliers',
-      contactPerson: 'James White',
-      phone: '9990001111',
-      email: 'sales@bulksuppliers.com',
-      location: 'Denver, CO',
-      status: 1,  // Active
-    },
-    {
-      id: 'M010',
-      sellerId: 'SELL707',
-      entityType: 'Distributor',
-      companyName: 'Fast Delivery',
-      contactPerson: 'Lisa Harris',
-      phone: '3334445555',
-      email: 'contact@fastdelivery.com',
-      location: 'Atlanta, GA',
-      status: 2,  // Pending Approval
-    },
+  const tabs = [
+    { id: "inward", label: "Inward" },
+    { id: "approved", label: "Approved" },
+    { id: "pending", label: "Pending" },
+    { id: "holding", label: "Holding" },
+    { id: "rejected", label: "Rejected" },
+    // { id: "banned", label: "Banned" },
+    // { id: "active", label: "Active" },
   ];
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = supplierData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const registrationTabs = [
+    { id: "pending", label: "Pending" },
+    { id: "approved", label: "Approved" },
+    { id: "rejected", label: "Rejected" },
+  ];
 
-  const statusLabels = {
-    1: 'Active',
-    0: 'Inactive',
-    2: 'Pending Approval',
-    3: 'Blocked',
+  const handleFilterChange = (value) => setFilter(value);
+  const handleSearchChange = (value) => setSearch(value);
+  const handleSortChange = (value) => setSort(value);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    fetchAllUsers(tab);
   };
 
-  const statusColors = {
-    1: 'text-green-500',
-    0: 'text-red-500',
-    2: 'text-yellow-500',
-    3: 'text-gray-500',
+  const token = localStorage.getItem("token");
+  const [allUsers, setAllUsers] = useState([]);
+  const [displayUsers, setDisplayUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(20);
+  const [userDetails, setUserDetails] = useState(null);
+  const [statusForm, setStatusForm] = useState({
+    active_status: "active",
+    account_remark: "",
+  });
+  const [registrationForm, setRegistrationForm] = useState({
+    registration_status: "approved",
+    account_remark: "",
+  });
+
+  useEffect(() => {
+    fetchAllUsers(activeTab);
+  }, []);
+
+  useEffect(() => {
+    paginateUsers();
+  }, [allUsers, currentPage, recordsPerPage]);
+
+  const fetchAllUsers = async (status = "pending") => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BASE_URL_V2
+        }/api/supplierSeller/all-supplier-list?active_status=${status}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      const filteredUsers = data?.data || [];
+      setAllUsers(filteredUsers);
+    } catch (error) {
+      toast.error("Failed to fetch users");
+    }
   };
 
-  const handleEdit = (id) => {
-    setSelectedSellerId(id);
-    document.getElementById('my_modal_edit').showModal();
+  const fetchUserDetails = async (userId) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BASE_URL_V2
+        }/api/supplierSeller/single-supplier-info/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch user details");
+      }
+      const data = await response.json();
+      setUserDetails(data.data);
+    } catch (error) {
+      toast.error("Failed to fetch user details");
+    }
   };
 
-  const handleDelete = (id) => {
-    setSelectedSellerId(id);
-    document.getElementById('my_modal_delete').showModal();
+  const changeActiveStatus = async (userId) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BASE_URL_V2
+        }/api/supplierSeller/change-supplier-active-status/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(statusForm),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+      toast.success("Status updated successfully");
+      setIsStatusModalOpen(false);
+      fetchAllUsers(activeTab);
+    } catch (error) {
+      toast.error("Failed to update status");
+    }
   };
 
-  const handleStatusChange = (id) => {
-    setSelectedSellerId(id);
-    document.getElementById('my_modal_status').showModal();
+  const changeRegistrationStatus = async (userId) => {
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_BASE_URL_V2
+        }/api/supplierSeller/change-supplier-registration-status/${userId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(registrationForm),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update registration status");
+      }
+      toast.success("Registration status updated successfully");
+      setIsRegistrationModalOpen(false);
+      fetchAllUsers(activeTab);
+    } catch (error) {
+      toast.error("Failed to update registration status");
+    }
   };
 
-  const handlePageChange = (page, perPage) => {
-    setCurrentPage(page);
+  const paginateUsers = () => {
+    const startIndex = (currentPage - 1) * recordsPerPage;
+    const endIndex = startIndex + recordsPerPage;
+    setDisplayUsers(allUsers.slice(startIndex, endIndex));
+  };
+
+  const handlePageChange = (newPage, perPage) => {
+    setCurrentPage(newPage);
     setRecordsPerPage(perPage);
   };
 
-  return (<>
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-      <table className="w-full table-auto mb-4 min-w-[900px]">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entity Type</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company Name</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact Person</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {currentRecords?.map((supplier, i) => (
-            <tr key={supplier.id} className="hover:bg-gray-50 border-b border-gray-300">
-              <td className="px-4 py-4 text-sm text-gray-900">{(currentPage - 1) * recordsPerPage + i + 1}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.sellerId}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.entityType}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.companyName}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.contactPerson}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.phone}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.email}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.location}</td>
-              <td className={`px-4 py-4 text-sm font-semibold ${statusColors[supplier.status]}`}>
-                {statusLabels[supplier.status]}
-              </td>
-              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
-                <div className="dropdown dropdown-bottom dropdown-end">
-                  <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                    <BsThreeDots className='mt-2 text-blue-500' size={28} />
-                  </button>
-                  <ul tabIndex={0} className="dropdown-content menu bg-white z-10 rounded-box w-52 shadow">
-                    <li><a href="#" onClick={() => handleEdit(supplier.id)}>Edit</a></li>
-                    <li><a href="#" onClick={() => handleDelete(supplier.id)}>Delete</a></li>
-                    <li><a href="#" onClick={() => handleStatusChange(supplier.id)}>Change Status</a></li>
-                  </ul>
+  const openModal = async (user) => {
+    setSelectedUser(user);
+    await fetchUserDetails(user.supplier_id);
+    setIsModalOpen(true);
+  };
+
+  const openStatusModal = (user) => {
+    setSelectedUser(user);
+    setStatusForm({
+      active_status: user.active_status || "active",
+      account_remark: user.account_remark || "",
+    });
+    setIsStatusModalOpen(true);
+  };
+
+  const openRegistrationModal = (user) => {
+    setSelectedUser(user);
+    setRegistrationForm({
+      registration_status: user.registration_status || "pending",
+      account_remark: user.account_remark || "",
+    });
+    setIsRegistrationModalOpen(true);
+  };
+
+  const handleStatusChange = (e) => {
+    setStatusForm({
+      ...statusForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleRegistrationChange = (e) => {
+    setRegistrationForm({
+      ...registrationForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  return (
+    <div className="min-h-screen">
+      <div className="flex flex-col md:flex-row bg-gray-100">
+        <div className="p-6 bg-gray-100 min-h-screen flex-1 overflow-x-auto">
+          <ToastContainer position="top-right" autoClose={3000} />
+
+          <div className="w-full mb-6">
+            <div className="max-w-full px-2 md:px-4">
+              <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
+                <div className="w-full overflow-x-auto scrollbar-hide py-2">
+                  <div className="min-w-full flex justify-center">
+                    <div className=" bg-gray-100 p-4 rounded-full shadow-sm">
+                      <div className="flex items-center justify-center gap-2">
+                        {tabs.map((tab) => (
+                         <button
+                         key={tab.id}
+                         onClick={() => handleTabChange(tab.id)}
+                         className={`flex flex-col items-center justify-center gap-2
+           px-4 py-2 font-medium text-sm border rounded-md transition-colors shadow-sm
+           ${
+             activeTab === tab.id
+               ? "border-blue-500 text-blue-600 border-b-2 bg-white"
+               : "border-gray-300 text-gray-600 bg-white hover:bg-gray-50"
+           }
+         `}
+                       >
+                         <span className="text-sm font-medium text-gray-600">{tab.label}</span>
+                         <span className="text-xs font-bold">{100}</span>
+                       </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg">
+          <div className="w-full md:w-auto">
+              <select className="select min-w-[150px] text-center  w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                <option disabled selected>
+                  Sort
+                </option>
+                <option>Homer</option>
+                <option>Marge</option>
+                <option>Bart</option>
+                <option>Lisa</option>
+                <option>Maggie</option>
+              </select>
+            </div>
+            {/* Search Input */}
+            <div className="flex-1 max-w-md">
+              <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                <svg
+                  className="w-4 h-4 text-blue-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+                <input
+                  type="text"
+                  className="grow text-blue-900 placeholder:text-center placeholder-blue-400"
+                  placeholder="Search customer..."
+                />
+              </label>
+            </div>
+            <div className="w-full md:w-auto">
+              <div className="dropdown">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base"
+                >
+                  Filter
+                </div>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white"
+                >
+                  <li>
+                    <label>
+                      <input type="checkbox" />
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" /> Checkbox Label
+                    </label>
+                  </li>
+                  <li>
+                    <label>
+                      <input type="checkbox" /> Checkbox Label
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+           
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full bg-white shadow-md rounded-lg overflow-auto">
+              <thead className="bg-gray-700 text-white">
+                <tr className="uppercase text-xs font-medium">
+                  <th className="px-4 py-3 text-left">
+                    <input type="checkbox" className="w-4 h-4" />
+                  </th>
+                  <th className="px-4 py-3 text-left">No</th>
+                  <th className="px-4 py-3 text-left">ID</th>
+                  <th className="px-4 py-3 text-left">Seller Id</th>
+                  <th className="px-4 py-3 text-left">Entity Type</th>
+                  <th className="px-4 py-3 text-left">Company Name</th>
+                  <th className="px-4 py-3 text-left">Contact Person</th>
+                  <th className="px-4 py-3 text-left">Phone Number</th>
+                  <th className="px-4 py-3 text-left">Email Id</th>
+                  <th className="px-4 py-3 text-left">Location</th>
+                  <th className="px-6 py-3 text-left">Status</th>
+                  <th className="px-6 py-3 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayUsers.map((user, i) => (
+                  <tr key={i} className="border-b text-center hover:bg-gray-50">
+                    <td className="p-3 border-r">
+                      <input type="checkbox" className="w-4 h-4" />
+                    </td>
+                    <td className="p-3 border-r">
+                      {(currentPage - 1) * recordsPerPage + (i + 1)}
+                    </td>
+                    <td className="p-3 border-r">{user.supplier_id}</td>
+                    <td className="p-3 border-r">
+                      {user.company_name || "N/A"}
+                    </td>
+                    <td className="p-3 border-r">{user.nature}</td>
+                    <td className="p-3 border-r">{user.registration}</td>
+                    <td className="p-3 border-r">{user.promoter_name}</td>
+                    <td className="p-3 border-r">
+                      {user.promoter_phone || "N/A"}
+                    </td>
+                    <td className="p-3 border-r">{user.promoter_email}</td>
+                    <td className="p-3 border-r">
+                      {user.city}, {user.state} PIN: {user.pincode}
+                    </td>
+                    <td className="p-3 border-r">
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs ${
+                          user.active_status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : user.active_status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : user.active_status === "holding"
+                            ? "bg-blue-100 text-blue-800"
+                            : user.active_status === "banned"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {user.active_status}
+                      </span>
+                    </td>
+                    <td className="p-3 border-r flex space-x-2">
+                      <button
+                        onClick={() => openModal(user)}
+                        className="text-blue-600 hover:text-blue-800 text-sm"
+                      >
+                        View
+                      </button>
+                      <button
+                        onClick={() => openStatusModal(user)}
+                        className="text-green-600 hover:text-green-800 text-sm"
+                      >
+                        Status
+                      </button>
+                      <button
+                        onClick={() => openRegistrationModal(user)}
+                        className="text-purple-600 hover:text-purple-800 text-sm"
+                      >
+                        Registration
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            totalRecords={allUsers.length}
+            recordsPerPage={recordsPerPage}
+            onPageChange={handlePageChange}
+          />
+
+          {/* User Details Modal */}
+          {isModalOpen && userDetails && (
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-4xl max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold uppercase">
+                    User Details
+                  </h2>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Basic Information
+                    </h3>
+                    <p>
+                      <strong>Supplier ID:</strong> {userDetails.id}
+                    </p>
+                    <p>
+                      <strong>Business Name:</strong>{" "}
+                      {userDetails.business_name || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Business Registration:</strong>{" "}
+                      {userDetails.business_registration || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Trade Type:</strong>{" "}
+                      {userDetails.trade_type || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Selling Goods:</strong>{" "}
+                      {userDetails.selling_goods || "N/A"}
+                    </p>
+                    <p>
+                      <strong>User Type:</strong>{" "}
+                      {userDetails.user_type || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Active Status:</strong>
+                      <span
+                        className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                          userDetails.active_status === "active"
+                            ? "bg-green-100 text-green-800"
+                            : userDetails.active_status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : userDetails.active_status === "holding"
+                            ? "bg-blue-100 text-blue-800"
+                            : userDetails.active_status === "banned"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {userDetails.active_status}
+                      </span>
+                    </p>
+                    <p>
+                      <strong>Registration Status:</strong>
+                      <span
+                        className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                          userDetails.registration_status === "approved"
+                            ? "bg-green-100 text-green-800"
+                            : userDetails.registration_status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : userDetails.registration_status === "rejected"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-gray-100 text-gray-800"
+                        }`}
+                      >
+                        {userDetails.registration_status}
+                      </span>
+                    </p>
+                    <p>
+                      <strong>Account Remark:</strong>{" "}
+                      {userDetails.account_remark || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Promoter Information
+                    </h3>
+                    <p>
+                      <strong>Name:</strong>{" "}
+                      {userDetails.promoter_first_name || "N/A"}{" "}
+                      {userDetails.promoter_last_name || ""}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong>{" "}
+                      {userDetails.promoter_phone || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Alt Phone:</strong>{" "}
+                      {userDetails.promoter_alt_phone || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Email:</strong>{" "}
+                      {userDetails.promoter_email || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Operator Information
+                    </h3>
+                    <p>
+                      <strong>Name:</strong>{" "}
+                      {userDetails.operator_first_name || "N/A"}{" "}
+                      {userDetails.operator_last_name || ""}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong>{" "}
+                      {userDetails.operator_phone || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Email:</strong>{" "}
+                      {userDetails.operator_email || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Address Information
+                    </h3>
+                    <p>
+                      <strong>Address:</strong> {userDetails.address || "N/A"}
+                    </p>
+                    <p>
+                      <strong>City:</strong> {userDetails.city || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Pincode:</strong> {userDetails.pincode || "N/A"}
+                    </p>
+                    <p>
+                      <strong>State:</strong> {userDetails.state || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Country:</strong> {userDetails.country || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Bank Information
+                    </h3>
+                    <p>
+                      <strong>Account Holder:</strong>{" "}
+                      {userDetails.account_holder_name || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Bank Name:</strong>{" "}
+                      {userDetails.bank_name || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Account Number:</strong>{" "}
+                      {userDetails.account_number || "N/A"}
+                    </p>
+                    <p>
+                      <strong>IFSC Code:</strong>{" "}
+                      {userDetails.ifsc_code || "N/A"}
+                    </p>
+                    <p>
+                      <strong>Account Type:</strong>{" "}
+                      {userDetails.account_type || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="font-medium text-lg border-b pb-2">
+                      Document Links
+                    </h3>
+                    <p>
+                      <strong>GST Certificate:</strong>
+                      {userDetails.gst_certificate ? (
+                        <a
+                          href={userDetails.gst_certificate}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "N/A"
+                      )}
+                    </p>
+                    <p>
+                      <strong>PAN Card:</strong>
+                      {userDetails.pan_card ? (
+                        <a
+                          href={userDetails.pan_card}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "N/A"
+                      )}
+                    </p>
+                    <p>
+                      <strong>Passport/Aadhaar:</strong>
+                      {userDetails.passport_adhaar_card ? (
+                        <a
+                          href={userDetails.passport_adhaar_card}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "N/A"
+                      )}
+                    </p>
+                    <p>
+                      <strong>Signature:</strong>
+                      {userDetails.signature ? (
+                        <a
+                          href={userDetails.signature}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "N/A"
+                      )}
+                    </p>
+                    <p>
+                      <strong>Cancel Cheque:</strong>
+                      {userDetails.cancel_cheque ? (
+                        <a
+                          href={userDetails.cancel_cheque}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          View
+                        </a>
+                      ) : (
+                        "N/A"
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Active Status Change Modal */}
+          {isStatusModalOpen && selectedUser && (
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold">
+                    Change Active Status
+                  </h2>
+                  <button
+                    onClick={() => setIsStatusModalOpen(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Status
+                    </label>
+                    <select
+                      name="active_status"
+                      value={statusForm.active_status}
+                      onChange={handleStatusChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="active">Active</option>
+                      <option value="holding">Holding</option>
+                      <option value="banned">Banned</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Remark
+                    </label>
+                    <textarea
+                      name="account_remark"
+                      value={statusForm.account_remark}
+                      onChange={handleStatusChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      rows="3"
+                      placeholder="Enter remark for status change"
+                    />
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={() => setIsStatusModalOpen(false)}
+                      className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() =>
+                        changeActiveStatus(selectedUser.supplier_id)
+                      }
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Update Status
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Registration Status Change Modal */}
+          {isRegistrationModalOpen && selectedUser && (
+            <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold">
+                    Change Registration Status
+                  </h2>
+                  <button
+                    onClick={() => setIsRegistrationModalOpen(false)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Status
+                    </label>
+                    <select
+                      name="registration_status"
+                      value={registrationForm.registration_status}
+                      onChange={handleRegistrationChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="approved">Approved</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Remark
+                    </label>
+                    <textarea
+                      name="account_remark"
+                      value={registrationForm.account_remark}
+                      onChange={handleRegistrationChange}
+                      className="w-full p-2 border border-gray-300 rounded"
+                      rows="3"
+                      placeholder="Enter remark for registration status change"
+                    />
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={() => setIsRegistrationModalOpen(false)}
+                      className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() =>
+                        changeRegistrationStatus(selectedUser.supplier_id)
+                      }
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Update Status
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-         <Pagination 
-         totalRecords={supplierData.length} 
-         recordsPerPage={recordsPerPage} 
-         onPageChange={handlePageChange}
-       /></>
   );
 };
 
-export default MerchantSupplierApprovalTable;
+export default UserTable;

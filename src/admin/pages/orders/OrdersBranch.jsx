@@ -42,7 +42,9 @@ const Orders = () => {
                                 </div>
                             </div>
                         </div>
-
+<div className="flex justify-center my-4">
+    <button className='bg-red-600 text-white font-semibold p-3 rounded-md'>Move To Shipment</button>
+</div>
                         <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
                             <div className='w-full md:w-auto'>
                                 <div className="dropdown">

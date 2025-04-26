@@ -253,9 +253,12 @@ const breadcrumbItems = [
 ];
 
 import React, { useState, useEffect } from "react";
-
+import PillTabs from '../../components/PillTabs';
+import CreateGstPopup from './CreateGstTax';
 
 const GstTable = () => {
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
   const [filteredData, setFilteredData] = useState(gstData);
@@ -281,10 +284,39 @@ const GstTable = () => {
     setCurrentPage(page);
     setRecordsPerPage(perPage);
   };
+  const topOptions = [
+    { id:1 ,label: "Non-taxable (72)" },
+    { id:2 ,label: "Taxable (72)" },
+  ];
 
+  const bottomOptions = [
+    { id:1 ,label: "0% (8)" },
+    { id:2 ,label: "3% (5)" },
+    { id:3 ,label: "5% (10)" },
+    { id:4 ,label: "12% (5)" },
+    { id:5 ,label: "18% (10)" },
+    { id:6 ,label: "28% (4)" },
+  ];
   return (
     <div className="overflow-x-auto p-4">
       <Breadcrumbs pageTitle="Manage GST/TAX" items={breadcrumbItems} />
+      <div className="space-y-3">
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+    <PillTabs tabs={topOptions} />
+  </div>
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+    <PillTabs tabs={bottomOptions} />
+  </div>
+</div>
+<div className="flex justify-end my-2">
+  <button
+    onClick={() => setIsPopupOpen(true)}
+    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg"
+  >
+    + Add GST/TAX
+  </button>
+</div>
+
       <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
                             <div className='w-full md:w-auto'>
                                 <div className="dropdown">
@@ -378,6 +410,8 @@ const GstTable = () => {
         recordsPerPage={recordsPerPage}
         onPageChange={handlePageChange}
       />
+      <CreateGstPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+
     </div>
   );
 };

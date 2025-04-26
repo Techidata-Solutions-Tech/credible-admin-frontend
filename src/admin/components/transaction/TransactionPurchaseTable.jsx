@@ -63,80 +63,80 @@ const TransactionPurchaseTable = () => {
       <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto mb-10">
-            <thead className="bg-gray-200">
+            <thead className="bg-gray-500">
               <tr>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  ID
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
+                  No
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3 min-w-[220px] text-xs font-medium text-white border  uppercase">
                   Order Date
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Supplier Name
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Supplier ID
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Purchase Order ID
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Payment Type
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Order Value
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Upfront Payment
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Balance Payment
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Transaction ID
                 </th>
-                <th className="sticky top-0 px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                <th className="sticky top-0 px-4 py-3  text-xs font-medium text-white border  uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentRecords.map((item) => (
+              {currentRecords.map((item,index) => (
                 <tr
-                  key={item.id}
+                  key={index}
                   className="hover:bg-gray-50 border-b border-gray-300"
                 >
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
-                    {item.id}
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                    {index+1}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.orderDate}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.supplierName}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.supplierId}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.purchaseOrderId}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.paymentType}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     ${item.orderValue}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     ${item.upfrontPayment}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     ${item.balancePayment}
                   </td>
-                  <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm text-gray-900 whitespace-nowrap">
                     {item.transactionId}
                   </td>
-                  <td className="px-4 py-4 text-sm whitespace-nowrap">
+                  <td className="border border-gray-400 px-4 py-4 text-sm whitespace-nowrap">
                     <button className="text-blue-600 hover:text-blue-800 font-medium hover:underline">
                       View
                     </button>

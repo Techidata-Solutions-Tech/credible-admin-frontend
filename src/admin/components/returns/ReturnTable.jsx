@@ -68,7 +68,21 @@ const ReturnTable = () => {
   };
 
   return (<>
-  
+ <div className="flex justify-between items-center bg-white my-5 w-full">
+  <div className="flex items-center space-x-2">
+    <span className="font-bold text-gray-700">Warehouse ID:</span>
+    <span className="bg-blue-100 text-blue-700 font-semibold px-3 py-1 rounded-md">
+      12345
+    </span>
+  </div>
+  <div className="flex items-center space-x-2">
+    <span className="font-bold text-gray-700">Supplier ID:</span>
+    <span className="bg-green-100 text-green-700 font-semibold px-3 py-1 rounded-md">
+      12345
+    </span>
+  </div>
+</div>
+
     <div className="w-full bg-white rounded-lg shadow-sm overflow-auto pb-[100px]">
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
@@ -76,7 +90,7 @@ const ReturnTable = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">ID</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">No</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Date</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Product Name</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Brand</th>
@@ -89,13 +103,13 @@ const ReturnTable = () => {
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Unit Price</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Tax</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Tax Amount</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Total</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Gross Amount</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {currentRecords?.map((item) => (
+                {currentRecords?.map((item,index) => (
                   <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                    <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id}</td>
+                    <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{index+1}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.date}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.productName}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.brand}</td>
