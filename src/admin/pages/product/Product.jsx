@@ -134,7 +134,8 @@ const Product = () => {
                         </div>
 
             {/* Product Table */}
-            <div className="w-full overflow-x-auto my-3 sticky z-10">
+            <div className="w-full overflow-x-auto my-3 z-10">
+
               {loading ? <Loader/> : <ProductTable products={products} setToggle={setToggle}/>}
             </div>
 
