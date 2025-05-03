@@ -200,7 +200,7 @@ const OrderTable = () => {
             <input
               type="text"
               className="grow text-blue-900 placeholder:text-center placeholder-blue-400"
-              placeholder="Search customer..."
+              placeholder=" Search "
             />
           </label>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SelectMultipleMedia from '../../components/product/SelectMultipleImages';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 export default function VerificationForm() {
   const [formData, setFormData] = useState({
@@ -47,16 +48,19 @@ export default function VerificationForm() {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
-
+  const breadcrumbItems = [
+    { label: 'Warehouse Management', href: '#' },
+    { label: 'Branch', href: '#' },
+    { label: 'Verification', href: '/admin/warehouse/table' },
+  ];
   return (
-    <div className="max-w-full mx-auto border border-gray-300 p-4 bg-white">
+    <div className="min-h-screen flex flex-col">
+          <Breadcrumbs
+            pageTitle="Verification"
+            items={breadcrumbItems}
+          />
       <form onSubmit={handleSubmit}>
-        {/* Header */}
-        <div className="mb-6">
-          <div className="bg-blue-700 text-white py-2 px-4 inline-block">
-            <h2 className="text-lg font-bold">Verification</h2>
-          </div>
-        </div>
+  
         
         {/* Top Row - Stockist Info */}
         <div className="flex flex-wrap gap-8 mb-6">

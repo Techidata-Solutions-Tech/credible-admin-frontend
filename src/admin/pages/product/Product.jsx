@@ -66,20 +66,13 @@ const Product = () => {
   console.log(products);
   
   return (
-    <div className="flex h-screen overflow-auto">
-      
-      
-      <div className="flex-1 flex flex-col overflow-auto">
-        
-        
-        
-       
-        <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+    <div className="min-h-screen">        
+        <div className="bg-gray-100 p-4">
           <Breadcrumbs
             pageTitle="ManageProducts"
             items={breadcrumbItems}
           />
-          <div className="flex flex-col sm:flex-row justify-end mb-4 container items-center gap-4 w-full">
+          <div className="flex flex-col sm:flex-row justify-end px-2 items-center gap-4 w-full">
             <button type='button'
               className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
             >
@@ -98,7 +91,7 @@ const Product = () => {
               <div className="max-w-full px-4">
                 <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
                   <div className="w-full overflow-x-auto py-2">
-                    <div className="flex flex-col justify-center min-w-full">
+                    <div className="flex flex-col justify-center items-center min-w-full">
                       <PillTabs tabs={tabs_status1} />
                       <PillTabs tabs={tabs_status2} />
                     </div>
@@ -107,36 +100,41 @@ const Product = () => {
               </div>
             </div>
 
-            {/* Filters and Search */}
-            <div className='flex gap-2 flex-wrap justify-between w-[100%]'>
-              <div className="dropdown">
-                <div tabIndex={0} role="button" className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                  Filter
-                </div>
-                <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                  <li><label><input type="checkbox" /></label></li>
-                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                  <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                </ul>
-              </div>
-              <div className="">
-                <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                  <i className="ri-search-line"></i>
-                  <input type="text" className="grow" placeholder="Product" />
-                </label>
-              </div>
-              <select className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                <option disabled selected>Sort</option>
-                <option>Homer</option>
-                <option>Marge</option>
-                <option>Bart</option>
-                <option>Lisa</option>
-                <option>Maggie</option>
-              </select>
-            </div>
+            <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
+                            <div className='w-full md:w-auto'>
+                                <div className="dropdown z-[100000]">
+                                    <div tabIndex={0} role="button" className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white">
+                                        <li><label><input type="checkbox" /></label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {/* Search Input */}
+                            <div className="flex-1 max-w-md">
+                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder=" Search " />
+                               
+                             </label>
+                            </div>
+                            <div className='w-full md:w-auto'>
+                                <select className="select min-w-[150px] text-center  w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                    <option disabled selected>Sort</option>
+                                    <option>Homer</option>
+                                    <option>Marge</option>
+                                    <option>Bart</option>
+                                    <option>Lisa</option>
+                                    <option>Maggie</option>
+                                </select>
+                            </div>
+                        </div>
 
             {/* Product Table */}
-            <div className="w-full overflow-x-auto my-3 sticky top-[50px] z-10">
+            <div className="w-full overflow-x-auto my-3 sticky z-10">
               {loading ? <Loader/> : <ProductTable products={products} setToggle={setToggle}/>}
             </div>
 
@@ -151,7 +149,6 @@ const Product = () => {
               />
             </div>
         </div>
-      </div>
     </div>
   )
 }

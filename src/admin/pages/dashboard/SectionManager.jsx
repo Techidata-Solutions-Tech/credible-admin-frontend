@@ -217,7 +217,7 @@ const SectionManager = () => {
                 <i className="ri-search-line"></i>
                 <input 
                   type="text" 
-                  className="grow placeholder:text-center" 
+                  className="grow text-blue-900 placeholder:text-center placeholder-blue-400 min-w-[250px]" 
                   placeholder="Search Sections" 
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}

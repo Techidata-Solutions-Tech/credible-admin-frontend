@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Pagination from '../../components/Pagination';
+import Breadcrumbs from '../../components/Breadcrumbs';
 const ManageSaleReturns = () => {
   const [activeTab, setActiveTab] = useState('Inward');
   const [currentPage, setCurrentPage] = useState(1);
@@ -242,38 +243,43 @@ const ManageSaleReturns = () => {
     );
   };
 
+  const breadcrumbItems = [
+    { label: 'Warehouse Management', href: '#' },
+    { label: 'Branch', href: '#' },
+    { label: 'Manage Sales Returns', href: '/admin/warehouse/table' },
+  ];
   return (
-    <div className="container mx-auto p-4">
-      {/* Header */}
-      <div className="bg-blue-700 text-white p-2 mb-4 inline-block">
-        <h1 className="text-xl font-bold">Manage Sales Returns</h1>
-      </div>
-
+    <div className="min-h-screen flex flex-col">
+          <Breadcrumbs
+            pageTitle="Manage Sales Returns"
+            items={breadcrumbItems}
+          />
       {/* Tabs */}
-      <div className="flex mb-4 mt-6">
-        {tabs.map((tab) => (
-          <div
-            key={tab.name}
-            className={`flex-1 text-center p-2 cursor-pointer ${
-              activeTab === tab.name ? 'bg-green-500 text-white' : 'bg-blue-700 text-white'
-            }`}
-            onClick={() => {
-              setActiveTab(tab.name);
-              setCurrentPage(1); // Reset to first page when changing tabs
-            }}
-          >
-            <div className="flex justify-center items-center">
-              <span>{tab.name}</span>
-              <span className="ml-2">{tab.count}</span>
-            </div>
-          </div>
-        ))}
-      </div>
+      <div className="bg-gradient-to-r from-blue-500 to-teal-400 py-3 rounded-lg shadow-lg transform px-20 mb-5">
+                               
+  <div className="flex flex-wrap justify-center gap-2 p-1 rounded-full bg-gray-50">
+    {tabs.map((tab) => (
+      <button
+        key={tab.name}
+        onClick={() => {
+          setActiveTab(tab.name);
+          setCurrentPage(1); // Reset to first page when changing tabs
+        }}
+        className={`
+         px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col gap-0 justify-center items-center
+               ${`flex-1 text-center p-2 cursor-pointer ${
+              activeTab === tab.name ? 'bg-cyan-500 text-white' : 'bg-gray-400 text-white'
+            }`}`}
+      >
+        <span>{tab.name}</span>
+        <span className="text-xs font-semibold">{tab.count}</span>
+      </button>
+    ))}
+  </div>
+</div>
 
-      {/* Active Tab Label */}
-      <div className="bg-blue-700 text-white p-2 mb-4 inline-block">
-        <h2 className="text-lg font-bold">{activeTab}</h2>
-      </div>
+
+ 
 
       {/* Table */}
       {renderTable()}

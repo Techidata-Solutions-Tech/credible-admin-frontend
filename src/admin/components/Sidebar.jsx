@@ -538,7 +538,7 @@ const Sidebar = (props) => {
                     {openMenus['tax'] && (
                       <ul className="ml-4">
                         <li><Link to="/admin/taxes/gst-tax" className="block p-2 hover:bg-gray-100">Manage GST/TAX</Link></li>
-                        <li><Link to="/admin/taxes/hsn-sac" className="block p-2 hover:bg-gray-100">Manage HSN/SAC</Link></li>
+                        <li><Link to="/admin/taxes/create-gst-tax" className="block p-2 hover:bg-gray-100">Create GST/TAX</Link></li>
                       </ul>
                     )}
                   </li>

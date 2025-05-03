@@ -301,10 +301,10 @@ const GstTable = () => {
     <div className="overflow-x-auto p-4">
       <Breadcrumbs pageTitle="Manage GST/TAX" items={breadcrumbItems} />
       <div className="space-y-3">
-  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto flex justify-center">
     <PillTabs tabs={topOptions} />
   </div>
-  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto">
+  <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-md shadow-sm overflow-x-auto flex justify-center">
     <PillTabs tabs={bottomOptions} />
   </div>
 </div>
@@ -334,7 +334,7 @@ const GstTable = () => {
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search customer..." />
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder=" Search " />
                                
                              </label>
                             </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Breadcrumbs from '../../components/Breadcrumbs';
 
 export default function SalesOrders() {
   const [activeTab, setActiveTab] = useState('Confirmed');
@@ -162,41 +163,75 @@ export default function SalesOrders() {
     setShowShipmentModal(true);
   };
 
+  const breadcrumbItems = [
+    { label: 'Warehouse Management', href: '#' },
+    { label: 'Branch', href: '#' },
+    { label: 'My Orders', href: '/admin/warehouse/table' },
+  ];
   return (
-    <div className="max-w-6xl mx-auto p-4 border border-gray-300 border-dashed">
+    <div className="min-h-screen flex flex-col">
+          <Breadcrumbs
+            pageTitle="My Orders"
+            items={breadcrumbItems}
+          />
       <div className="mb-4">
-        <div className="bg-green-500 text-white font-bold py-2 px-4 inline-block mb-2">
-          My Orders
-        </div>
+    
         
-        <div className="flex flex-wrap items-center">
-          <span className="mr-2">Total Order</span>
-          <div className="flex items-center mr-8">
-            <span className="text-blue-600 mr-4">Cancelled by Seller</span>
-            <span className="text-blue-600 mx-16">After Purchase Return</span>
-            <span className="text-blue-600">Wrong Address & Other Reason</span>
-          </div>
-        </div>
+      <div className="flex flex-wrap items-center justify-between text-base font-medium">
+      <div className="flex items-center">
+      <span className="mr-4 text-gray-800">Total Orders:</span>
+
+      <span className="font-bold">12</span>
+    </div>
+  <div className="flex flex-wrap gap-x-12 items-center text-blue-600">
+    <div className="flex items-center">
+      <span className="mr-2">Cancelled by Seller:</span>
+      <span className="font-bold">12</span>
+    </div>
+    <div className="flex items-center">
+      <span className="mr-2">After Purchase Return:</span>
+      <span className="font-bold">8</span>
+    </div>
+    <div className="flex items-center">
+      <span className="mr-2">Wrong Address & Other Reason:</span>
+      <span className="font-bold">5</span>
+    </div>
+  </div>
+</div>
+
       </div>
-      
-      <div className="grid grid-cols-7 gap-1 mb-4">
-        {statusTabs.map((tab) => (
-          <button
-            key={tab.name}
-            className={`${tab.color} text-white font-semibold py-2 px-4 text-center ${activeTab === tab.name ? 'ring-2 ring-blue-500' : ''}`}
-            onClick={() => setActiveTab(tab.name)}
-          >
-            <div>{tab.name}</div>
-            <div>{tab.count}</div>
-          </button>
-        ))}
-      </div>
-      
-      <div className="flex justify-center gap-1 mb-8">
+        <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
+                               
+      <div className="px-10 py-2 bg-white grid grid-cols-7 gap-2 rounded-full">
+  {statusTabs.map((tab) => (
+    <button
+      key={tab.name}
+      className={`
+        px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col gap-0 justify-center items-center
+        ${activeTab === tab.name 
+          ? 'bg-cyan-500 text-white shadow-sm ' 
+          : 'text-gray-600 hover:bg-gray-100'}
+      `}
+      onClick={() => setActiveTab(tab.name)}
+    >
+      <span>{tab.name}</span>
+      <span>{tab.count}</span>
+    </button>
+  ))}
+</div>
+</div>
+
+<div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
+      <div className="bg-white mx-20 py-4 flex justify-center gap-1 rounded-full">
         {processTabs.map((tab) => (
           <button
             key={tab.name}
-            className={`${tab.color} text-white font-semibold py-2 px-4 w-48 text-center`}
+            className={`
+              px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col gap-0 justify-center items-center
+              ${activeTab === tab.name 
+                ? 'bg-cyan-500 text-white shadow-sm ' 
+                : 'text-gray-600 hover:bg-gray-100'}
+            `}
             onClick={() => setActiveTab(tab.name)}
           >
             <div>{tab.name}</div>
@@ -204,95 +239,49 @@ export default function SalesOrders() {
           </button>
         ))}
       </div>
+      </div>
       
-      <div className="flex items-center mb-8 justify-center">
+      <div className="flex items-center my-4 justify-center">
         <button 
           className="bg-red-500 text-white font-semibold py-2 px-4 mr-2"
           onClick={handleMoveToShipment}
         >
           Move to Shipment
         </button>
-        <div className="flex items-center">
-          <span className="text-blue-600 ml-2 mr-2">→</span>
-          <div className="text-sm">
-            <div>New pop-up nned to open & Select Logistic Partner.</div>
-            <div>Then assign shipping Logistic Partner.</div>
-            <div>Then create shippping maifest, shipping label/slip</div>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-between mb-4">
-        <button 
-          className="border border-gray-300 py-2 px-8 relative"
-          onClick={handleFilterToggle}
-        >
-          Filter
-           {showFilter && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-gray-300 p-4 shadow-lg z-10 w-64">
-              <div className="mb-2">
-                <label className="block text-sm font-semibold mb-1">Date</label>
-                <input
-                  type="text"
-                  name="date"
-                  value={filterOptions.date}
-                  onChange={handleFilterChange}
-                  placeholder="DD/MM/YYYY"
-                  className="w-full border border-gray-300 p-1 text-sm"
-                />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-semibold mb-1">Order ID</label>
-                <input
-                  type="text"
-                  name="orderId"
-                  value={filterOptions.orderId}
-                  onChange={handleFilterChange}
-                  className="w-full border border-gray-300 p-1 text-sm"
-                />
-              </div>
-              <div className="mb-2">
-                <label className="block text-sm font-semibold mb-1">Customer Name</label>
-                <input
-                  type="text"
-                  name="customerName"
-                  value={filterOptions.customerName}
-                  onChange={handleFilterChange}
-                  className="w-full border border-gray-300 p-1 text-sm"
-                />
-              </div>
-              <div className="flex justify-between">
-                <button 
-                  className="bg-red-500 text-white text-sm px-3 py-1"
-                  onClick={handleFilterReset}
-                >
-                  Reset
-                </button>
-                <button 
-                  className="bg-green-500 text-white text-sm px-3 py-1"
-                  onClick={handleFilterToggle}
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-          )}
-        </button>
         
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 py-2 px-4 flex-grow mx-4"
-        />
-        
-        <button 
-          className="border border-gray-300 py-2 px-8"
-          onClick={handleSort}
-        >
-          Sort {sortBy ? `(${sortBy} ${sortDirection})` : ''}
-        </button>
       </div>
+      <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
+                            <div className='w-full md:w-auto'>
+                                <div className="dropdown">
+                                    <div tabIndex={0} role="button" className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
+                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white">
+                                        <li><label><input type="checkbox" /></label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {/* Search Input */}
+                            <div className="flex-1 max-w-md">
+                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                                    <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                    </svg>
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search ..." />
+                               
+                             </label>
+                            </div>
+                            <div className='w-full md:w-auto'>
+                                <select className="select min-w-[150px] text-center  w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
+                                    <option disabled selected>Sort</option>
+                                    <option>Homer</option>
+                                    <option>Marge</option>
+                                    <option>Bart</option>
+                                    <option>Lisa</option>
+                                    <option>Maggie</option>
+                                </select>
+                            </div>
+                        </div>
       
       <div className="overflow-x-auto mb-4">
         <table className="w-full border-collapse">

@@ -137,8 +137,8 @@ const MerchantSupplierTable = () => {
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{(currentPage-1)*recordsPerPage + index + 1}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.id}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.sellerName}</td>
-              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.categories.join(', ')}</td>
-              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.products.join(', ')}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.categories.length}</td>
+              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.products.length}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.place}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.state}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm">

@@ -82,6 +82,20 @@ import ManageReturn from '../admin/pages/returns/ManageReturns'
 import ViewMerchantSupplier from '../admin/pages/merchant/ViewMerchantSupplier'
 import ViewMerchantSeller from '../admin/pages/merchant/ViewMerchantSeller'
 import ShippingInwardDetail from '../admin/pages/shipping/InwardDetail'
+import CreateTaxModal from '../admin/components/tax/CreateTax'
+import AlertList from '../admin/pages/purchase/Alert'
+import CreateGstPopup from '../admin/pages/tax/CreateGst'
+import AlertDetail from '../admin/pages/purchase/AlertDetail'
+import PurchaseSupplier from '../admin/pages/purchase/ManageSuppliers'
+import PurchaseSupplierDetail from '../admin/pages/purchase/PurchaseSupplierDetail'
+import PreferredSupplier from '../admin/pages/purchase/PreferredSuppliers'
+import ViewPreferredSupplier from '../admin/pages/purchase/PreferredSupplierDetail'
+import PriceComparision from '../admin/pages/purchase/PriceComparision'
+import ProcurementList from '../admin/pages/purchase/ProcurementList'
+import ProcurementDetails from '../admin/pages/purchase/ProcurementDetails'
+import InvoiceMatching from '../admin/pages/purchase/InvoiceMatching'
+import InvoiceMatchingDetails from '../admin/pages/purchase/InvoiceMatchingDetails'
+import PurchaseOrderForm from '../admin/pages/purchase/createPurchaseOrder'
 const AdminRoutes = () => {
   return (
    <AdminLayout>
@@ -152,6 +166,7 @@ const AdminRoutes = () => {
           {/* taxes */}
           <Route path='/taxes/hsn-sac' element={ <AdminProtectWrapper><TaxHSNSAC/></AdminProtectWrapper>}/>
           <Route path='/taxes/gst-tax' element={ <AdminProtectWrapper><Taxes/></AdminProtectWrapper>}/>
+          <Route path='/taxes/create-gst-tax' element={ <AdminProtectWrapper><CreateGstPopup/></AdminProtectWrapper>}/>
           {/* Users */}
           <Route path='/users/manage' element={<AdminProtectWrapper><ManageUsers/></AdminProtectWrapper>}/>
           {/* Marketing */}
@@ -159,6 +174,19 @@ const AdminRoutes = () => {
           <Route path='/marketing/create-coupon' element={ <AdminProtectWrapper><CreateCoupon/></AdminProtectWrapper>}/>
           <Route path='/marketing/seller-coupon' element={ <AdminProtectWrapper><SellerCoupon/></AdminProtectWrapper>}/>
           <Route path='/marketing/referral-coupon' element={ <AdminProtectWrapper><ReferralCode/></AdminProtectWrapper>}/>
+          {/* purchase  */}
+          <Route path='/purchase/alert' element={ <AdminProtectWrapper><AlertList/></AdminProtectWrapper>}/>
+          <Route path='/purchase/alert/:id' element={ <AdminProtectWrapper><AlertDetail/></AdminProtectWrapper>}/>
+          <Route path='/purchase/create' element={ <AdminProtectWrapper><PurchaseOrderForm/></AdminProtectWrapper>}/>
+          <Route path='/purchase/manage-supplier' element={ <AdminProtectWrapper><PurchaseSupplier/></AdminProtectWrapper>}/>
+          <Route path='/purchase/manage-supplier/:id' element={ <AdminProtectWrapper><PurchaseSupplierDetail/></AdminProtectWrapper>}/>
+          <Route path='/purchase/preferred-supplier' element={ <AdminProtectWrapper><PreferredSupplier/></AdminProtectWrapper>}/>
+          <Route path='/purchase/preferred-supplier/:id' element={ <AdminProtectWrapper><ViewPreferredSupplier/></AdminProtectWrapper>}/>
+          <Route path='/purchase/price-comparision' element={ <AdminProtectWrapper><PriceComparision/></AdminProtectWrapper>}/>
+          <Route path='/purchase/procurement-list' element={ <AdminProtectWrapper><ProcurementList/></AdminProtectWrapper>}/>
+          <Route path='/purchase/procurement-list/:id' element={ <AdminProtectWrapper><ProcurementDetails/></AdminProtectWrapper>}/>
+          <Route path='/purchase/invoice-matching' element={ <AdminProtectWrapper><InvoiceMatching/></AdminProtectWrapper>}/>
+          <Route path='/purchase/invoice-matching/:id' element={ <AdminProtectWrapper><InvoiceMatchingDetails/></AdminProtectWrapper>}/>
           {/* shipping  */}
           <Route path='/shipping/inward' element={ <AdminProtectWrapper><ShippingInward/></AdminProtectWrapper>}/>
           <Route path='/shipping/inward/:id' element={ <AdminProtectWrapper><ShippingInwardDetail/></AdminProtectWrapper>}/>
