@@ -152,8 +152,7 @@ const Banner = () => {
   ];
 
   return (
-    <div className="">
-      <div className="rounded shadow-lg p-2 md:p-4 m-2 bg-white">
+      <div className="bg-white p-2">
         <Breadcrumbs pageTitle="Banners" items={breadcrumbItems} />
         <div className="w-full mb-3">
           <div className="max-w-full ">
@@ -170,7 +169,7 @@ const Banner = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-2 flex-wrap justify-between w-[100%]">
+        <div className="flex gap-2 mb-2 flex-wrap justify-between w-[100%]">
           <div className="dropdown">
             <div
               tabIndex={0}
@@ -201,7 +200,7 @@ const Banner = () => {
               <input
                 type="text"
                 className="grow text-blue-900 placeholder:text-center placeholder-blue-400 min-w-[250px]"
-                placeholder="Search Banner"
+                placeholder="Search"
                 value={searchTerm}
                 onChange={handleSearch}
               />
@@ -219,14 +218,12 @@ const Banner = () => {
             <option value="position-desc">Position (Z-A)</option>
           </select>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 container items-center w-full mt-4"></div>
         {loading ? (
           <Loader />
         ) : (
           <BannerTable setToggle={setToggle} banners={filteredBanners} />
         )}
       </div>
-    </div>
   );
 };
 

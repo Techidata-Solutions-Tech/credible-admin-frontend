@@ -119,6 +119,7 @@ const AddProductForm = () => {
       codAvilable: "",
     },
     taxDetails: {
+      applicableTax:"",
       categorieId: 0,
       categorieName: "",
       cgst: 0,
@@ -427,7 +428,7 @@ const AddProductForm = () => {
         // taxClass: formData.taxDetails.taxClass,
         // countryTaxCode: formData.taxDetails.countryTaxCode,
         // hsnSacCode: formData.taxDetails.hsnSacCode,
-        // taxableAmount: Number(formData.taxDetails.taxableAmount),
+        // cessAmount: Number(formData.taxDetails.cessAmount),
         // taxType: formData.taxDetails.taxType,
         // taxRate: Number(formData.taxDetails.taxRate),
         // taxTitle: formData.taxDetails.taxTitle,
@@ -531,7 +532,7 @@ const AddProductForm = () => {
 
       case 2:
         return (
-          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          <div className="container mx-auto  space-y-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-2">
@@ -548,7 +549,7 @@ const AddProductForm = () => {
                       },
                     }))
                   }
-                  className="w-full px-4 py-2 border border-gray-40 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+                  className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
                 />
               </div>
               <div>
@@ -703,7 +704,7 @@ const AddProductForm = () => {
 
       case 3:
         return (
-          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          <div className="container mx-auto space-y-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Material */}
               <div>
@@ -1148,7 +1149,7 @@ const AddProductForm = () => {
 
       case 4:
         return (
-          <div className="grid sm:grid-cols-2 gap-4 container mx-auto shadow-lg rounded-md p-6">
+          <div className="grid sm:grid-cols-2 gap-4 container mx-auto ">
             <div>
               <label className="block text-md font-semibold text-gray-700 mb-1">
                 Quantity
@@ -1193,7 +1194,7 @@ const AddProductForm = () => {
 
       case 5:
         return (
-          <div className="space-y-4 container shadow-lg rounded-md p-4">
+          <div className="space-y-4 container">
             {/* Price Details Section */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Purchase Price */}
@@ -1333,7 +1334,7 @@ const AddProductForm = () => {
 
       case 6:
         return (
-          <div className="container p-4">
+          <div className="container">
             <div className="grid grid-cols-3 gap-6">
               {/* Tax Country */}
               <div>
@@ -1362,41 +1363,17 @@ const AddProductForm = () => {
               {/* Country Tax Code */}
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Country Tax Code
-                </label>
-                <Select
-                  options={taxCodeOptions}
-                  value={taxCodeOptions.find(
-                    (opt) => opt.value === formData.taxDetails.countryTaxCode
-                  )}
-                  onChange={(option) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        countryTaxCode: option ? option.value : "",
-                      },
-                    }))
-                  }
-                  placeholder="Select tax code..."
-                  isSearchable
-                />
-              </div>
-
-              {/* HSN/SAC Code */}
-              <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  HSN/SAC Code
+                  Applicable Tax
                 </label>
                 <input
                   type="text"
-                  value={formData.taxDetails.hsnCode}
+                  value={formData.taxDetails.applicableTax}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
                       taxDetails: {
                         ...prev.taxDetails,
-                        hsnCode: e.target.value,
+                        applicableTax: e.target.value,
                       },
                     }))
                   }
@@ -1404,6 +1381,30 @@ const AddProductForm = () => {
                   placeholder="Enter HSN/SAC code"
                 />
               </div>
+     {/* Tax Rate */}
+     <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Rate
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.taxCode}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxCode: e.target.value || 0,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  step="0.01"
+                  min="0"
+                  placeholder="Enter tax rate"
+                />
+              </div>
+           
               {/* Tax Class */}
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
@@ -1426,7 +1427,27 @@ const AddProductForm = () => {
                 />
               </div>
 
-
+   {/* HSN/SAC */}
+   <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  HSN/SAC
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.hsnCode}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        hsnCode: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  placeholder="Enter HSN/SAC code"
+                />
+              </div>
               {/* Tax Type */}
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
@@ -1450,29 +1471,8 @@ const AddProductForm = () => {
                   <option value="percentage">Percentage</option>
                 </select>
               </div>
- {/* Tax Title */}
+ {/* Tax Rate */}
  <div>
-                <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Tax Title
-                </label>
-                <input
-                  type="text"
-                  value={formData.taxDetails.taxTitle}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      taxDetails: {
-                        ...prev.taxDetails,
-                        taxTitle: e.target.value,
-                      },
-                    }))
-                  }
-                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  placeholder="Enter tax title"
-                />
-              </div>
-              {/* Tax Rate */}
-              <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
                   Tax Rate
                 </label>
@@ -1484,16 +1484,15 @@ const AddProductForm = () => {
                       ...prev,
                       taxDetails: {
                         ...prev.taxDetails,
-                        taxRate: parseFloat(e.target.value) || 0,
+                        taxRate: Number(e.target.value),
                       },
                     }))
                   }
                   className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-                  step="0.01"
-                  min="0"
-                  placeholder="Enter tax rate"
+                  placeholder="Enter tax title"
                 />
               </div>
+         
  {/* Cess (%) */}
  <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
@@ -1520,17 +1519,17 @@ const AddProductForm = () => {
               {/* Taxable Amount */}
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
-                  Taxable Amount
+                  Cess Amount
                 </label>
                 <input
                   type="number"
-                  value={formData.taxDetails.taxableAmount}
+                  value={formData.taxDetails.cessAmount}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
                       taxDetails: {
                         ...prev.taxDetails,
-                        taxableAmount: parseFloat(e.target.value) || 0,
+                        cessAmount: parseFloat(e.target.value) || 0,
                       },
                     }))
                   }
@@ -1550,7 +1549,7 @@ const AddProductForm = () => {
 
       case 7:
         return (
-          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          <div className="container mx-auto  space-y-6">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Saleable Quantity */}
               <div>
@@ -1720,7 +1719,7 @@ const AddProductForm = () => {
 
       case 8:
         return (
-          <div className="space-y-4 container shadow-lg rounded-md p-4">
+          <div className="space-y-4 container ">
             <div>
               <label className="block text-md font-semibold text-gray-700 mb-1">
                 Select Warehouse
@@ -1783,7 +1782,7 @@ const AddProductForm = () => {
         );
       case 9:
         return (
-          <div className="gap-4 container shadow-lg rounded-md p-4 grid md:grid-cols-2 xl:grid-cols-3">
+          <div className="gap-4 container shadow-lg rounded-md grid md:grid-cols-2 xl:grid-cols-3">
             <div>
               <label className="block text-md font-semibold text-gray-700 mb-1">
                 Warranty
@@ -1891,7 +1890,7 @@ const AddProductForm = () => {
       case 10:
         return (
           <div>GO TO NEXT PLEASE</div>
-          // <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          // <div className="container mx-auto  p-6 space-y-6">
           //   <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           //      {/* Cancellation Policy */}
           //      <div>
@@ -2234,7 +2233,7 @@ const AddProductForm = () => {
 
       case 12:
         return (
-          <div className="container mx-auto shadow-md rounded-md p-6 space-y-6">
+          <div className="container mx-auto space-y-6">
             <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-6">
               {/* Manufacturing Name */}
               <div>
@@ -2488,7 +2487,7 @@ const AddProductForm = () => {
 
       case 14:
         return (
-          <div className="space-y-4 p-5">
+          <div className="space-y-4">
             <SelectMultipleMedia
               formData={formData}
               setFormData={setFormData}
@@ -2579,7 +2578,7 @@ const AddProductForm = () => {
   };
 
   return (
-    <div className="max-w-[1800px] mx-auto px-6 pb-4">
+    <div className="max-w-[1800px] mx-auto pb-4">
       {/* <h1 className="text-3xl my-2 font-semibold uppercase">Add Product</h1> */}
       <Accordion
         steps={steps}
@@ -2588,7 +2587,7 @@ const AddProductForm = () => {
         firstStep={firstStep}
       >
         {(stepNumber) => (
-          <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="">
             {renderFormFields(stepNumber)}
             <div className="mt-6 flex justify-between">
               <button
@@ -2664,7 +2663,7 @@ const CategoryStep = ({
   };
 
   return (
-    <div className="container mx-auto shadow-md rounded-md px-6 pb-3">
+    <div className="container mx-auto  pb-3">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">

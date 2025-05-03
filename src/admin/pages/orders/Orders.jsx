@@ -12,11 +12,12 @@ const Orders = () => {
         { id: 5, label: 'Undeliverd (05)' },
         { id: 6, label: 'Delivered (50)' },
         { id: 7, label: 'Open Orders (10)' },
-    ];
-    const tabs_status = [
         { id: 8, label: 'Under process (04)' },
         { id: 9, label: 'Ready to ship (03)' },
         { id: 10, label: 'Pickup & Shipped(03)' },
+    ];
+    const tabs_status = [
+     
     ];
     const breadcrumbItems = [
         { label: 'Order Management', href: '#' },
@@ -25,43 +26,26 @@ const Orders = () => {
       ];
   
     return (
-        <div className='min-h-screen'>
+        <div className='min-h-screen bg-white p-2'>
                 <Breadcrumbs
                   pageTitle="My Orders"
                   items={breadcrumbItems}
                 /> 
                 
 
-                <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-                    <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
                         <div className="w-full mb-4 md:mb-6">
-                            <div className="max-w-full px-2 md:px-4">
+                            <div className="max-w-full">
                                 <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 rounded-lg shadow-lg ">
                                     <div className="w-full overflow-x-auto py-1">
                                         <div className="flex min-w-full justify-center">
-                                            <PillTabs tabs={top_status} />
+                                            <PillTabs tabs={top_status} />                                        
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="w-full mb-4 md:mb-6">
-                            <div className="max-w-full px-2 md:px-4">
-                                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2  rounded-lg shadow-lg ">
-                                    <div className="w-full overflow-x-auto py-1 ">
-                                        <div className="flex min-w-full justify-center">
-                                            <PillTabs tabs={tabs_status} />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    
                         <OrderTable />
                        
-                    </div>
-                </div>
         </div>
     )
 }

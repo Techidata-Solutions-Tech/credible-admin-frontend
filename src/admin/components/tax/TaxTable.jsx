@@ -145,10 +145,10 @@ const TaxTable = ({ token }) => {
   const currentRecords = taxes.slice(indexOfFirstRecord, indexOfLastRecord);
 
   return (
-    <div className="w-full shadow-lg rounded-lg border  py-8">
+    <div className="bg-white p-2">
        <div className="w-full my-2">
               <div className="max-w-full px-4">
-                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg">
                   <div className="w-full overflow-x-auto py-2">
                     <div className="flex flex-col justify-center min-w-full">
                       {/* <PillTabs tabs={calculateTaxRateCounts(taxes)} /> */}
@@ -193,7 +193,7 @@ const TaxTable = ({ token }) => {
         </div>
       </div>
 
-      <div className="px-4 max-w-full max-h-[600px] overflow-y-auto overflow-x-auto">
+      <div className=" max-w-full max-h-[600px] overflow-y-auto overflow-x-auto">
         <table className="w-full border-collapse overflow-auto">
           <thead>
             <tr className="uppercase bg-gray-100">

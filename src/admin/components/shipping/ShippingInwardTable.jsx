@@ -9,7 +9,7 @@ const data = [
 
 const ShippingInwardTable = () => {
   return (
-    <div className="overflow-x-auto p-4">
+    <div className="overflow-x-auto ">
       <table className="table-auto w-full border border-gray-300">
         <thead>
           <tr className="bg-green-600 text-white text-center">

@@ -75,7 +75,7 @@ const InventoryManagementSellerTable = () => {
 
   return (
     <>
-      <div className="w-full bg-white rounded-lg shadow-sm overflow-auto">
+      <div className="w-full bg-white ">
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto mb-10">
             <thead className="bg-gray-200">

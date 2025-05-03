@@ -249,7 +249,7 @@ const ManageSaleReturns = () => {
     { label: 'Manage Sales Returns', href: '/admin/warehouse/table' },
   ];
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col p-2 bg-white">
           <Breadcrumbs
             pageTitle="Manage Sales Returns"
             items={breadcrumbItems}

@@ -17,19 +17,19 @@ const InventoryManagementSeller = () => {
     const breadcrumbItems = [
         { label: 'Inventory Management', href: '#' },
         { label: 'Inventory', href: '#' },
-        { label: 'sellerwise Inventory', href: '/admin/marketing/create-coupon' }
+        { label: 'Sellerwise Inventory', href: '/admin/marketing/create-coupon' }
       ];
      
         return (
-          <div className=" p-4">
+          <div className=" bg-white p-2">
              <Breadcrumbs
-                  pageTitle="sellerwise Inventory"
+                  pageTitle="Sellerwise Inventory"
                   items={breadcrumbItems}
                 />  
-                <div className='flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white'>
+                <div className='flex-1 rounded shadow-lg my-2 bg-white'>
                     <div className="w-full mb-6">
-                        <div className="max-w-full px-2 md:px-4">
-                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
+                        <div className="max-w-full">
+                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 rounded-lg shadow-lg ">
                                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
                                     <div className="min-w-full flex justify-center">
                                         <PillTabs tabs={tabs_user} />
@@ -40,16 +40,34 @@ const InventoryManagementSeller = () => {
                     </div>
 
                    <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
-                            <div className='w-full md:w-auto'>
-                                <div className="dropdown">
-                                    <div tabIndex={0} role="button" className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
-                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white">
-                                        <li><label><input type="checkbox" /></label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    </ul>
-                                </div>
-                            </div>
+                           <div className='w-full md:w-auto'>
+  <div className="dropdown">
+    <div
+      tabIndex={0}
+      role="button"
+      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+    >
+      Filter
+      {/* Dropdown icon */}
+      <svg
+        className="w-4 h-4 fill-current"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
+      </svg>
+    </div>
+    <ul
+      tabIndex={0}
+      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white"
+    >
+      <li><label><input type="checkbox" /></label></li>
+      <li><label><input type="checkbox" /> Checkbox Label</label></li>
+      <li><label><input type="checkbox" /> Checkbox Label</label></li>
+    </ul>
+  </div>
+</div>
+
                             {/* Search Input */}
                             <div className="flex-1 max-w-md">
                                 <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">

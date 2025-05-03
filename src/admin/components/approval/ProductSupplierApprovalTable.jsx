@@ -76,7 +76,7 @@ const ProductSupplierApprovalTable = () => {
   };
 
   return (<>
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
+    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto overflow-y-hidden">
       <table className="w-full table-auto mb-10 min-w-[1200px]">
         <thead className="bg-gray-200">
           <tr>

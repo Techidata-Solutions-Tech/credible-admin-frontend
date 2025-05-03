@@ -106,9 +106,9 @@ const CreateTaxForm = ({ token }) => {
     // { label: 'Create Product Category', href: '/create-product-category' }
   ];
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+    <div className="flex-1 overflow-y-auto bg-white p-2">
       <Breadcrumbs pageTitle="Create Tax" items={breadcrumbItems} />
-      <div className="flex justify-end px-4 mb-4">
+      <div className="flex justify-end bg-gray-100 mb-4">
         <div className="flex flex-end my-2">
           <button
             onClick={() => setIsCsvModalOpen(true)}

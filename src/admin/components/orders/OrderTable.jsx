@@ -164,12 +164,12 @@ const OrderTable = () => {
   return (
     <>
       <div className="flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg items-center">
-      <div className="w-full mt-0 md:w-auto relative bottom-2">
+      <div className="w-full mt-0 md:w-auto relative bottom-2 text-blue-500 outline-blue-500">
           <label className="label">
             {/* <span className="label-text font-medium">Order Status</span> */}
           </label>
           <select
-            className="select select-bordered w-full"
+            className="select w-full border-blue-500"
             value={orderStatus}
             onChange={handleStatusChange}
           >
@@ -254,10 +254,7 @@ const OrderTable = () => {
         </div>
       ) : (
         <>
-          <div className="w-full bg-white container rounded-lg shadow-sm overflow-auto">
-            <div className="overflow-x-auto">
-              <div className="inline-block min-w-full align-middle">
-                <div className="overflow-auto md:rounded-lg pb-20">
+            <div className="overflow-x-auto overflow-y-hidden">
                   <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-200">
                       <tr>
@@ -393,9 +390,6 @@ const OrderTable = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>
-            </div>
-          </div>
 
           {currentRecords.length > 0 && (
             <div className="mt-4">

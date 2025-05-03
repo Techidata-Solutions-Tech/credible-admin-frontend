@@ -218,9 +218,8 @@ const UserTable = () => {
   ];
 
   return (
-    <div className="min-h-screen">
-      <div className="flex flex-col md:flex-row bg-gray-100">
-        <div className="p-6 bg-gray-100 min-h-screen flex-1 overflow-x-auto">
+
+        <div className="p-2 bg-white min-h-screen flex-1 overflow-x-auto">
           <ToastContainer position="top-right" autoClose={3000} />
           <Breadcrumbs
             pageTitle="Business Users"
@@ -229,7 +228,7 @@ const UserTable = () => {
           
           {/* Status Tabs */}
           <div className="w-full mb-6">
-            <div className="max-w-full px-2 md:px-4">
+            <div className="max-w-full">
               <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
                 <div className="w-full overflow-x-auto scrollbar-hide py-2">
                   <div className="min-w-full flex justify-center">
@@ -607,8 +606,7 @@ const UserTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
+    
   );
 };
 

@@ -8,12 +8,10 @@ const MerchantSupplierApproval = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className=" bg-white p-2 ">
       <Breadcrumbs pageTitle="Supplier Approval" items={breadcrumbItems} />
 
-      <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
         <MerchantSupplierApprovalTable />
-      </div>
     </div>
   );
 };

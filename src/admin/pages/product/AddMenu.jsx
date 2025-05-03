@@ -82,10 +82,8 @@ const AddMenu = () => {
   ];
   return (
     <div className=''>
-      
-      <div className='flex bg-gray-100'>
         
-        <div className=' rounded shadow-lg p-4 w-screen m-2 bg-white'>
+        <div className=' rounded shadow-lg  w-screen p-2 bg-white'>
         <Breadcrumbs
               pageTitle="Add Menu"
               items={breadcrumbItems}
@@ -98,7 +96,7 @@ const AddMenu = () => {
               <input
                 id="name"
                 type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 {...register('name', { required: 'Name is required' })}
               />
               {errors.name && <p className="text-red-500 text-xs">{errors.name.message}</p>}
@@ -109,7 +107,7 @@ const AddMenu = () => {
               <input
                 id="seo_url"
                 type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 {...register('seo_url', { required: 'Name is required' })}
               />
               {errors.seo_url && <p className="text-red-500 text-xs">{errors.seo_url.message}</p>}
@@ -123,7 +121,7 @@ const AddMenu = () => {
                 </label>
                 <select
                   id="parentCat"
-                  className="w-full p-2 border rounded-md bg-transparent"
+                  className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 //   {...register("parentCat")}
                 >
                   <option value="0">Select a Category</option>
@@ -142,7 +140,7 @@ const AddMenu = () => {
                 <input
                   id="featureimage"
                   type="file"
-                  className="w-full p-2 border rounded-md bg-transparent"
+                  className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 //   {...register('featureimage', { required: 'Image is required' })}
                 />
                 {errors.featureimage && <p className="text-red-500 text-xs">{errors.featureimage.message}</p>}
@@ -153,7 +151,7 @@ const AddMenu = () => {
                 </label>
                 <select
                   id="cat_type"
-                  className="w-full p-2 border rounded-md bg-transparent"
+                  className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 //   {...register("cat_type")}
                 >
                   <option value={true}>Yes</option>
@@ -167,7 +165,7 @@ const AddMenu = () => {
                 <label htmlFor="status" className="block text-sm font-semibold">Status</label>
                 <select
                   id="status"
-                  className="w-full p-2 border rounded-md bg-transparent"
+                  className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                   {...register('status', { required: 'Status is required' })}
                 >
                   <option value="">Select Status</option>
@@ -182,7 +180,7 @@ const AddMenu = () => {
               <label htmlFor="description" className="block text-sm font-semibold">Description</label>
               <textarea
                 id="description"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 // {...register('description', { required: 'Description is required' })}
                 rows="4"
               />
@@ -194,7 +192,7 @@ const AddMenu = () => {
               <input
                 id="meta_title"
                 type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 // {...register('meta_title', { required: 'Meta title is required' })}
               />
               {errors.meta_title && <p className="text-red-500 text-xs">{errors.meta_title.message}</p>}
@@ -205,7 +203,7 @@ const AddMenu = () => {
               <input
                 id="meta_keywords"
                 type="text"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 // {...register('meta_keywords', { required: 'Meta keywords are required' })}
               />
               {errors.meta_keywords && <p className="text-red-500 text-xs">{errors.meta_keywords.message}</p>}
@@ -215,7 +213,7 @@ const AddMenu = () => {
               <label htmlFor="meta_description" className="block text-sm font-semibold">Meta Description</label>
               <textarea
                 id=" meta_description"
-                className="w-full p-2 border rounded-md bg-transparent"
+                className="w-full p-2 border border-gray-500 rounded-md bg-transparent"
                 // {...register('meta_description', { required: 'Meta description is required' })}
                 rows="3"
               />
@@ -239,7 +237,6 @@ const AddMenu = () => {
           </form>
 
         </div>
-      </div>
       <ToastContainer />
     </div>
   )

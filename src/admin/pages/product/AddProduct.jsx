@@ -19,9 +19,9 @@ const AddProduct = () => {
     },
   ];
   return (
-        <div className=" bg-gray-100 p-4">
+        <div className="py-2 px-4 bg-white">
           <Breadcrumbs pageTitle="Add Product" items={breadcrumbItems} />
-          <div className="rounded shadow-lg p-4 bg-white">
+          <div className="rounded">
             <AddProductForm />
           </div>
         </div>

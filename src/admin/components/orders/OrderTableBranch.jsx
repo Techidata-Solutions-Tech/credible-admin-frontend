@@ -85,11 +85,10 @@ const OrderTable = () => {
   return (
     <>
       <OrderDetailModalBranch />
-      <div className="w-full bg-white container rounded-lg shadow-sm overflow-auto pb-[100px]">
-        <div className="overflow-x-auto">
+    
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-auto md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
+            <div className="overflow-auto md:rounded-lg overflow-y-hidden">
+              <table className="min-w-full divide-y divide-gray-200 ">
                 <thead className="bg-gray-200">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs md:text-[14px] font-semibold text-gray-700 uppercase">Date</th>
@@ -129,8 +128,6 @@ const OrderTable = () => {
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
 
         
       </div>

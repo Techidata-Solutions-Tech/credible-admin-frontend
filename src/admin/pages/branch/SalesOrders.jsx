@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Breadcrumbs from '../../components/Breadcrumbs';
+import PillTabs from '../../components/PillTabs';
 
 export default function SalesOrders() {
   const [activeTab, setActiveTab] = useState('Confirmed');
@@ -62,15 +63,19 @@ export default function SalesOrders() {
     }
   ];
 
-  const statusTabs = [
-    { name: 'Confirmed', count: 100, color: 'bg-teal-600' },
-    { name: 'Cancelled', count: 20, color: 'bg-green-500' },
-    { name: 'Replaced', count: 5, color: 'bg-green-500' },
-    { name: 'Returned', count: 10, color: 'bg-green-500' },
-    { name: 'Un - Delivered', count: 5, color: 'bg-green-600' },
-    { name: 'Delivered', count: 50, color: 'bg-green-500' },
-    { name: 'Open Orders', count: 10, color: 'bg-teal-600' }
+  const tabs_user = [
+    { id: 1, label: "Confirmed (100)" },
+    { id: 2, label: "Cancelled (20)" },
+    { id: 3, label: "Replaced (5)" },
+    { id: 4, label: "Returned (10)" },
+    { id: 5, label: "Un - Delivered (5)" },
+    { id: 6, label: "Delivered (50)" },
+    { id: 7, label: "Open Orders (10)" },
+    { id: 8, label: "Under Process (4)" },
+    { id: 9, label: "Ready to Ship (3)" },
+    { id: 10, label: "Pickup & Shipped (3)" },
   ];
+  
 
   const processTabs = [
     { name: 'Under Process', count: 4, color: 'bg-teal-600' },
@@ -169,7 +174,7 @@ export default function SalesOrders() {
     { label: 'My Orders', href: '/admin/warehouse/table' },
   ];
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col  bg-white p-2">
           <Breadcrumbs
             pageTitle="My Orders"
             items={breadcrumbItems}
@@ -200,46 +205,17 @@ export default function SalesOrders() {
 </div>
 
       </div>
-        <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
-                               
-      <div className="px-10 py-2 bg-white grid grid-cols-7 gap-2 rounded-full">
-  {statusTabs.map((tab) => (
-    <button
-      key={tab.name}
-      className={`
-        px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col gap-0 justify-center items-center
-        ${activeTab === tab.name 
-          ? 'bg-cyan-500 text-white shadow-sm ' 
-          : 'text-gray-600 hover:bg-gray-100'}
-      `}
-      onClick={() => setActiveTab(tab.name)}
-    >
-      <span>{tab.name}</span>
-      <span>{tab.count}</span>
-    </button>
-  ))}
-</div>
-</div>
-
-<div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
-      <div className="bg-white mx-20 py-4 flex justify-center gap-1 rounded-full">
-        {processTabs.map((tab) => (
-          <button
-            key={tab.name}
-            className={`
-              px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex flex-col gap-0 justify-center items-center
-              ${activeTab === tab.name 
-                ? 'bg-cyan-500 text-white shadow-sm ' 
-                : 'text-gray-600 hover:bg-gray-100'}
-            `}
-            onClick={() => setActiveTab(tab.name)}
-          >
-            <div>{tab.name}</div>
-            <div>{tab.count}</div>
-          </button>
-        ))}
-      </div>
-      </div>
+      <div className="w-full mb-6">
+                        <div className="max-w-full ">
+                            <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
+                                <div className="w-full overflow-x-auto scrollbar-hide py-2">
+                                    <div className="min-w-full flex justify-center">
+                                        <PillTabs tabs={tabs_user} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
       
       <div className="flex items-center my-4 justify-center">
         <button 
@@ -251,23 +227,41 @@ export default function SalesOrders() {
         
       </div>
       <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
-                            <div className='w-full md:w-auto'>
-                                <div className="dropdown">
-                                    <div tabIndex={0} role="button" className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">Filter</div>
-                                    <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white">
-                                        <li><label><input type="checkbox" /></label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                        <li><label><input type="checkbox" /> Checkbox Label</label></li>
-                                    </ul>
-                                </div>
-                            </div>
+      <div className='w-full md:w-auto'>
+  <div className="dropdown">
+    <div
+      tabIndex={0}
+      role="button"
+      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+    >
+      Filter
+      {/* Dropdown icon */}
+      <svg
+        className="w-4 h-4 fill-current"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+      >
+        <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
+      </svg>
+    </div>
+    <ul
+      tabIndex={0}
+      className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow bg-white"
+    >
+      <li><label><input type="checkbox" /></label></li>
+      <li><label><input type="checkbox" /> Checkbox Label</label></li>
+      <li><label><input type="checkbox" /> Checkbox Label</label></li>
+    </ul>
+  </div>
+</div>
+
                             {/* Search Input */}
                             <div className="flex-1 max-w-md">
                                 <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search ..." />
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search" />
                                
                              </label>
                             </div>

@@ -124,19 +124,17 @@ const UserTable = () => {
   ];
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white p-2">
       
-      <div className="flex flex-col md:flex-row bg-gray-100">
         
-        <div className="p-6 bg-gray-100 min-h-screen flex-1 overflow-x-auto">
           <ToastContainer position="top-right" autoClose={3000} />
           <Breadcrumbs
               pageTitle="Personal Users"
               items={breadcrumbItems}
             />
             <div className="w-full my-3">
-              <div className="max-w-full px-4">
-                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+              <div className="max-w-full ">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg">
                   <div className="w-full overflow-x-auto py-2">
                     <div className="flex justify-center min-w-full">
                       <PillTabs tabs={tabs_status} />
@@ -225,8 +223,6 @@ const UserTable = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>
   );
 };
 

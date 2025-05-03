@@ -123,10 +123,10 @@ const CreateCoupon = () => {
  
     return (
      
-      <div className="overflow-x-auto p-4 min-h-screen ">
+      <div className="overflow-x-auto p-2 bg-white min-h-screen ">
       <Breadcrumbs pageTitle="Create Coupon" items={breadcrumbItems} />
       <ToastContainer />
-      <div className="max-w-5xl mx-auto my-8 ">
+      <div className=" mx-auto my-8 ">
         <form 
           onSubmit={handleSubmit(onSubmit)} 
           className="grid grid-cols-1 gap-y-8"
@@ -136,7 +136,7 @@ const CreateCoupon = () => {
             <div>
               <label className="block text-sm font-bold mb-1 text-gray-700">Parent Category</label>
               <select
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 onChange={handleParentChange}
               >
                 <option value="">Select Parent Category</option>
@@ -149,7 +149,7 @@ const CreateCoupon = () => {
             <div>
               <label className="block text-sm font-bold mb-1 text-gray-700">Sub Category</label>
               <select
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 onChange={handleSubChange}
                 disabled={!selectedParent}
               >
@@ -163,7 +163,7 @@ const CreateCoupon = () => {
             <div>
               <label className="block text-sm font-bold mb-1 text-gray-700">Child Category</label>
               <select
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 onChange={handleChildChange}
                 disabled={!selectedSub}
               >
@@ -207,21 +207,21 @@ const CreateCoupon = () => {
             {!isAllProducts && selectedProducts.length > 0 && (
               <div>
                 <label className="block text-sm font-bold mb-1 text-gray-700">Selected Products</label>
-                <div className="overflow-x-auto rounded-lg border border-gray-200">
+                <div className="overflow-x-auto rounded-lg border border-gray-500 border border-gray-500-gray-200">
                   <table className="min-w-full bg-white">
                     <thead>
                       <tr>
-                        <th className="px-4 py-2 border-b">Product Name</th>
-                        <th className="px-4 py-2 border-b border-l border-r">SKU</th>
-                        <th className="px-4 py-2 border-b">Brand</th>
+                        <th className="px-4 py-2 border border-gray-500-b">Product Name</th>
+                        <th className="px-4 py-2 border border-gray-500-b border border-gray-500-l border border-gray-500-r">SKU</th>
+                        <th className="px-4 py-2 border border-gray-500-b">Brand</th>
                       </tr>
                     </thead>
                     <tbody>
                       {selectedProducts?.map(product => (
                         <tr key={product.value}>
-                          <td className="px-4 py-2 border-b">{product.label}</td>
-                          <td className="px-4 py-2 border-b border-l border-r">{product.sku}</td>
-                          <td className="px-4 py-2 border-b">{product.brand}</td>
+                          <td className="px-4 py-2 border border-gray-500-b">{product.label}</td>
+                          <td className="px-4 py-2 border border-gray-500-b border border-gray-500-l border border-gray-500-r">{product.sku}</td>
+                          <td className="px-4 py-2 border border-gray-500-b">{product.brand}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -236,7 +236,7 @@ const CreateCoupon = () => {
             <div>
               <label className="block text-sm font-bold mb-1 text-gray-700">Discount Type</label>
               <select
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('discountType', { required: 'Discount type is required' })}
               >
                 <option value="">Select Discount Type</option>
@@ -249,7 +249,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Discount Value</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('discountValue')}
               />
             </div>
@@ -257,7 +257,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">User Group</label>
               <input
                 type="text"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('userGroup', { required: 'User group is required' })}
               />
               {errors.userGroup && <p className="text-red-500 text-xs">{errors.userGroup.message}</p>}
@@ -270,7 +270,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Min Order Amount</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('minOrderAmount')}
               />
             </div>
@@ -278,7 +278,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Min Order Quantity</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('minOrderQuantity')}
               />
             </div>
@@ -286,7 +286,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Limit Per Coupon</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('limitPerCoupon')}
               />
             </div>
@@ -298,7 +298,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Coupon Used</label>
               <input
                 type="number"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('couponUsed')}
               />
             </div>
@@ -306,7 +306,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">Start Date & Time</label>
               <input
                 type="datetime-local"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('startDateTime')}
               />
             </div>
@@ -314,7 +314,7 @@ const CreateCoupon = () => {
               <label className="block text-sm font-bold mb-1 text-gray-700">End Date & Time</label>
               <input
                 type="datetime-local"
-                className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 border border-gray-500 rounded-lg focus:ring-2 focus:ring-blue-400"
                 {...register('endDateTime')}
               />
             </div>
