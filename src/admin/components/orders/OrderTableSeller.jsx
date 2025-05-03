@@ -63,10 +63,10 @@ const OrderTable = () => {
   return (
     <>
       <OrderDetailModalSeller />
-      <div className="w-full bg-white container rounded-lg shadow-sm overflow-auto pb-[100px]">
+      <div className="w-full bg-white container rounded-lg shadow-sm overflow-auto ">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
-            <div className="overflow-auto md:rounded-lg">
+            <div className="overflow-auto md:rounded-lg overflow-y-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-200">
                   <tr>

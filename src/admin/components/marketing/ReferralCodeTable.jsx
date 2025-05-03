@@ -83,10 +83,9 @@ const ReferralCodeTable = () => {
   };
 
   return (
-    <>
-      <div className="max-w-full bg-white rounded-lg shadow-sm overflow-x-auto">
-        <table className="max-w-full table-auto mb-10 min-w-[1000px]">
-          <thead className="bg-gray-200">
+      <div className="max-w-full bg-white rounded-lg shadow-sm overflow-x-auto overflow-y-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-200 w-full">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Referral ID
@@ -120,7 +119,7 @@ const ReferralCodeTable = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white divide-y divide-gray-200 w-full">
             {currentRecords.map((referral) => (
               <tr
                 key={referral.id}
@@ -194,14 +193,13 @@ const ReferralCodeTable = () => {
             ))}
           </tbody>
         </table>
-      </div>
-
-      <Pagination
+        <Pagination
         totalRecords={referralData.length}
         recordsPerPage={recordsPerPage}
         onPageChange={handlePageChange}
       />
-    </>
+      </div>
+
   );
 };
 

@@ -129,18 +129,16 @@ const CreateWarehouse = () => {
     { label: 'Create Warehouse', href: '/admin/warehouse/table' },
   ];
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen  bg-white p-2">
       
-      <div className="flex flex-col md:flex-row bg-gray-100">
         
-        <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
         <Breadcrumbs
               pageTitle="Create Warehouse"
               items={breadcrumbItems}
             />
           <form onSubmit={handleSubmit}>
             {/* Warehouse Details */}
-            <div className="mb-4 p-4 border rounded-md">
+            <div className="mb-4  ">
               <h3 className="text-lg font-semibold bg-green-600 text-white p-2 rounded-md">
                 Warehouse Details
               </h3>
@@ -152,7 +150,7 @@ const CreateWarehouse = () => {
                     name="warehouseId"
                     value={formData.warehouseId}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.warehouseId}</p>
@@ -165,7 +163,7 @@ const CreateWarehouse = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="password"
                   />
                   <p className="text-red-600 text-sm">{errors.password}</p>
@@ -178,7 +176,7 @@ const CreateWarehouse = () => {
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="date"
                   />
                   <p className="text-red-600 text-sm">{errors.date}</p>
@@ -191,7 +189,7 @@ const CreateWarehouse = () => {
                     name="state"
                     value={formData.state}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.state}</p>
@@ -204,7 +202,7 @@ const CreateWarehouse = () => {
                     name="city"
                     value={formData.city}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.city}</p>
@@ -217,7 +215,7 @@ const CreateWarehouse = () => {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.location}</p>
@@ -230,7 +228,7 @@ const CreateWarehouse = () => {
                     name="pinCode"
                     value={formData.pinCode}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.pinCode}</p>
@@ -243,7 +241,7 @@ const CreateWarehouse = () => {
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.address}</p>
@@ -256,7 +254,7 @@ const CreateWarehouse = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.name}</p>
@@ -269,7 +267,7 @@ const CreateWarehouse = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="email"
                   />
                   <p className="text-red-600 text-sm">{errors.email}</p>
@@ -282,7 +280,7 @@ const CreateWarehouse = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.phone}</p>
@@ -295,7 +293,7 @@ const CreateWarehouse = () => {
                     name="alternateNumber"
                     value={formData.alternateNumber}
                     onChange={handleChange}
-                    className="w-full border p-2 rounded-md"
+                    className="w-full border border-gray-500 p-2 rounded-md"
                     type="text"
                   />
                   <p className="text-red-600 text-sm">{errors.alternateNumber}</p>
@@ -304,7 +302,7 @@ const CreateWarehouse = () => {
             </div>
 
             {/* Activation Details */}
-            <div className="mb-4 p-4 border rounded-md">
+            <div className="mb-4 ">
               <h3 className="text-lg font-semibold bg-green-600 text-white p-2 rounded-md">
                 Activation Details
               </h3>
@@ -352,8 +350,6 @@ const CreateWarehouse = () => {
               </button>
             </div>
           </form>
-        </div>
-      </div>
       <ToastContainer />
     </div>
   );

@@ -99,7 +99,8 @@ const BannerTable = ({setToggle, banners }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
+    <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto overflow-y-hidden">
+
       <table className="w-full table-auto mb-10 min-w-[900px]">
         <thead className="bg-gray-200">
           <tr>
@@ -135,7 +136,7 @@ const BannerTable = ({setToggle, banners }) => {
             >
               <td className="px-4 py-4 text-sm text-gray-900">{i+1}</td>
               <td className="px-4 py-4 text-sm text-gray-900">{banner.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">
+              <td className="px-4 py-4 text-sm text-gray-900 flex justify-center">
                 <img
                   src={banner.image}
                   alt="Banner"
@@ -158,7 +159,7 @@ const BannerTable = ({setToggle, banners }) => {
               <td className="px-4 py-4 text-sm text-gray-900">
                 {banner.index}
               </td>
-              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex  gap-1">
+              <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button
                     tabIndex={0}

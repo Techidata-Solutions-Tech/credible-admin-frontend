@@ -166,7 +166,7 @@ const AddBrand = () => {
   }
 
   return (
-    <div className='rounded shadow-lg p-4 m-2 bg-white'>
+    <div className='rounded p-5 bg-white min-h-screen'>
       <ToastContainer 
         position="top-right"
         autoClose={5000}
@@ -179,19 +179,17 @@ const AddBrand = () => {
         pauseOnHover
       />
       <Breadcrumbs pageTitle={isEditing ? "Edit Brand" : "Add Brand"} items={breadcrumbItems} />
-      <div className="flex-1 flex flex-col overflow-auto">
-        <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
-          <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
+   
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="max-w-5xl mx-auto grid grid-cols-3 gap-4 p-6 bg-white shadow-md rounded-lg"
+              className="mx-auto grid grid-cols-3 gap-4  "
             >
               {/* Category Dropdown */}
               <div>
                 <label className="block mb-1 font-semibold">Category:</label>
                 <select
                   {...register("category_id", { required: true })}
-                  className="border p-2 w-full"
+                  className="border p-2 border-gray-600 w-full"
                   disabled={isLoading}
                 >
                   <option value="">Select a category</option>
@@ -207,7 +205,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Company Name:</label>
                 <input 
                   {...register("company_name", { required: true })} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -216,7 +214,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Brand Name:</label>
                 <input 
                   {...register("brand_name", { required: true })} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -241,7 +239,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Product ID:</label>
                 <input 
                   {...register("product_id")} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -250,7 +248,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Country:</label>
                 <input 
                   {...register("country")} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -258,7 +256,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Meta Title:</label>
                 <input 
                   {...register("meta_title")} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -267,7 +265,7 @@ const AddBrand = () => {
                 <label className="block mb-1 font-semibold">Meta Keywords:</label>
                 <input 
                   {...register("meta_keywords")} 
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -277,7 +275,7 @@ const AddBrand = () => {
                 <textarea 
                   {...register("meta_description")} 
                   rows={3}
-                  className="border p-2 w-full" 
+                  className="border p-2 border-gray-600 w-full" 
                   disabled={isLoading}
                 />
               </div>
@@ -300,10 +298,7 @@ const AddBrand = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
       </div>
-    </div>
   );
 };
 

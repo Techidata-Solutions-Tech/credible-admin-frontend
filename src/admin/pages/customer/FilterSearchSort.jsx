@@ -63,7 +63,7 @@ const FilterSearchSort = ({
           <input
             type="text"
             className="grow text-blue-900 placeholder:text-center placeholder-blue-400"
-            placeholder="Search ..."
+            placeholder="Search"
             value={searchQuery}
             onChange={handleSearchChange}
           />

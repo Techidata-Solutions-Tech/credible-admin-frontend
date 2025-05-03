@@ -44,7 +44,7 @@ const Sidebar = (props) => {
 
       <div
         className={`fixed lg:sticky top-0 h-screen transition-all duration-300 ${
-          isSidebarOpen ? 'left-0' : '-left-[300px] lg:left-0'
+          isSidebarOpen ? 'left-0 z-[100000]' : '-left-[300px] lg:left-0'
         }`}
       >
         <div className="overflow-x-hidden text-gray-800 h-screen">

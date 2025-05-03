@@ -66,13 +66,12 @@ const Product = () => {
   console.log(products);
   
   return (
-    <div className="min-h-screen">        
-        <div className="bg-gray-100 p-4">
+    <div className="min-h-screen  bg-white p-2">      
           <Breadcrumbs
             pageTitle="ManageProducts"
             items={breadcrumbItems}
           />
-          <div className="flex flex-col sm:flex-row justify-end px-2 items-center gap-4 w-full">
+          <div className="flex flex-col sm:flex-row justify-end px-2 items-center gap-4 mb-2 w-full">
             <button type='button'
               className="bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base whitespace-nowrap"
             >
@@ -85,16 +84,13 @@ const Product = () => {
               Bulk Upload
             </Link> 
           </div>
-          <div className="rounded shadow-lg p-2 sm:p-4 bg-white">
             {/* Tabs Section */}
             <div className="w-full mb-6">
-              <div className="max-w-full px-4">
-                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
-                  <div className="w-full overflow-x-auto py-2">
-                    <div className="flex flex-col justify-center items-center min-w-full">
+              <div className="max-w-full ">
+                <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-4 rounded-lg shadow-lg">
+                  <div className="w-full overflow-x-auto py-2 flex flex-col items-center">
                       <PillTabs tabs={tabs_status1} />
                       <PillTabs tabs={tabs_status2} />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -140,7 +136,6 @@ const Product = () => {
             </div>
 
             
-          </div>
           {/* Pagination */}
           <div className="flex justify-center mt-6">
               <Pagination 
@@ -149,7 +144,6 @@ const Product = () => {
                 onPageChange={handlePageChange}
               />
             </div>
-        </div>
     </div>
   )
 }

@@ -54,7 +54,7 @@ export default function VerificationForm() {
     { label: 'Verification', href: '/admin/warehouse/table' },
   ];
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col  bg-white p-2">
           <Breadcrumbs
             pageTitle="Verification"
             items={breadcrumbItems}
