@@ -37,63 +37,61 @@ console.log(products);
     } };
 
   return (
-    <div className="w-full bg-gray-100 border rounded-lg shadow-md sticky top-[300px] z-10">
-      <table className="w-full overflow-x-auto overflow-y-auto max-h-[20rem]">
+    <div className="w-full bg-gray-100 border rounded-lg shadow-md z-10">
+      <table className="w-full overflow-x-auto ">
         <thead className="bg-gray-50 text-black ">
           <tr className=' uppercase'>
-          <th className="px-4 py-3 text-left text-[14px] font-[700] "> <input type="checkbox" className='border border-black'/></th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">No</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">ID</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Category</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Subcategory</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Child Category</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Image</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Name</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Product Name</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Brand</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Model</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Variant</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">SKU</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">UOM</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Tax Rate</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Selling Price ($)</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">MRP ($)</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Supplier</th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] ">Action</th>
+          <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400"> <input type="checkbox" className='border border-black'/></th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">No</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">ID</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Category</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Subcategory</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Child Category</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Image</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400 min-w-[350px]">Product Name</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Brand</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Model</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Variant</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">SKU</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">UOM</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Tax Rate</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Selling Price ($)</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">MRP ($)</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Supplier</th>
+            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Action</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200 ">
           {products?.map((product, index) => (
             <tr key={product?.id} className="hover:bg-gray-50">
-              <td className="px-4 py-4">
+              <td className="border border-gray-400 px-4 py-4">
               <input type="checkbox" className='border border-black'/>
               </td>
              
-              <td className="px-4 py-4 text-[14px] text-gray-600 font-semibold">{index + 1}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600 font-semibold">{product?.id}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.main_category}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.sub_category}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.child_category}</td>
-              <td className="px-4 py-4">
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600 font-semibold">{index + 1}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600 font-semibold">{product?.id}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.main_category}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.sub_category}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.child_category}</td>
+              <td className="border border-gray-400 px-4 py-4">
                 <img src={product?.images[0]} alt={product?.product_name} className="h-12 w-12 rounded-lg object-cover shadow" />
               </td>
-              <td className="px-4 py-4 text-[14px] text-gray-700">{product?.product_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-700">{product?.product_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.brand_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.model_name}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.variant}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.SKU}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.UOM}</td>
-              <td className="px-4 py-4 text-[14px] text-gray-600">{product?.taxRate}</td>
-              <td className="px-4 py-4 text-[14px] text-green-700 font-semibold">
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-700">{product?.product_name}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.brand_name}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.model_name}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.variant}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.SKU}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.UOM}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.taxRate}</td>
+              <td className="border border-gray-400 px-4 py-4 text-[14px] text-green-700 font-semibold">
                 {product?.seller_price}
               </td>
-              <td className="px-4 py-4 text-sm text-red-500 font-semibold">{product?.mrp}</td>
-              <td className="px-4 py-4 text-sm text-red-500 font-semibold">{product?.supplier_name}</td>
-              <td className="px-4 py-4 text-sm text-gray-700 flex justify-center gap-3">
+              <td className="border border-gray-400 px-4 py-4 text-sm text-red-500 font-semibold">{product?.mrp}</td>
+              <td className="border border-gray-400 px-4 py-4 text-sm text-red-500 font-semibold">{product?.supplier_name}</td>
+              <td className="border-r border-b border-gray-400 px-4 py-4 text-sm text-gray-700 flex justify-center">
                 <div className="dropdown dropdown-bottom dropdown-end">
                   <button tabIndex={0} className="text-gray-600 hover:text-gray-800">
-                    <BsThreeDots className='mt-2 text-blue-500' size={28} />
+                    <BsThreeDots className='mt-5 text-blue-500' size={28} />
                   </button>
                   <ul
                     tabIndex={0}

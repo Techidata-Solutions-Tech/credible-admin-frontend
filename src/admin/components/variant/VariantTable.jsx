@@ -12,6 +12,7 @@ const VariantTable = ({ variants, setToggle,token }) => {
     setSelectedVariant(variant);
     document.getElementById('edit_variant2').showModal();
   };
+console.log(variants);
 
   const handleDeleteModal = (variantId) => {
     setSelectedVariantId(variantId);

@@ -173,7 +173,7 @@ const AddCategory = () => {
               items={breadcrumbItems}
             />
           </div>
-          <div className="flex justify-around mb-4 bg-gradient-to-r from-blue-500 to-teal-400 p-2 py-8 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
+          <div className="flex justify-around mb-4 bg-gradient-to-r from-blue-500 to-teal-400 p-2 py-8 md:p-4 rounded-lg shadow-lg ">
             <div className="bg-white rounded-full p-4">
               <button
                 className={`px-4 py-2 rounded-full ${formType === "category"

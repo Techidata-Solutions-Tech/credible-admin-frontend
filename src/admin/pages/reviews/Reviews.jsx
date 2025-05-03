@@ -22,7 +22,7 @@ const Reviews = () => {
                 <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
                     <div className="bg-white rounded-lg shadow-md p-6">
                         {/* Header Section with improved spacing and alignment */}
-                        <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg transform hover:scale-95 transition-all duration-300">
+                        <div className="bg-gradient-to-r from-blue-500 to-teal-400 p-2 md:p-4 rounded-lg shadow-lg ">
                             <div className="w-full overflow-x-auto py-2">
                                 <div className="flex justify-center min-w-full">
                                     <PillTabs tabs={tabs_type} />

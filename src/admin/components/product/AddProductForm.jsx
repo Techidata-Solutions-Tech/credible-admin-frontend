@@ -5,9 +5,65 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Accordion from "./Accordion";
 import SelectMultipleMedia from "./SelectMultipleImages";
+const countryOptions = [
+  { value: 'IN', label: 'India' },
+  { value: 'US', label: 'United States' },
+  { value: 'GB', label: 'United Kingdom' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'AU', label: 'Australia' },
+  { value: 'DE', label: 'Germany' },
+  { value: 'FR', label: 'France' },
+  { value: 'IT', label: 'Italy' },
+  { value: 'ES', label: 'Spain' },
+  { value: 'JP', label: 'Japan' },
+  { value: 'CN', label: 'China' },
+  { value: 'BR', label: 'Brazil' },
+  { value: 'RU', label: 'Russia' },
+  { value: 'ZA', label: 'South Africa' },
+  { value: 'MX', label: 'Mexico' },
+  { value: 'KR', label: 'South Korea' },
+  { value: 'TR', label: 'Turkey' },
+  { value: 'NL', label: 'Netherlands' },
+  { value: 'CH', label: 'Switzerland' },
+  { value: 'SE', label: 'Sweden' },
+  { value: 'BE', label: 'Belgium' },
+  { value: 'AR', label: 'Argentina' },
+  { value: 'SA', label: 'Saudi Arabia' },
+  { value: 'ID', label: 'Indonesia' },
+  { value: 'PL', label: 'Poland' },
+  { value: 'NO', label: 'Norway' },
+  { value: 'TH', label: 'Thailand' },
+  { value: 'EG', label: 'Egypt' },
+  { value: 'SG', label: 'Singapore' },
+  { value: 'MY', label: 'Malaysia' },
+  { value: 'PH', label: 'Philippines' },
+  { value: 'FI', label: 'Finland' },
+  { value: 'IE', label: 'Ireland' },
+  { value: 'DK', label: 'Denmark' },
+  { value: 'AT', label: 'Austria' },
+  { value: 'NZ', label: 'New Zealand' },
+  { value: 'GR', label: 'Greece' },
+  { value: 'IL', label: 'Israel' },
+  { value: 'PT', label: 'Portugal' },
+  { value: 'HU', label: 'Hungary' },
+  { value: 'CZ', label: 'Czech Republic' },
+  { value: 'UA', label: 'Ukraine' },
+  { value: 'RO', label: 'Romania' },
+  { value: 'CL', label: 'Chile' },
+  { value: 'VN', label: 'Vietnam' },
+  { value: 'BD', label: 'Bangladesh' },
+  { value: 'PK', label: 'Pakistan' },
+  { value: 'NG', label: 'Nigeria' },
+  { value: 'CO', label: 'Colombia' }
+];
+
+const taxCodeOptions = countryOptions.map(opt => ({
+  value: opt.value,
+  label: `${opt.value} (${opt.label.replace('I am from ', '')})`
+}));
 
 const AddProductForm = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     category: {
@@ -18,7 +74,8 @@ const AddProductForm = () => {
     productDetails: {
       product_name: "",
       brand_name: "",
-      brand_auth_letter: "https://credible.storage.s3.ap-south-1.amazonaws.com/1741850469797-bus-stop.png",
+      brand_auth_letter:
+        "https://credible.storage.s3.ap-south-1.amazonaws.com/1741850469797-bus-stop.png",
       model_name: "",
       model_number: "",
       modelSeries: "",
@@ -49,7 +106,8 @@ const AddProductForm = () => {
       productDescription: "",
     },
     bulkPurchase: {
-      quantity: "", setPrice: ""
+      quantity: "",
+      setPrice: "",
     },
     pricing: {
       purchasePrice: 0,
@@ -70,7 +128,7 @@ const AddProductForm = () => {
       igst: 0,
       sgst_utgst: 0,
       status: true,
-      taxRate: 0
+      taxRate: 0,
     },
     inventory: {
       saleableQty: 0,
@@ -82,8 +140,8 @@ const AddProductForm = () => {
     },
     warehouse: {
       warehouseId: 0,
-      location:"",
-      address:""
+      location: "",
+      address: "",
     },
     warrenty: {
       warrentyApplicable: "",
@@ -124,12 +182,12 @@ const AddProductForm = () => {
       videos: [],
     },
     // shippingCancellationReturn: {
-    //   shippingPolicy: "",        
-    //   shippingDuration: "",        
-    //   returnPolicy: "",           
-    //   returnDays: "",              
-    //   cancellationPolicy: "",    
-    //   cancellationDuration: "",  
+    //   shippingPolicy: "",
+    //   shippingDuration: "",
+    //   returnPolicy: "",
+    //   returnDays: "",
+    //   cancellationPolicy: "",
+    //   cancellationDuration: "",
     // }
   });
   const [showModal, setShowModal] = useState(false);
@@ -170,12 +228,14 @@ const AddProductForm = () => {
   const fetchCategorySub = async (parentId) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=${parentId}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/api/admin/get-child-categories?parentId=${parentId}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -192,14 +252,15 @@ const AddProductForm = () => {
 
   const fetchCategoryChild = async (parentId) => {
     try {
-
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=${parentId}`,
+        `${
+          import.meta.env.VITE_BASE_URL
+        }/api/admin/get-child-categories?parentId=${parentId}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
@@ -224,14 +285,15 @@ const AddProductForm = () => {
   useEffect(() => {
     const fetchCategoryParent = async () => {
       try {
-
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/api/admin/get-child-categories?parentId=0`,
+          `${
+            import.meta.env.VITE_BASE_URL
+          }/api/admin/get-child-categories?parentId=0`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -244,14 +306,13 @@ const AddProductForm = () => {
 
     const fetchTaxData = async () => {
       try {
-
         const response = await fetch(
           `${import.meta.env.VITE_BASE_URL}/api/admin/tax`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -268,14 +329,13 @@ const AddProductForm = () => {
 
     const fetchWarehouses = async () => {
       try {
-
         const response = await fetch(
           `${import.meta.env.VITE_BASE_URL}/api/warehouse`,
           {
-            method: 'GET',
+            method: "GET",
             headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -290,7 +350,6 @@ const AddProductForm = () => {
       }
     };
 
-
     fetchWarehouses();
     fetchTaxData();
     fetchCategoryParent();
@@ -302,27 +361,28 @@ const AddProductForm = () => {
   };
 
   const onSubmit = async () => {
-
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1);
       return;
     }
 
     const payload = {
-    "added_by":localStorage.getItem("userRole"), 
-    "added_by_id":parseInt(localStorage.getItem("userId")),
+      added_by: localStorage.getItem("userRole"),
+      added_by_id: parseInt(localStorage.getItem("userId")),
       category: {
         category: Number(formData.category.category),
       },
       productDetails: {
         product_name: formData.productDetails.product_name,
         brand_name: formData.productDetails.brand_name,
-        brand_auth_letter: formData.productDetails.brand_auth_letter, 
+        brand_auth_letter: formData.productDetails.brand_auth_letter,
         model_name: formData.productDetails.model_name,
         model_number: formData.productDetails.model_number,
         modelSeries: formData.productDetails.modelSeries,
-        standardProductIdentifier: formData.productDetails.standardProductIdentifier,
-        standardProductIdentifierNumber: formData.productDetails.standardProductIdentifierNumber,
+        standardProductIdentifier:
+          formData.productDetails.standardProductIdentifier,
+        standardProductIdentifierNumber:
+          formData.productDetails.standardProductIdentifierNumber,
         SKU: formData.productDetails.SKU,
       },
       productFeatured: {
@@ -362,7 +422,7 @@ const AddProductForm = () => {
       },
       taxDetails: {
         taxId: Number(formData.taxDetails.id),
-     
+
         // taxCountry: formData.taxDetails.taxCountry,
         // taxClass: formData.taxDetails.taxClass,
         // countryTaxCode: formData.taxDetails.countryTaxCode,
@@ -412,7 +472,8 @@ const AddProductForm = () => {
       },
       manufacturingDetails: {
         manufacturingName: formData.manufacturingDetails.manufacturingName,
-        manufacturingAddress: formData.manufacturingDetails.manufacturingAddress,
+        manufacturingAddress:
+          formData.manufacturingDetails.manufacturingAddress,
         countryOfOrigin: formData.manufacturingDetails.countryOfOrigin,
         batchNumber: formData.manufacturingDetails.batchNumber,
         manufacturingDate: formData.manufacturingDetails.manufacturingDate,
@@ -425,22 +486,26 @@ const AddProductForm = () => {
         metaURL: formData.seoSection.metaURL,
         metaKeyword: formData.seoSection.metaKeyword,
         metaDescription: formData.seoSection.metaDescription,
-      }, imageAndVideo: {
+      },
+      imageAndVideo: {
         images: formData.imageAndVideo.images,
         videos: formData.imageAndVideo.videos,
-      }
+      },
     };
-console.log(payload.taxDetails);
+    console.log(payload.taxDetails);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/admin/product`, {
-        method: "POST",
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/api/admin/product`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (!response.ok) throw new Error(await response.text());
 
@@ -462,7 +527,6 @@ console.log(payload.taxDetails);
             fetchCategorySub={fetchCategorySub}
             fetchCategoryChild={fetchCategoryChild}
           />
-
         );
 
       case 2:
@@ -600,7 +664,9 @@ console.log(payload.taxDetails);
                   Standard Product Identifier Number
                 </label>
                 <input
-                  value={formData.productDetails.standardProductIdentifierNumber}
+                  value={
+                    formData.productDetails.standardProductIdentifierNumber
+                  }
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -1080,7 +1146,6 @@ console.log(payload.taxDetails);
           </div>
         );
 
-
       case 4:
         return (
           <div className="grid sm:grid-cols-2 gap-4 container mx-auto shadow-lg rounded-md p-6">
@@ -1124,18 +1189,13 @@ console.log(payload.taxDetails);
               />
             </div>
           </div>
-
-
         );
 
       case 5:
         return (
           <div className="space-y-4 container shadow-lg rounded-md p-4">
-
-
             {/* Price Details Section */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
               {/* Purchase Price */}
               <div>
                 <label className="block text-md font-semibold text-gray-700 mb-1">
@@ -1275,226 +1335,216 @@ console.log(payload.taxDetails);
         return (
           <div className="container p-4">
             <div className="grid grid-cols-3 gap-6">
-  {/* Tax Rate Selection */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      Select Tax Rate
-    </label>
-    <select
-      value={formData.taxDetails.taxRate} // Set the selected tax rate here
-      onChange={(e) => {
-        const selectedTax = taxData.find(tax => tax.taxRate === parseFloat(e.target.value)); // Find the selected tax based on the taxRate
-        if (selectedTax) {
-          console.log(selectedTax.id);
-          
-          setFormData((prev) => ({
-            ...prev,
-            taxDetails: {
-              ...prev.taxDetails,
-              taxRate: selectedTax.taxRate,
-              cgst: selectedTax.cgst,
-              sgst_utgst: selectedTax.sgst_utgst,
-              igst: selectedTax.igst,
-              hsn: selectedTax.hsn,
-              description: selectedTax.description || "",
-              categorieName: selectedTax.categorieName || "",
-              status: true, 
-              id:selectedTax.id,
-            },
-          }));
-        }
-      }}
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-    >
-      <option value="">Select tax rate...</option>
-      {taxData?.map((tax, index) => (
-        <option key={index} value={tax.taxRate}>{tax.taxRate}</option>
-      ))}
-    </select>
-  </div>
+              {/* Tax Country */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Country
+                </label>
+                <Select
+                  options={countryOptions}
+                  value={countryOptions.find(
+                    (opt) => opt.value === formData.taxDetails.taxCountry
+                  )}
+                  onChange={(option) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxCountry: option ? option.value : "",
+                      },
+                    }))
+                  }
+                  placeholder="Select country..."
+                  isSearchable
+                />
+              </div>
 
-  {/* HSN/SAC Code */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      HSN/SAC Code
-    </label>
-    <input
-      type="text"
-      value={formData.taxDetails.hsn}  // Use the HSN value from selected tax
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            hsn: e.target.value,
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      placeholder="Enter HSN/SAC code"
-    />
-  </div>
+              {/* Country Tax Code */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Country Tax Code
+                </label>
+                <Select
+                  options={taxCodeOptions}
+                  value={taxCodeOptions.find(
+                    (opt) => opt.value === formData.taxDetails.countryTaxCode
+                  )}
+                  onChange={(option) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        countryTaxCode: option ? option.value : "",
+                      },
+                    }))
+                  }
+                  placeholder="Select tax code..."
+                  isSearchable
+                />
+              </div>
 
-  {/* CGST */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      CGST
-    </label>
-    <input
-      type="number"
-      value={formData.taxDetails.cgst} // Fill in the CGST automatically based on tax selection
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            cgst: Math.max(0, parseFloat(e.target.value) || 0),
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      step="0.01"
-      min="0"
-    />
-  </div>
+              {/* HSN/SAC Code */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  HSN/SAC Code
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.hsnCode}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        hsnCode: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  placeholder="Enter HSN/SAC code"
+                />
+              </div>
+              {/* Tax Class */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Class
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.taxClass}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxClass: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  placeholder="Enter tax class"
+                />
+              </div>
 
-  {/* SGST/UTGST */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      SGST/UTGST
-    </label>
-    <input
-      type="number"
-      value={formData.taxDetails.sgst_utgst}  // Automatically populated SGST/UTGST value
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            sgst_utgst: Math.max(0, parseFloat(e.target.value) || 0),
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      step="0.01"
-      min="0"
-    />
-  </div>
 
-  {/* IGST */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      IGST
-    </label>
-    <input
-      type="number"
-      value={formData.taxDetails.igst} // Automatically filled IGST value
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            igst: Math.max(0, parseFloat(e.target.value) || 0),
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      step="0.01"
-      min="0"
-    />
-  </div>
+              {/* Tax Type */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Type
+                </label>
+                <select
+                  value={formData.taxDetails.taxType}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxType: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                >
+                  <option value="">Select tax type...</option>
+                  <option value="fixed">Fixed</option>
+                  <option value="percentage">Percentage</option>
+                </select>
+              </div>
+ {/* Tax Title */}
+ <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.taxDetails.taxTitle}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxTitle: e.target.value,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  placeholder="Enter tax title"
+                />
+              </div>
+              {/* Tax Rate */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Tax Rate
+                </label>
+                <input
+                  type="number"
+                  value={formData.taxDetails.taxRate}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxRate: parseFloat(e.target.value) || 0,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  step="0.01"
+                  min="0"
+                  placeholder="Enter tax rate"
+                />
+              </div>
+ {/* Cess (%) */}
+ <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Cess (%)
+                </label>
+                <input
+                  type="number"
+                  value={formData.taxDetails.cess}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        cess: parseFloat(e.target.value) || 0,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  step="0.01"
+                  min="0"
+                  placeholder="Enter cess (%)"
+                />
+              </div>
+              {/* Taxable Amount */}
+              <div>
+                <label className="block text-md font-semibold text-gray-700 mb-1">
+                  Taxable Amount
+                </label>
+                <input
+                  type="number"
+                  value={formData.taxDetails.taxableAmount}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      taxDetails: {
+                        ...prev.taxDetails,
+                        taxableAmount: parseFloat(e.target.value) || 0,
+                      },
+                    }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+                  step="0.01"
+                  min="0"
+                  placeholder="Enter taxable amount"
+                />
+              </div>
 
-  {/* Description */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      Description
-    </label>
-    <input
-      type="text"
-      value={formData.taxDetails.description}  // Fill in description automatically
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            description: e.target.value,
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      placeholder="Enter description"
-    />
-  </div>
+             
 
-  {/* Tax Class */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-    Category Name
-    </label>
-    <input
-      type="text"
-      value={formData.taxDetails.categorieName}  // Automatically filled tax amount value
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            categorieName: e.target.value,
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-    />
-  </div>
-
-  {/* Tax Type */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      Tax Type
-    </label>
-    <select
-      value={formData.taxDetails.taxType}
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            taxType: e.target.value,
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-    >
-      <option value="">Select tax type...</option>
-      <option value="fix">Fix</option>
-      <option value="percentage">Percentage</option>
-    </select>
-  </div>
-
-  {/* Tax Amount */}
-  <div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      Tax Amount
-    </label>
-    <input
-      type="number"
-      value={formData.taxDetails.taxAmount}  // Automatically filled tax amount value
-      onChange={(e) =>
-        setFormData((prev) => ({
-          ...prev,
-          taxDetails: {
-            ...prev.taxDetails,
-            taxAmount: Math.max(0, parseFloat(e.target.value) || 0),
-          },
-        }))
-      }
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-      step="0.01"
-      min="0"
-    />
-  </div>
-</div>
-
+             
+            </div>
           </div>
         );
 
@@ -1609,7 +1659,7 @@ console.log(payload.taxDetails);
                       ...prev,
                       inventory: {
                         ...prev.inventory,
-                        stockStatus: e.target.value === 'in_stock', // Converts to boolean
+                        stockStatus: e.target.value === "in_stock", // Converts to boolean
                       },
                     }))
                   }
@@ -1620,7 +1670,6 @@ console.log(payload.taxDetails);
                   <option value="out_of_stock">Out of Stock</option>
                 </select>
               </div>
-
 
               {/* Low Stock Alert */}
               <div>
@@ -1651,7 +1700,7 @@ console.log(payload.taxDetails);
                 Inventory Notes (Optional)
               </label>
               <textarea
-                value={formData.inventory.notes || ''}
+                value={formData.inventory.notes || ""}
                 onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
@@ -1669,43 +1718,42 @@ console.log(payload.taxDetails);
           </div>
         );
 
-
-
       case 8:
         return (
           <div className="space-y-4 container shadow-lg rounded-md p-4">
+            <div>
+              <label className="block text-md font-semibold text-gray-700 mb-1">
+                Select Warehouse
+              </label>
+              <select
+                value={formData.warehouse.warehouseId}
+                onChange={(e) => {
+                  const selectedId = parseInt(e.target.value);
+                  const warehouse = warehouses.find(
+                    (wh) => wh.id === selectedId
+                  );
 
-<div>
-    <label className="block text-md font-semibold text-gray-700 mb-1">
-      Select Warehouse
-    </label>
-    <select
-      value={formData.warehouse.warehouseId}
-      onChange={(e) => {
-        const selectedId = parseInt(e.target.value);
-        const warehouse = warehouses.find((wh) => wh.id === selectedId);
+                  setFormData((prev) => ({
+                    ...prev,
+                    warehouse: {
+                      ...prev.warehouse,
+                      warehouseId: selectedId,
+                    },
+                  }));
 
-        setFormData((prev) => ({
-          ...prev,
-          warehouse: {
-            ...prev.warehouse,
-            warehouseId: selectedId,
-          },
-        }));
-
-        // Set the selected warehouse for location and address
-        setSelectedWarehouse(warehouse); // Update the selected warehouse state
-      }}
-      className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
-    >
-      <option value="">Select a warehouse...</option>
-      {warehouses.map((warehouse) => (
-        <option key={warehouse.id} value={warehouse.id}>
-          {warehouse.name} - {warehouse.city}, {warehouse.state}
-        </option>
-      ))}
-    </select>
-  </div>
+                  // Set the selected warehouse for location and address
+                  setSelectedWarehouse(warehouse); // Update the selected warehouse state
+                }}
+                className="w-full px-4 py-2 border border-gray-400 rounded-md bg-transparent"
+              >
+                <option value="">Select a warehouse...</option>
+                {warehouses.map((warehouse) => (
+                  <option key={warehouse.id} value={warehouse.id}>
+                    {warehouse.name} - {warehouse.city}, {warehouse.state}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Warehouse Location */}
             <div>
@@ -1731,7 +1779,6 @@ console.log(payload.taxDetails);
                 rows="3"
               />
             </div>
-
           </div>
         );
       case 9:
@@ -1887,7 +1934,6 @@ console.log(payload.taxDetails);
           //       />
           //     </div>
 
-
           //     {/* Return Policy */}
           //     <div>
           //       <label className="block text-md font-semibold text-gray-700 mb-2">
@@ -1951,8 +1997,6 @@ console.log(payload.taxDetails);
           //         className="w-full px-4 py-2 border border-gray-400 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
           //       />
           //     </div>
-
-
 
           //     {/* Cancellation Duration */}
           //     <div>
@@ -2359,8 +2403,6 @@ console.log(payload.taxDetails);
           </div>
         );
 
-
-
       case 13:
         return (
           <div className=" grid md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -2447,7 +2489,10 @@ console.log(payload.taxDetails);
       case 14:
         return (
           <div className="space-y-4 p-5">
-            <SelectMultipleMedia formData={formData} setFormData={setFormData} />
+            <SelectMultipleMedia
+              formData={formData}
+              setFormData={setFormData}
+            />
 
             <div className="mt-4">
               <h3 className="text-lg font-semibold mb-2">Selected Images:</h3>
@@ -2463,13 +2508,15 @@ console.log(payload.taxDetails);
                       <button
                         type="button"
                         onClick={() => {
-                          setFormData(prev => ({
+                          setFormData((prev) => ({
                             ...prev,
                             imageAndVideo: {
                               ...prev.imageAndVideo,
-                              images: prev.imageAndVideo.images.filter((_, i) => i !== index)
-                            }
-                          }))
+                              images: prev.imageAndVideo.images.filter(
+                                (_, i) => i !== index
+                              ),
+                            },
+                          }));
                         }}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >
@@ -2499,13 +2546,15 @@ console.log(payload.taxDetails);
                       <button
                         type="button"
                         onClick={() => {
-                          setFormData(prev => ({
+                          setFormData((prev) => ({
                             ...prev,
                             imageAndVideo: {
                               ...prev.imageAndVideo,
-                              videos: prev.imageAndVideo.videos.filter((_, i) => i !== index)
-                            }
-                          }))
+                              videos: prev.imageAndVideo.videos.filter(
+                                (_, i) => i !== index
+                              ),
+                            },
+                          }));
                         }}
                         className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                       >
@@ -2616,7 +2665,7 @@ const CategoryStep = ({
 
   return (
     <div className="container mx-auto shadow-md rounded-md px-6 pb-3">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">
             Main Category
@@ -2635,43 +2684,47 @@ const CategoryStep = ({
           </select>
         </div>
 
-       {categorySub.length> 0 && <div>
-          <label className="block text-md font-semibold text-gray-700 mb-2">
-            Sub Category
-          </label>
-          <select
-            value={formData.category.category}
-            onChange={handleSubCategoryChange}
-            className="w-full px-4 py-2 border border-gray-400  rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
-            disabled={!categorySub || categorySub.length === 0}
-          >
-            <option value="">Select sub category</option>
-            {categorySub?.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>}
+        {
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-2">
+              Sub Category
+            </label>
+            <select
+              value={formData.category.category}
+              onChange={handleSubCategoryChange}
+              className="w-full px-4 py-2 border border-gray-400  rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+              disabled={!categorySub || categorySub.length === 0}
+            >
+              <option value="">Select sub category</option>
+              {categorySub?.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        }
 
-        {categoryChild.length> 0  && <div>
-          <label className="block text-md font-semibold text-gray-700 mb-2">
-            Child Category
-          </label>
-          <select
-            value={formData.category.category}
-            onChange={handleChildCategoryChange}
-            className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
-            disabled={!categoryChild || categoryChild.length === 0}
-          >
-            <option value="">Select a Category</option>
-            {categoryChild?.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>}
+        {
+          <div>
+            <label className="block text-md font-semibold text-gray-700 mb-2">
+              Child Category
+            </label>
+            <select
+              value={formData.category.category}
+              onChange={handleChildCategoryChange}
+              className="w-full px-4 py-2 border border-gray-400 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-transparent"
+              disabled={!categoryChild || categoryChild.length === 0}
+            >
+              <option value="">Select a Category</option>
+              {categoryChild?.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        }
 
         <div>
           <label className="block text-md font-semibold text-gray-700 mb-2">
