@@ -95,7 +95,7 @@ import ProcurementList from '../admin/pages/purchase/ProcurementList'
 import ProcurementDetails from '../admin/pages/purchase/ProcurementDetails'
 import InvoiceMatching from '../admin/pages/purchase/InvoiceMatching'
 import InvoiceMatchingDetails from '../admin/pages/purchase/InvoiceMatchingDetails'
-import PurchaseOrderForm from '../admin/pages/purchase/createPurchaseOrder'
+import PurchaseOrderForm from '../admin/pages/purchase/CreatePurchaseOrder'
 const AdminRoutes = () => {
   return (
    <AdminLayout>

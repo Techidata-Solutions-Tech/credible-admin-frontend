@@ -37,7 +37,9 @@ console.log(products);
     } };
 
   return (
-    <div className="w-full bg-gray-100 border rounded-lg shadow-md z-10">
+    <div className="w-full bg-gray-100 border rounded-lg shadow-md z-10 overflow-y-hidden">
+
+
       <table className="w-full overflow-x-auto ">
         <thead className="bg-gray-50 text-black ">
           <tr className=' uppercase'>

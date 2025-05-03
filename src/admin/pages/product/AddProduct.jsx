@@ -19,16 +19,12 @@ const AddProduct = () => {
     },
   ];
   return (
-    <div className="flex h-screen overflow-auto">
-      <div className="flex-1 flex flex-col overflow-auto">
-        <div className="flex-1 overflow-y-auto bg-gray-100 p-4">
+        <div className=" bg-gray-100 p-4">
           <Breadcrumbs pageTitle="Add Product" items={breadcrumbItems} />
           <div className="rounded shadow-lg p-4 bg-white">
             <AddProductForm />
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 
