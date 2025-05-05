@@ -154,34 +154,34 @@ const UserTable = () => {
             <table className="w-full bg-white shadow-md rounded-lg overflow-auto">
               <thead className="bg-gray-700 text-white">
                 <tr className=" uppercase text-xs font-medium">
-                  <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>
-                  <th className="px-4 py-3 text-left">No</th>
-                  <th className="px-4 py-3 text-left">ID</th>
-                  <th className="px-4 py-3 text-left">Name</th>
-                  <th className="px-4 py-3 text-left">Phone Number</th>
-                  <th className="px-4 py-3 text-left">Email Id</th>
-                  <th className="px-4 py-3 text-left">City</th>
-                  <th className="px-4 py-3 text-left">Pincode</th>
-                  <th className="px-4 py-3 text-left">State</th>
-                  <th className="px-4 py-3 text-left">Created Date</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <th className=" border py-3 text-left"><input type="checkbox" className="w-3 h-3" /></th>
+                  <th className=" border py-3 text-left">No</th>
+                  <th className="px-4 border py-3 text-left">ID</th>
+                  <th className="px-4 border py-3 text-left">Name</th>
+                  <th className="px-4 border py-3 text-left">Phone Number</th>
+                  <th className="px-4 border py-3 text-left">Email Id</th>
+                  <th className="px-4 border py-3 text-left">City</th>
+                  <th className="px-4 border py-3 text-left">Pincode</th>
+                  <th className="px-4 border py-3 text-left">State</th>
+                  <th className="px-4 border py-3 text-left">Created Date</th>
+                  <th className="px-6 border py-3 text-left">Status</th>
+                  <th className="px-6 border py-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {displayUsers.map((user,i) => (
                   <tr key={user.id} className="border-b text-center hover:bg-gray-50">
-                    <td className="p-3 border-r"><input type="checkbox" className="w-4 h-4" /></td>
-                    <td className="p-3 border-r">{i+1}</td>
-                    <td className="p-3 border-r">{user.id}</td>
-                    <td className="p-3 border-r">{user.firstName || "N/A"} {user.lastName || ""}</td>
-                    <td className="p-3 border-r">{user.phone || "N/A"}</td>
-                    <td className="p-3 border-r">{user.email}</td>
-                    <td className="p-3 border-r">{user.city}</td>
-                    <td className="p-3 border-r">{user.pincode}</td>
-                    <td className="p-3 border-r">{user.state}</td>
-                    <td className="p-3 border-r">{new Date(user.createdAt).toLocaleString()}</td>
-                    <td className="p-3 border-r flex justify-center items-center space-x-4">
+                    <td className="p-3 border-r border-gray-400"><input type="checkbox" className="w-3 h-3" /></td>
+                    <td className="p-3 border-r border-gray-400">{i+1}</td>
+                    <td className="p-3 border-r border-gray-400">{user.id}</td>
+                    <td className="p-3 border-r border-gray-400">{user.firstName || "N/A"} {user.lastName || ""}</td>
+                    <td className="p-3 border-r border-gray-400">{user.phone || "N/A"}</td>
+                    <td className="p-3 border-r border-gray-400">{user.email}</td>
+                    <td className="p-3 border-r border-gray-400">{user.city}</td>
+                    <td className="p-3 border-r border-gray-400">{user.pincode}</td>
+                    <td className="p-3 border-r border-gray-400">{user.state}</td>
+                    <td className="p-3 border-r border-gray-400">{new Date(user.createdAt).toLocaleString()}</td>
+                    <td className="p-3 border-r border-gray-400 flex justify-center items-center space-x-4">
                       <button
                         onClick={() => toggleBlockStatus(user.id, user.isAccountBlockedByAdmin)}
                         className={`px-3 py-1 text-white rounded-full ${user.isAccountBlockedByAdmin ? "bg-red-500" : "bg-green-500"}`}
@@ -189,7 +189,7 @@ const UserTable = () => {
                         {user.isAccountBlockedByAdmin ? "Blocked" : "Active"}
                       </button>
                     </td>
-                    <td className="p-3 border-r">
+                    <td className="p-3 border-r border-gray-400">
                       <button onClick={() => openModal(user)} className="text-blue-600 hover:text-blue-800 text-lg">
                         Profile
                       </button>

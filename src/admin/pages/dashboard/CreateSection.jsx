@@ -74,7 +74,7 @@ const CreateSection = () => {
       
       <div className="flex flex-col md:flex-row bg-gray-100">
         
-        <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
+        <div className="flex-1 rounded shadow-lg p-2 bg-white">
         <Breadcrumbs
               pageTitle="Create HomePage Section"
               items={breadcrumbItems}

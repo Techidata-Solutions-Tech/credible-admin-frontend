@@ -90,7 +90,7 @@ const ReturnTable = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">No</th>
+                  <th className="w-[45px] py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">No</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Date</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Product Name</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase whitespace-nowrap">Brand</th>
@@ -109,7 +109,7 @@ const ReturnTable = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {currentRecords?.map((item,index) => (
                   <tr key={item.id} className="hover:bg-gray-50 border-b border-gray-300">
-                    <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{index+1}</td>
+                    <td className=" py-4 text-sm text-gray-900 whitespace-nowrap">{index+1}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.date}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.productName}</td>
                     <td className="px-4 py-4 text-sm text-gray-900 whitespace-nowrap">{item.brand}</td>

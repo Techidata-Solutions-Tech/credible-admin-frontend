@@ -174,7 +174,7 @@ const SectionManager = () => {
   return (
     <div className="min-h-screen">
       <div className="flex flex-col md:flex-row bg-gray-100">
-        <div className="flex-1 rounded shadow-lg p-2 md:p-4 m-2 bg-white">
+        <div className="flex-1 rounded shadow-lg p-2 bg-white">
           <Breadcrumbs
             pageTitle="Manage Sections"
             items={breadcrumbItems}
@@ -183,62 +183,96 @@ const SectionManager = () => {
             <Link to={'/admin/dashboard/section/create'} className="bg-gray-700 text-white rounded-md p-3">Create section</Link>
           </div>
           
-          <div className='flex gap-2 flex-wrap justify-between w-[100%] my-3'>
-            <div className="dropdown">
-              <div tabIndex={0} role="button" className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base">
-                Filter
-              </div>
-              <ul tabIndex={0} className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow">
-                <li>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.active}
-                      onChange={() => handleFilterChange('active')}
-                    />
-                    Active Sections
-                  </label>
-                </li>
-                <li>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={filters.inactive}
-                      onChange={() => handleFilterChange('inactive')}
-                    />
-                    Inactive Sections
-                  </label>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="">
-              <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-                <i className="ri-search-line"></i>
-                <input 
-                  type="text" 
-                  className="grow text-blue-900 placeholder:text-center placeholder-blue-400 min-w-[250px]" 
-                  placeholder="Search Sections" 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </label>
-            </div>
-            
-            <select 
-              className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base"
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-            >
-              <option value="default">Sort</option>
-              <option value="name-asc">Name (A-Z)</option>
-              <option value="name-desc">Name (Z-A)</option>
-              <option value="order-asc">Order (Low to High)</option>
-              <option value="order-desc">Order (High to Low)</option>
-              <option value="status-asc">Status (Active First)</option>
-              <option value="status-desc">Status (Inactive First)</option>
-            </select>
-          </div>
+          <div className="flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 rounded-lg">
+  {/* Filter Dropdown */}
+  <div className="w-full md:w-auto">
+    <div className="dropdown">
+      <div
+        tabIndex={0}
+        role="button"
+        className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-3 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+      >
+        Filter
+        <svg
+          className="w-4 h-4 fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        >
+          <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
+        </svg>
+      </div>
+      <ul
+        tabIndex={0}
+        className="dropdown-content menu bg-white text-gray-800 rounded-box z-[1] w-52 p-2 shadow"
+      >
+        <li>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={filters.active}
+              onChange={() => handleFilterChange('active')}
+            />
+            Active Sections
+          </label>
+        </li>
+        <li>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={filters.inactive}
+              onChange={() => handleFilterChange('inactive')}
+            />
+            Inactive Sections
+          </label>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {/* Search Input */}
+  <div className="flex-1 max-w-lg">
+    <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+      <svg
+        className="w-4 h-4 text-blue-500"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <input
+        type="text"
+        className="grow text-blue-900 placeholder:text-center placeholder-blue-400"
+        placeholder="Search Sections"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </label>
+  </div>
+
+  {/* Sort Dropdown */}
+  <div className="w-full md:w-auto">
+    <select
+      className="select min-w-[150px] text-center w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base"
+      value={sortOption}
+      onChange={(e) => setSortOption(e.target.value)}
+    >
+      <option value="default">Sort</option>
+      <option value="name-asc">Name (A-Z)</option>
+      <option value="name-desc">Name (Z-A)</option>
+      <option value="order-asc">Order (Low to High)</option>
+      <option value="order-desc">Order (High to Low)</option>
+      <option value="status-asc">Status (Active First)</option>
+      <option value="status-desc">Status (Inactive First)</option>
+    </select>
+  </div>
+</div>
+
           
           {/* Loading indicator */}
           {loading && (
@@ -252,7 +286,7 @@ const SectionManager = () => {
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-100 uppercase">
-                  <th className="border border-gray-300 p-2">No</th>
+                  <th className="border border-gray-300 w-[45px]">No</th>
                   <th className="border border-gray-300 p-2">ID</th>
                   <th className="border border-gray-300 p-2">Name</th>
                   <th className="border border-gray-300 p-2">Status</th>
@@ -264,7 +298,7 @@ const SectionManager = () => {
                 {filteredSections.length > 0 ? (
                   filteredSections.map((section, i) => (
                     <tr key={section.id} className="text-center border border-gray-300">
-                      <td className="border border-gray-300 p-2">{i+1}</td>
+                      <td className="border border-gray-300 ">{i+1}</td>
                       <td className="border border-gray-300 p-2">{section.id}</td>
                       <td className="border border-gray-300 p-2">{section.name}</td>
                       <td className="border border-gray-300 p-2">

@@ -242,13 +242,13 @@ const UserTable = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
+          <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 mt-2 rounded-lg'>
                            <div className='w-full md:w-auto'>
   <div className="dropdown">
     <div
       tabIndex={0}
       role="button"
-      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-3 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
     >
       Filter
       {/* Dropdown icon */}
@@ -272,12 +272,12 @@ const UserTable = () => {
 </div>
 
                             {/* Search Input */}
-                            <div className="flex-1 max-w-md">
-                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                            <div className="flex-1 max-w-lg ">
+                                <label className="input bg-white border-blue-400 focus-within:border-blue-400 flex items-center gap-2 w-full">
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
-                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder="Search" />
+                              <input type="text" className="grow text-blue-900 placeholder:text-center placeholder-blue-400" placeholder=" Search " />
                                
                              </label>
                             </div>
@@ -296,29 +296,29 @@ const UserTable = () => {
             <table className="w-full bg-white shadow-md rounded-lg overflow-auto">
               <thead className="bg-gray-700 text-white">
                 <tr className="uppercase text-xs font-medium">
-                  <th className="px-4 py-3 text-left">
-                    <input type="checkbox" className="w-4 h-4" />
+                  <th className="py-3 text-left border">
+                    <input type="checkbox" className="w-3 h-3" />
                   </th>
-                  <th className="px-4 py-3 text-left">No</th>
-                  <th className="px-4 py-3 text-left">ID</th>
-                  <th className="px-4 py-3 text-left">Seller Id</th>
-                  <th className="px-4 py-3 text-left">Entity Type</th>
-                  <th className="px-4 py-3 text-left">Company Name</th>
-                  <th className="px-4 py-3 text-left">Contact Person</th>
-                  <th className="px-4 py-3 text-left">Phone Number</th>
-                  <th className="px-4 py-3 text-left">Email Id</th>
-                  <th className="px-4 py-3 text-left">Location</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <th className="py-3 text-left border">No</th>
+                  <th className="px-4 py-3 text-left border">ID</th>
+                  <th className="px-4 py-3 text-left border">Seller Id</th>
+                  <th className="px-4 py-3 text-left border">Entity Type</th>
+                  <th className="px-4 py-3 text-left border">Company Name</th>
+                  <th className="px-4 py-3 text-left border">Contact Person</th>
+                  <th className="px-4 py-3 text-left border">Phone Number</th>
+                  <th className="px-4 py-3 text-left border">Email Id</th>
+                  <th className="px-4 py-3 text-left border">Location</th>
+                  <th className="px-6 py-3 text-left border">Status</th>
+                  <th className="px-6 py-3 text-left border">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {displayUsers.map((user, i) => (
                   <tr key={i} className="border-b text-center hover:bg-gray-50">
-                    <td className="p-3 border-r">
-                      <input type="checkbox" className="w-4 h-4" />
+                    <td className=" border-r">
+                      <input type="checkbox" className="w-3 h-3" />
                     </td>
-                    <td className="p-3 border-r">
+                    <td className=" border-r">
                       {(currentPage - 1) * recordsPerPage + (i + 1)}
                     </td>
                     <td className="p-3 border-r">{user.supplier_id}</td>
