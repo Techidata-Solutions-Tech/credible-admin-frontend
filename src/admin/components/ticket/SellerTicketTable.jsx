@@ -24,7 +24,7 @@ const SellerTicketTable = () => {
     1: 'text-blue-500',
     2: 'text-yellow-500',
     3: 'text-green-500',
-    4: 'text-gray-500',
+    4: 'bg-gray-500',
   };
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -54,18 +54,18 @@ const SellerTicketTable = () => {
   return (
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto">
       <table className="w-full table-auto mb-10 min-w-[900px]">
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-600 text-white">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket No</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seller ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Replies</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agent</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created Date</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Updated Date</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">ID</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Ticket No</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Seller ID</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Subject</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Replies</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Agent</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Created Date</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Updated Date</th>
+            <th className="px-4 py-3 text-left text-xs font-medium  uppercase">Status</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  uppercase">Action</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">

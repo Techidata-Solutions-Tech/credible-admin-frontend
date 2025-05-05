@@ -122,7 +122,7 @@ const MerchantSupplierTable = () => {
       <table className="w-full table-auto mb-4 min-w-[900px]">
         <thead className="bg-gray-200">
           <tr>
-            <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">No</th>
+            <th className="w-[45px] py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">No</th>
             <th colSpan={2} className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Seller ID & Name</th>
             <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Categories</th>
             <th className="px-4 py-3 border border-gray-400  text-left text-xs font-medium text-gray-500 uppercase">Products</th>
@@ -134,7 +134,7 @@ const MerchantSupplierTable = () => {
         <tbody className="bg-white divide-y divide-gray-200">
           {currentRecords?.map((seller, index) => (
             <tr key={seller.id} className="hover:bg-gray-50 border-b border-gray-300">
-              <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{(currentPage-1)*recordsPerPage + index + 1}</td>
+              <td className="w-[45px] py-4 border border-gray-400 text-sm text-gray-900">{(currentPage-1)*recordsPerPage + index + 1}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.id}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.sellerName}</td>
               <td className="px-4 py-4 border border-gray-400 text-sm text-gray-900">{seller.categories.length}</td>

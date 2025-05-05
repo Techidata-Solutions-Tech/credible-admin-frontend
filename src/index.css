@@ -12,10 +12,18 @@
     max-width: 100%;
     overflow-x: scroll;} 
     
+    thead{
+      background-color: rgb(68, 68, 68) !important;
+      color: white !important;
+    }
   th {
+    background-color: rgb(68, 68, 68) !important;
     white-space: nowrap; 
     padding: 8px;
     text-align: center !important;
+    font-weight: bold !important;
+    color: white !important;
+    text-transform: uppercase;
   }
   td {
     padding: 8px;

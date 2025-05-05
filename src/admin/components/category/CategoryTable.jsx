@@ -108,9 +108,9 @@ const token = localStorage.getItem('token')
       <table className="w-full table-auto mb-15">
         <thead className="bg-gray-500 text-black">
           <tr className='text-white uppercase'>
-          <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium"> <input type="checkbox" className='border border-black'/></th>
+          <th className="w-[45px] py-3  border border-gray-400 text-left text-md font-medium"> <input type="checkbox" className='border border-black'/></th>
          
-            <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">No</th>
+            <th className="w-[45px] py-3  border border-gray-400 text-left text-md font-medium">No</th>
             <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Name</th>
             <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Image</th>
             <th className="px-6 py-3  border border-gray-400 text-left text-md font-medium">Parent Category</th>
@@ -130,8 +130,8 @@ const token = localStorage.getItem('token')
         <tbody className="bg-white divide-y divide-gray-200">
           {categories?.map((category, index) => (
             <tr key={category.id} className="hover:bg-gray-100 border-b border-gray-300">
-              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900"> <input type="checkbox" className='border border-black'/></td>
-              <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{index+1}</td>
+              <td className="w-[45px] py-4 border border-gray-400 text-sm text-gray-900"> <input type="checkbox" className='border border-black'/></td>
+              <td className="w-[45px] py-4 border border-gray-400 text-sm text-gray-900">{index+1}</td>
               <td className="px-6 py-4 border border-gray-400 text-sm text-gray-900">{"— ".repeat(category.depth)} {category.name}</td>
               <td className="px-6 py-4 border border-gray-400 text-sm">
                 <img src={category.featureimage} alt="Category" className="w-14 h-14 rounded-md object-cover" />

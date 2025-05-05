@@ -158,13 +158,13 @@ const breadcrumbItems = [
           items={breadcrumbItems}
         />
 
-<div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg'>
+   <div className='flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 mt-2 rounded-lg'>
                            <div className='w-full md:w-auto'>
   <div className="dropdown">
     <div
       tabIndex={0}
       role="button"
-      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+      className="min-w-[150px] text-center w-full md:w-auto bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-3 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
     >
       Filter
       {/* Dropdown icon */}
@@ -188,8 +188,8 @@ const breadcrumbItems = [
 </div>
 
                             {/* Search Input */}
-                            <div className="flex-1 max-w-md">
-                                <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+                            <div className="flex-1 max-w-lg ">
+                                <label className="input bg-white border-blue-400 focus-within:border-blue-400 flex items-center gap-2 w-full">
                                     <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
@@ -213,21 +213,21 @@ const breadcrumbItems = [
         <table className="w-full table-auto bg-white shadow-md rounded-lg">
           <thead>
             <tr className="bg-gray-200 uppercase">
-              <th className="p-4">No</th>
-              <th className="p-4">Attribute Name</th>
-              <th className="p-4">Values</th>
-              <th className="p-4">Type</th>
-              <th className="p-4">Actions</th>
+              <th className=" border border-gray-400 w-[45px] ">No</th>
+              <th className=" border border-gray-400 p-4">Attribute Name</th>
+              <th className=" border border-gray-400 p-4">Values</th>
+              <th className=" border border-gray-400 p-4">Type</th>
+              <th className=" border border-gray-400 p-4">Actions</th>
             </tr>
           </thead>
           <tbody>
             {currentItems?.map((attr, index) => (
               <tr key={attr.id} className="text-center">
-                <td className="p-4">{index + 1 + (currentPage - 1) * perPage}</td>
-                <td className="p-4">{attr.name}</td>
-                <td className="p-4">{attr.value.join(" | ")}</td>
-                <td className="p-4">{attr.type}</td>
-                <td className="p-4">
+                <td className=" border border-gray-400 w-[45px] ">{index + 1 + (currentPage - 1) * perPage}</td>
+                <td className=" border border-gray-400 p-4">{attr.name}</td>
+                <td className=" border border-gray-400 p-4">{attr.value.join(" | ")}</td>
+                <td className=" border border-gray-400 p-4">{attr.type}</td>
+                <td className=" border border-gray-400 p-4">
                   <button
                     onClick={() => openEditModal(attr)}
                     className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"

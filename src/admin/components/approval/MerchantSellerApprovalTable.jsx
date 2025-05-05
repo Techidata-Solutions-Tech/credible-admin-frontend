@@ -162,34 +162,34 @@ const MerchantSellerApprovalTable = () => {
   return (<>
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto overflow-y-hidden">
       <table className="w-full table-auto mb-4 min-w-[900px]">
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-200 font-bold">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Supplier ID</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Entity Type</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Company Name</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact Person</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+            <th className=" py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">No</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">ID</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Supplier ID</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Entity Type</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Company Name</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Contact Person</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Phone</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Email</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Location</th>
+            <th className="px-4 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Status</th>
+            <th className="px-6 py-3 text-left border border-gray-400 text-xs font-medium text-gray-500 uppercase">Action</th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {currentRecords?.map((supplier, i) => (
             <tr key={supplier.id} className="hover:bg-gray-50 border-b border-gray-300">
-              <td className="px-4 py-4 text-sm text-gray-900">{(currentPage - 1) * recordsPerPage + i + 1}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.id}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.supplierId}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.entityType}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.companyName}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.contactPerson}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.phone}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.email}</td>
-              <td className="px-4 py-4 text-sm text-gray-900">{supplier.location}</td>
-              <td className={`px-4 py-4 text-sm font-semibold ${statusColors[supplier.status]}`}>
+              <td className=" py-4 text-sm border border-gray-400 text-gray-900">{(currentPage - 1) * recordsPerPage + i + 1}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.id}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.supplierId}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.entityType}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.companyName}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.contactPerson}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.phone}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.email}</td>
+              <td className="px-4 py-4 text-sm border border-gray-400 text-gray-900">{supplier.location}</td>
+              <td className={`px-4 py-4 text-sm border border-gray-400 font-semibold ${statusColors[supplier.status]}`}>
                 {statusLabels[supplier.status]}
               </td>
               <td className="px-2 py-2 whitespace-nowrap text-sm text-gray-900 flex justify-center gap-1">

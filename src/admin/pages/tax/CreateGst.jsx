@@ -106,7 +106,7 @@ const CreateTaxForm = ({ token }) => {
     // { label: 'Create Product Category', href: '/create-product-category' }
   ];
   return (
-    <div className="flex-1 overflow-y-auto bg-white p-2">
+    <div className="bg-white p-2">
       <Breadcrumbs pageTitle="Create Tax" items={breadcrumbItems} />
       <div className="flex justify-end bg-gray-100 mb-4">
         <div className="flex flex-end my-2">
@@ -121,7 +121,7 @@ const CreateTaxForm = ({ token }) => {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-4 rounded shadow-md rounded-md mt-4"
+        className=" rounded-md mt-4"
       >
         <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
           <input

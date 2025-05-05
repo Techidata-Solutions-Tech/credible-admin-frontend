@@ -43,8 +43,8 @@ console.log(products);
       <table className="w-full overflow-x-auto ">
         <thead className="bg-gray-50 text-black ">
           <tr className=' uppercase'>
-          <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400"> <input type="checkbox" className='border border-black'/></th>
-            <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">No</th>
+          <th className="w-[45px] py-3 text-left text-[14px] font-[700] border border-gray-400"> <input type="checkbox" className='border border-black'/></th>
+            <th className="w-[45px] py-3 text-left text-[14px] font-[700] border border-gray-400">No</th>
             <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">ID</th>
             <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Category</th>
             <th className="px-4 py-3 text-left text-[14px] font-[700] border border-gray-400">Subcategory</th>
@@ -66,11 +66,11 @@ console.log(products);
         <tbody className="bg-white divide-y divide-gray-200 ">
           {products?.map((product, index) => (
             <tr key={product?.id} className="hover:bg-gray-50">
-              <td className="border border-gray-400 px-4 py-4">
+              <td className="border border-gray-400 py-4">
               <input type="checkbox" className='border border-black'/>
               </td>
              
-              <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600 font-semibold">{index + 1}</td>
+              <td className="border border-gray-400 py-4 text-[14px] text-gray-600 font-semibold">{index + 1}</td>
               <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600 font-semibold">{product?.id}</td>
               <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.main_category}</td>
               <td className="border border-gray-400 px-4 py-4 text-[14px] text-gray-600">{product?.sub_category}</td>

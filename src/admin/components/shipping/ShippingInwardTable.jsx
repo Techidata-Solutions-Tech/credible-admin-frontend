@@ -13,7 +13,7 @@ const ShippingInwardTable = () => {
       <table className="table-auto w-full border border-gray-300">
         <thead>
           <tr className="bg-green-600 text-white text-center">
-            <th className="border border-gray-300 px-4 py-2">No</th>
+            <th className="border border-gray-300 w-[45px]  py-2">No</th>
             <th className="border border-gray-300 px-4 py-2">PO NO</th>
             <th className="border border-gray-300 px-4 py-2">Tracking No</th>
             <th className="border border-gray-300 px-4 py-2">Shipping Partner</th>
@@ -34,7 +34,7 @@ const ShippingInwardTable = () => {
                 {isFirstOccurrence && (
                   <>
                     <td
-                      className="border border-gray-300 px-4 py-2 align-middle"
+                      className="border border-gray-300 w-[45px]  py-2 align-middle"
                       rowSpan={rowSpanCount}
                     >
                       {index+1}

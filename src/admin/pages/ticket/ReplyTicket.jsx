@@ -18,16 +18,13 @@ const ReplyTicket = () => {
   ];
  
     return (
-      <div className=" p-4">
+      <div className=" p-2 bg-white">
          <Breadcrumbs
               pageTitle="Reply Ticket"
               items={breadcrumbItems}
             />  
-      <div className='flex bg-gray-100'>
         
-        <div className='rounded shadow-lg p-4 w-screen m-2 bg-white'>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md">
+          <form onSubmit={handleSubmit(onSubmit)} className="c">
 
             {/* Customer ID (Disabled) */}
             <div className="mb-4">
@@ -98,10 +95,7 @@ const ReplyTicket = () => {
             </div>
 
           </form>
-
-        </div>
       </div>
-    </div>
   );
 };
 

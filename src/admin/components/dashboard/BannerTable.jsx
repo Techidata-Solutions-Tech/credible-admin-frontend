@@ -102,28 +102,28 @@ const BannerTable = ({setToggle, banners }) => {
     <div className="w-full bg-white rounded-lg shadow-sm overflow-x-auto overflow-y-hidden">
 
       <table className="w-full table-auto mb-10 min-w-[900px]">
-        <thead className="bg-gray-200">
+        <thead className="bg-gray-200  border border-gray-400 rounded overflow-hidden">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-1 py-3 w-[20px] border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               No
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-4 py-3 border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               ID
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-4 py-3 border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               Image
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-4 py-3 border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               Redirect URL
             </th>
           
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-4 py-3 border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               Position
             </th>
-            <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-4 py-3 border border-gray-400 text-left text-xs font-bold text-gray-500 uppercase">
               Index
             </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+            <th className="px-6 py-3  border border-gray-400  text-left text-xs font-bold text-gray-500 uppercase">
               Actions
             </th>
           </tr>
@@ -191,7 +191,7 @@ const BannerTable = ({setToggle, banners }) => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
           <div className="relative top-20 mx-auto p-5 border md:w-[60%] shadow-lg rounded-md bg-white">
             <div className="mt-3 text-center">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
+              <h3 className="text-lg leading-6 font-bold text-gray-900">
                 Edit Banner
               </h3>
               <button

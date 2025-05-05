@@ -270,27 +270,27 @@ const UserTable = () => {
             <table className="w-full bg-white shadow-md rounded-lg overflow-auto">
               <thead className="bg-gray-700 text-white">
                 <tr className="uppercase text-xs font-medium">
-                  <th className="px-4 py-3 text-left"><input type="checkbox" className="w-4 h-4" /></th>
-                  <th className="px-4 py-3 text-left">No</th>
-                  <th className="px-4 py-3 text-left">ID</th>
-                  <th className="px-4 py-3 text-left">Business Name</th>
-                  <th className="px-4 py-3 text-left">Nature</th>
-                  <th className="px-4 py-3 text-left">Registration</th>
-                  <th className="px-4 py-3 text-left">Contact Person</th>
-                  <th className="px-4 py-3 text-left">Phone Number</th>
-                  <th className="px-4 py-3 text-left">Email Id</th>
-                  <th className="px-4 py-3 text-left">City</th>
-                  <th className="px-4 py-3 text-left">Pincode</th>
-                  <th className="px-4 py-3 text-left">State</th>
-                  <th className="px-4 py-3 text-left">Created Date</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                  <th className="px-6 py-3 text-left">Actions</th>
+                  <th className=" py-3 text-left border border-gray-50"><input type="checkbox" className="w-3 h-3" /></th>
+                  <th className=" py-3 text-left border border-gray-50">No</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">ID</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Business Name</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Nature</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Registration</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Contact Person</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Phone Number</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Email Id</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">City</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Pincode</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">State</th>
+                  <th className="px-4 py-3 text-left border border-gray-50">Created Date</th>
+                  <th className="px-6 py-3 text-left border border-gray-50">Status</th>
+                  <th className="px-6 py-3 text-left border border-gray-50">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {displayUsers.map((user, i) => (
                   <tr key={i} className="border-b text-center hover:bg-gray-50">
-                    <td className="p-3 border-r"><input type="checkbox" className="w-4 h-4" /></td>
+                    <td className="p-3 border-r"><input type="checkbox" className="w-3 h-3" /></td>
                     <td className="p-3 border-r">{(currentPage-1)*recordsPerPage + (i+1)}</td>
                     <td className="p-3 border-r">{user.supplier_id}</td>
                     <td className="p-3 border-r">{user.company_name || "N/A"}</td>

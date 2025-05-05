@@ -46,14 +46,14 @@ const ManageReturn = () => {
   ];
 
   return (
-    <div className="p-4">
+    <div className=" p-2 bg-white">
       <Breadcrumbs pageTitle="Manage Purchase Returns" items={breadcrumbItems} />
 
       <div className="overflow-auto">
         <table className="min-w-full border border-gray-300">
           <thead>
             <tr className="bg-green-600 text-white">
-              <th className="text-center border border-gray-300 p-2">No</th>
+              <th className="text-center border border-gray-300 w-[45px]">No</th>
               <th className="text-center border border-gray-300 p-2">GRN NO</th>
               <th className="text-center border border-gray-300 p-2">PO NO</th>
               <th className="text-center border border-gray-300 p-2">SUPPLIER</th>
@@ -69,7 +69,7 @@ const ManageReturn = () => {
                 <tr key={`${item.grnNo}-${item.warehouse}`}>
                   {rowIndex === 0 && (
                     <>
-                      <td rowSpan={group.count} className="text-center border border-gray-300 p-2 align-middle">
+                      <td rowSpan={group.count} className="text-center border border-gray-300align-middle">
                         {String(indexOfFirst + groupIndex + 1).padStart(2, "0")}
                       </td>
                       <td rowSpan={group.count} className="text-center border border-gray-300 p-2 align-middle">

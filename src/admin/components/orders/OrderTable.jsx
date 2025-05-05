@@ -163,7 +163,7 @@ const OrderTable = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 bg-blue-50 p-4 rounded-lg items-center">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-2 md:justify-between mb-4 rounded-lg items-center">
       <div className="w-full mt-0 md:w-auto relative bottom-2 text-blue-500 outline-blue-500">
           <label className="label">
             {/* <span className="label-text font-medium">Order Status</span> */}
@@ -183,7 +183,7 @@ const OrderTable = () => {
         </div>
         {/* Search Input */}
         <div className="flex-1 max-w-md">
-          <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+          <label className="input bg-white border-blue-400 focus-within:border-blue-400 flex items-center gap-2 w-full">
             <svg
               className="w-4 h-4 text-blue-500"
               fill="none"

@@ -83,12 +83,12 @@ const AddMenu = () => {
   return (
     <div className=''>
         
-        <div className=' rounded shadow-lg  w-screen p-2 bg-white'>
+        <div className=' rounded p-2 bg-white'>
         <Breadcrumbs
               pageTitle="Add Menu"
               items={breadcrumbItems}
             />
-          <form onSubmit={handleSubmit(onSubmit)} className="p-4 border rounded-md">
+          <form onSubmit={handleSubmit(onSubmit)} className="order rounded-md">
 
            <div className='flex justify-evenly gap-[50px]'>
            <div className="mb-4 w-1/2">

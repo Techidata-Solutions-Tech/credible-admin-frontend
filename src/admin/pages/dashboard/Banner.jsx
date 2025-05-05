@@ -170,54 +170,67 @@ const Banner = () => {
           </div>
         </div>
         <div className="flex gap-2 mb-2 flex-wrap justify-between w-[100%]">
-          <div className="dropdown">
-            <div
-              tabIndex={0}
-              role="button"
-              className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base"
-            >
-              Filter
-            </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow"
-            >
-              <li>
-                <label>
-                  <input type="checkbox" /> Active Banners
-                </label>
-              </li>
-              <li>
-                <label>
-                  <input type="checkbox" /> With Redirect URL
-                </label>
-              </li>
-            </ul>
-          </div>
-          <div className="">
-            <label className="input input-bordered flex items-center gap-2 bg-transparent w-full">
-              <i className="ri-search-line"></i>
-              <input
-                type="text"
-                className="grow text-blue-900 placeholder:text-center placeholder-blue-400 min-w-[250px]"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </label>
-          </div>
-          <select
-            className="min-w-[150px] text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-md hover:bg-blue-500 hover:text-white text-sm sm:text-base"
-            value={sortOption}
-            onChange={handleSortChange}
-          >
-            <option value="default">Sort By</option>
-            <option value="index-asc">Index (Low to High)</option>
-            <option value="index-desc">Index (High to Low)</option>
-            <option value="position-asc">Position (A-Z)</option>
-            <option value="position-desc">Position (Z-A)</option>
-          </select>
-        </div>
+  {/* Filter Dropdown */}
+  <div className="dropdown">
+    <div
+      tabIndex={0}
+      role="button"
+      className="min-w-[150px] py-3 text-center bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base flex items-center justify-center gap-2"
+    >
+      Filter
+      <svg className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M5.25 7.5L10 12.25L14.75 7.5H5.25Z" />
+      </svg>
+    </div>
+    <ul
+      tabIndex={0}
+      className="dropdown-content menu bg-gray-100 text-gray-800 rounded-md z-[1] w-52 p-2 shadow"
+    >
+      <li>
+        <label>
+          <input type="checkbox" /> Active Banners
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" /> With Redirect URL
+        </label>
+      </li>
+    </ul>
+  </div>
+
+  {/* Search Input */}
+  <div className="flex-1 max-w-lg">
+    <label className="input bg-white border-blue-200 focus-within:border-blue-400 flex items-center gap-2 w-full">
+      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input
+        type="text"
+        className="grow text-blue-900 placeholder:text-center placeholder-blue-400"
+        placeholder="Search"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+    </label>
+  </div>
+
+  {/* Sort Dropdown */}
+  <div className="w-full md:w-auto">
+    <select
+      className="select min-w-[150px] text-center w-full md:max-w-[100px] bg-white text-blue-500 font-semibold border border-blue-500 px-2 sm:px-4 py-2 rounded-lg hover:bg-blue-500 hover:text-white text-sm sm:text-base"
+      value={sortOption}
+      onChange={handleSortChange}
+    >
+      <option value="default">Sort</option>
+      <option value="index-asc">Index (Low to High)</option>
+      <option value="index-desc">Index (High to Low)</option>
+      <option value="position-asc">Position (A-Z)</option>
+      <option value="position-desc">Position (Z-A)</option>
+    </select>
+  </div>
+</div>
+
         {loading ? (
           <Loader />
         ) : (
